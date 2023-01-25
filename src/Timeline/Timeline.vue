@@ -22,6 +22,7 @@ import { eventValue, isEventNode } from "@markwhen/parser/lib/Noder";
 import DebugView from "./DebugView.vue";
 import { ranges } from "@/utilities/ranges";
 import { useNodePosition } from "./Events/composables/useNodePosition";
+import { useEventFinder } from "@/utilities/useEventFinder";
 
 const timelineStore = useTimelineStore();
 
@@ -193,7 +194,7 @@ watch(
       return;
     }
 
-    const node = null//useEventFinder(path).value;
+    const node = useEventFinder(path).value;
     if (!node) {
       return;
     }
@@ -263,10 +264,13 @@ watch(
 </script>
 
 <template>
-  <div class="flex flex-row w-full h-full">
+  <div
+    class="flex flex-row w-full h-full"
+    :class="timelineStore.darkMode ? 'dark' : ''"
+  >
     <div
       id="timeline"
-      class="relative h-full overflow-auto w-full noScrollBar"
+      class="relative h-full overflow-auto w-full noScrollBar dark:text-white text-gray-900"
       ref="timelineElement"
       @scroll="scroll"
       :style="{ cursor: isPanning ? 'grabbing' : 'grab' }"
