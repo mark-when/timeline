@@ -1,12 +1,17 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import Timeline from "./Timeline/Timeline.vue";
-
+import App from "./App.vue";
 import "./assets/main.css";
 
-const app = createApp(Timeline);
-
-app.use(createPinia());
+const app = createApp(App);
+const pinia = createPinia();
+app.use(pinia);
 
 app.mount("#app");
-console.log('timeline mounted')
+
+// vue devtools
+if (import.meta.env.DEV) {
+  const script = document.createElement("script");
+  script.src = "http://localhost:8098";
+  document.head.append(script);
+}
