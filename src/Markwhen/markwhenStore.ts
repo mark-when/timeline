@@ -1,17 +1,17 @@
 import { equivalentPaths, type EventPath } from "@/Timeline/paths";
-import { eqPath } from "@/Timeline/timelineStore";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useLpc, type AppState, type MarkwhenState } from "./useLpc";
+import produce from "immer";
 
 export const useMarkwhenStore = defineStore("markwhen", () => {
   const app = ref<AppState>();
   const markwhen = ref<MarkwhenState>();
-  console.log("markwhen store inited");
+
   const { postRequest } = useLpc({
     state: (s) => {
-      app.value = s.app;
-      markwhen.value = s.markwhen;
+      app.value = produce(app.value, () => s.app);
+      markwhen.value = produce(markwhen.value, () => s.markwhen);
     },
   });
 
@@ -23,16 +23,29 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     postRequest("setDetailPath", path);
   };
 
+  const setText = (text: string, at?: { from: number; to: number }) => {
+    postRequest("setText", { text, at });
+  };
+
+  const showInEditor = (path: EventPath) => {
+    postRequest("showInEditor", path);
+  };
+
   const isDetailEventPath = (path: EventPath | undefined) =>
     !!path && equivalentPaths(path, app.value?.detailPath);
 
-  postRequest("state");
+  const requestStateUpdate = () => postRequest("state");
+  requestStateUpdate();
 
   return {
     app,
     markwhen,
+
+    requestStateUpdate,
     setHoveringPath,
     setDetailEventPath,
     isDetailEventPath,
+    setText,
+    showInEditor,
   };
 });

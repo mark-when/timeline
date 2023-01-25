@@ -60,7 +60,10 @@ const editDateRange = (range: DateRange) =>
 
 const hover = (hovering: boolean) => {
   if (hovering) {
-    timelineStore.setHoveringEvent(event.value.dateRangeInText.from);
+    timelineStore.setHoveringEvent({
+      type: "pageFiltered",
+      path: props.path.split(",").map((i) => parseInt(i)),
+    });
   } else {
     timelineStore.clearHoveringEvent();
   }

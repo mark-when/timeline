@@ -73,7 +73,10 @@ const hover = (isHovering: boolean) => {
 
 watch(hovering, (h) => {
   if (h) {
-    setHoveringEvent(props.node.rangeInText!.from);
+    setHoveringEvent({
+      type: "pageFiltered",
+      path: props.path.split(",").map((i) => parseInt(i)),
+    });
   } else {
     clearHoveringEvent();
   }

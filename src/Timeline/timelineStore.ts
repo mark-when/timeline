@@ -8,7 +8,7 @@ import {
 } from "@/Timeline/utilities/dateTimeUtilities";
 import { usePageEffect } from "./usePageEffect";
 import { ref, computed, watchEffect, watch } from "vue";
-import type { DateRangePart, Path } from "@markwhen/parser/lib/Types";
+import type { DateRangePart, Path, Timeline } from "@markwhen/parser/lib/Types";
 import type { EventPath, EventPaths } from "@/Timeline/paths";
 import { walk } from "@/Timeline/useNodeStore";
 import { isEventNode } from "@markwhen/parser/lib/Noder";
@@ -24,6 +24,7 @@ import {
 // import { useStorageStore } from "@/Storage/storageStore";
 // import { useEventDetailStore } from "@/EventDetail/eventDetailStore";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
+import type { Node, NodeArray } from "@markwhen/parser/lib/Node";
 
 export const recurrenceLimit = 100;
 
@@ -86,8 +87,8 @@ export const eqPath = (ep: EventPath, eps: EventPaths): boolean => {
 
 export const useTimelineStore = defineStore("timeline", () => {
   const markwhenStore = useMarkwhenStore();
-  const appState = computed(() => markwhenStore.app);
-  const markwhenState = computed(() => markwhenStore.markwhen);
+  const appState = computed(() => markwhenStore.app!);
+  const markwhenState = computed(() => markwhenStore.markwhen!);
 
   // const editorOrchestrator = useEditorOrchestratorStore();
   // const eventDetailStore = useEventDetailStore();
@@ -95,14 +96,14 @@ export const useTimelineStore = defineStore("timeline", () => {
   // const routeWatcherStore = useRouteWatcherStore();
   // const storageStore = useStorageStore();
 
-  const pageIndex = computed(() => appState.value?.pageIndex || 0);
-  const pageTimeline = computed(
-    () => markwhenState.value?.parsed[pageIndex.value] || emptyTimeline()
+  const pageIndex = computed(() => appState.value.pageIndex);
+  const pageTimeline = computed<Timeline>(
+    () => markwhenState.value.parsed[pageIndex.value]
   );
   const pageTimelineMetadata = computed(() => pageTimeline.value.metadata);
   const tags = computed(() => pageTimeline.value.tags);
-  const transformedEvents = computed(
-    () => markwhenState.value?.page.transformed
+  const transformedEvents = computed<Node<NodeArray>>(
+    () => markwhenState.value.page.transformed!
   );
   const darkMode = computed(() => !!appState.value?.isDark);
 
@@ -115,11 +116,11 @@ export const useTimelineStore = defineStore("timeline", () => {
   );
   const hoveringEventPaths = computed(() => appState.value?.hoveringPath);
   // const editEventDateRange = editorOrchestrator.editEventDateRange;
-  // const setHoveringEvent = editorOrchestrator.setHoveringEvent;
-  // const clearHoveringEvent = editorOrchestrator.clearHoveringEvent;
-  // const setText = editorOrchestrator.setText;
+  const setHoveringEvent = markwhenStore.setHoveringPath;
+  const clearHoveringEvent = () => markwhenStore.setHoveringPath();
+  const setText = markwhenStore.setText;
   // const editable = computed(() => editorOrchestrator.editable);
-  // const showInEditor = editorOrchestrator.showInEditor;
+  const showInEditor = markwhenStore.showInEditor;
   // const createEventFromRange = editorOrchestrator.createEventFromRange;
   const isDetailEventPath = markwhenStore.isDetailEventPath;
   const setDetailEventPath = markwhenStore.setDetailEventPath;
@@ -468,10 +469,10 @@ export const useTimelineStore = defineStore("timeline", () => {
     // actions
     setDetailEventPath,
     createEventFromRange: (...args: any) => {},
-    showInEditor: (...args: any) => {},
-    setText: (...args: any) => {},
-    setHoveringEvent: (...args: any) => {},
-    clearHoveringEvent: (...args: any) => {},
+    showInEditor,
+    setText,
+    setHoveringEvent,
+    clearHoveringEvent,
     editEventDateRange: (...args: any) => {},
     setViewport,
     setViewportGetter,

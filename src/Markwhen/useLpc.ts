@@ -1,6 +1,6 @@
 import type { EventPath, EventPaths } from "@/Timeline/paths";
 import type { Node, NodeArray } from "@markwhen/parser/lib/Node";
-import type { Timeline } from "@markwhen/parser/lib/Types";
+import type { DateRangeIso, DateTimeGranularity, Timeline } from "@markwhen/parser/lib/Types";
 
 export interface AppState {
   isDark?: boolean;
@@ -26,6 +26,19 @@ interface MessageTypes {
   state: State;
   setHoveringPath: EventPath;
   setDetailPath: EventPath;
+  setText: {
+    text: string,
+    at?: {
+      from: number,
+      to: number
+    }
+  },
+  showInEditor: EventPath;
+  newEvent: {
+    dateRangeIso: DateRangeIso;
+    granularity?: DateTimeGranularity;
+    immediate: boolean;
+  };
 }
 
 type MessageType = keyof MessageTypes;
