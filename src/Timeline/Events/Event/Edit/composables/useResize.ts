@@ -28,10 +28,7 @@ export const useResize = (
   const markersStore = useMarkersStore();
   const timelineStore = useTimelineStore();
 
-  const stop = () => {
-    tempFromIso.value = undefined;
-    tempToIso.value = undefined;
-
+  const removeListeners = () => {
     document.removeEventListener("mousemove", moveListenerLeft);
     document.removeEventListener("mousemove", moveListenerRight);
     document.removeEventListener("mousemove", moveListener);
@@ -49,6 +46,21 @@ export const useResize = (
     document.removeEventListener("keydown", escapeListener);
   };
 
+  const delayedStop = () => {
+    removeListeners();
+    setTimeout(() => {
+      tempFromIso.value = undefined;
+      tempToIso.value = undefined;
+    }, 100);
+  };
+
+  const stop = () => {
+    tempFromIso.value = undefined;
+    tempToIso.value = undefined;
+
+    removeListeners();
+  };
+
   const escapeListener = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       stop();
@@ -62,7 +74,10 @@ export const useResize = (
     }
 
     done?.(tempFrom.value, tempTo.value);
-    stop();
+
+    // Add a delay so that there isn't a shift from the time we send the
+    // request to when it actually comes through
+    delayedStop();
   };
 
   const moveListenerLeft = (e: MouseEvent | TouchEvent) => {
@@ -139,7 +154,7 @@ export const useResize = (
       e.preventDefault();
     }
     done?.(tempFrom.value, tempTo.value);
-    stop();
+    delayedStop();
   };
 
   const moveHandleListener = (e: MouseEvent | TouchEvent) => {
