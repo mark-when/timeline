@@ -31,28 +31,19 @@ const isDetailEvent = computed(() =>
 );
 const isDeep = computed(() => props.path.split(",").length > 4);
 
-const { isHoveredInEditor } = useIsHoveredInEditor({
-  type: "pageFiltered",
-  path: computedPath.value,
-});
-
 const styleObject = computed(() => {
   const obj = {
     height: `${props.height}px`,
     transition: `height 200ms cubic-bezier(0.4, 0, 0.2, 1)`,
   } as any;
   if (color.value) {
-    if (props.hovering || isDetailEvent.value || isHoveredInEditor.value) {
+    if (props.hovering || isDetailEvent.value) {
       obj.backgroundColor = `rgba(${color.value}, 0.1`;
     } else if (!isDeep.value) {
       obj.backgroundColor = `rgba(${color.value}, 0.05)`;
     }
     const border = `1px solid rgba(${color.value}, ${
-      isDetailEvent.value
-        ? "0.95"
-        : props.hovering || isHoveredInEditor.value
-        ? "0.75"
-        : "0.12"
+      isDetailEvent.value ? "0.95" : props.hovering ? "0.75" : "0.12"
     })`;
     obj.borderTop = border;
     obj.borderBottom = border;
