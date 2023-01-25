@@ -1,7 +1,7 @@
 import { useMarkersStore } from "@/Timeline/Markers/markersStore";
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import type { OffsetRange } from "@/Timeline/utilities/dateTimeUtilities";
-import type { DateFormat } from "@markwhen/parser/lib/Types";
+import { toDateRangeIso, type DateFormat } from "@markwhen/parser/lib/Types";
 import { computed, ref } from "vue";
 
 export const useCreateEvent = () => {
@@ -52,10 +52,10 @@ export const useCreateEvent = () => {
 
     if (rangeToCreate) {
       timelineStore.createEventFromRange(
-        {
+        toDateRangeIso({
           fromDateTime: rangeToCreate[0].dateTime,
           toDateTime: rangeToCreate[1].dateTime,
-        },
+        }),
         timelineStore.scaleOfViewportDateInterval,
         timelineStore.pageTimelineMetadata.preferredInterpolationFormat as
           | DateFormat

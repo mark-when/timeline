@@ -3,6 +3,10 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useLpc, type AppState, type MarkwhenState } from "./useLpc";
 import produce from "immer";
+import type {
+  DateRangeIso,
+  DateTimeGranularity,
+} from "@markwhen/parser/lib/Types";
 
 export const useMarkwhenStore = defineStore("markwhen", () => {
   const app = ref<AppState>();
@@ -34,6 +38,14 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   const isDetailEventPath = (path: EventPath | undefined) =>
     !!path && equivalentPaths(path, app.value?.detailPath);
 
+  const createEventFromRange = (
+    dateRangeIso: DateRangeIso,
+    granularity: DateTimeGranularity,
+    immediate: boolean = true
+  ) => {
+    postRequest("newEvent", { dateRangeIso, granularity, immediate });
+  };
+
   const requestStateUpdate = () => postRequest("state");
   requestStateUpdate();
 
@@ -47,5 +59,6 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     isDetailEventPath,
     setText,
     showInEditor,
+    createEventFromRange,
   };
 });

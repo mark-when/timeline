@@ -121,7 +121,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const setText = markwhenStore.setText;
   // const editable = computed(() => editorOrchestrator.editable);
   const showInEditor = markwhenStore.showInEditor;
-  // const createEventFromRange = editorOrchestrator.createEventFromRange;
+  const createEventFromRange = markwhenStore.createEventFromRange;
   const isDetailEventPath = markwhenStore.isDetailEventPath;
   const setDetailEventPath = markwhenStore.setDetailEventPath;
 
@@ -468,7 +468,7 @@ export const useTimelineStore = defineStore("timeline", () => {
 
     // actions
     setDetailEventPath,
-    createEventFromRange: (...args: any) => {},
+    createEventFromRange,
     showInEditor,
     setText,
     setHoveringEvent,
