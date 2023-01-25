@@ -6,3 +6,27 @@
   width: 100%;
   height: 100%;
 }
+
+html, body {
+  height: 100%;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  mix-blend-mode: multiply;
+}
+
+.noScrollBar::-webkit-scrollbar {
+  display: none;
+}
+
+.noScrollBar {
+  scrollbar-width: none;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.safeBottomPadding {
+  padding-bottom: env(safe-area-inset-bottom);
+}
