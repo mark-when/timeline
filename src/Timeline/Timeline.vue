@@ -14,7 +14,6 @@ import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { usePanning } from "./composables/usePanning";
 import { DateTime } from "luxon";
 import { useResizeObserver } from "@vueuse/core";
-import { useIsActive } from "./composables/useIsActive";
 import { toDateRange, type DateRange } from "@markwhen/parser/lib/Types";
 import { dateMidpoint } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
@@ -27,7 +26,6 @@ import { useEventFinder } from "@/utilities/useEventFinder";
 const timelineStore = useTimelineStore();
 
 const timelineElement = ref<HTMLDivElement>();
-const { isActive } = useIsActive();
 
 const getViewport = (): Viewport => {
   if (!timelineElement.value) {
@@ -95,15 +93,11 @@ watch(
     () => timelineStore.pageTimelineMetadata.latestTime,
   ],
   () => {
-    if (isActive.value) {
-      nextTick(setViewportDateInterval);
-    }
+    nextTick(setViewportDateInterval);
   }
 );
 useResizeObserver(timelineElement, (entries) => {
-  if (isActive.value) {
-    nextTick(setViewportDateInterval);
-  }
+  nextTick(setViewportDateInterval);
 });
 
 let ticking = false;
