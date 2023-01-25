@@ -56,7 +56,12 @@ export const useCreateEvent = () => {
           fromDateTime: rangeToCreate[0].dateTime,
           toDateTime: rangeToCreate[1].dateTime,
         }),
-        timelineStore.scaleOfViewportDateInterval,
+        // @ts-ignore
+        ["quarterhour", "quarterminute", "second"].includes(
+          timelineStore.scaleOfViewportDateInterval
+        )
+          ? "instant"
+          : timelineStore.scaleOfViewportDateInterval,
         timelineStore.pageTimelineMetadata.preferredInterpolationFormat as
           | DateFormat
           | undefined

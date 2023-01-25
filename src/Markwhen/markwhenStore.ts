@@ -4,9 +4,11 @@ import { ref } from "vue";
 import { useLpc, type AppState, type MarkwhenState } from "./useLpc";
 import produce from "immer";
 import type {
+  DateFormat,
   DateRangeIso,
   DateTimeGranularity,
 } from "@markwhen/parser/lib/Types";
+import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
 
 export const useMarkwhenStore = defineStore("markwhen", () => {
   const app = ref<AppState>();
@@ -46,6 +48,21 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     postRequest("newEvent", { dateRangeIso, granularity, immediate });
   };
 
+  const editEventDateRange = (
+    path: EventPath,
+    dateRangeIso: DateRangeIso,
+    scale: DisplayScale,
+    preferredInterpolationFormat: DateFormat | undefined
+  ) => {
+    const params = {
+      path,
+      range: dateRangeIso,
+      scale,
+      preferredInterpolationFormat,
+    };
+    postRequest("editEventDateRange", params);
+  };
+
   const requestStateUpdate = () => postRequest("state");
   requestStateUpdate();
 
@@ -60,5 +77,6 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     setText,
     showInEditor,
     createEventFromRange,
+    editEventDateRange,
   };
 });

@@ -1,6 +1,12 @@
 import type { EventPath, EventPaths } from "@/Timeline/paths";
+import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
 import type { Node, NodeArray } from "@markwhen/parser/lib/Node";
-import type { DateRangeIso, DateTimeGranularity, Timeline } from "@markwhen/parser/lib/Types";
+import type {
+  DateFormat,
+  DateRangeIso,
+  DateTimeGranularity,
+  Timeline,
+} from "@markwhen/parser/lib/Types";
 
 export interface AppState {
   isDark?: boolean;
@@ -27,17 +33,23 @@ interface MessageTypes {
   setHoveringPath: EventPath;
   setDetailPath: EventPath;
   setText: {
-    text: string,
+    text: string;
     at?: {
-      from: number,
-      to: number
-    }
-  },
+      from: number;
+      to: number;
+    };
+  };
   showInEditor: EventPath;
   newEvent: {
     dateRangeIso: DateRangeIso;
     granularity?: DateTimeGranularity;
     immediate: boolean;
+  };
+  editEventDateRange: {
+    path: EventPath;
+    range: DateRangeIso;
+    scale: DisplayScale;
+    preferredInterpolationFormat: DateFormat | undefined;
   };
 }
 

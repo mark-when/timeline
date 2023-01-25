@@ -4,7 +4,12 @@ import { computed } from "vue";
 import EventRow from "./Event/EventRow.vue";
 import { equivalentPaths } from "@/Timeline/paths";
 import { useEventRefs } from "./useEventRefs";
-import type { DateFormat, DateRange, Event } from "@markwhen/parser/lib/Types";
+import {
+  toDateRangeIso,
+  type DateFormat,
+  type DateRange,
+  type Event,
+} from "@markwhen/parser/lib/Types";
 import { eventValue, isEventNode } from "@markwhen/parser/lib/Noder";
 import { useTimelineStore } from "../timelineStore";
 
@@ -52,8 +57,8 @@ const preferredInterpolationFormat = computed(
 );
 const editDateRange = (range: DateRange) =>
   editEventDateRange(
-    event.value,
-    range,
+    { type: "pageFiltered", path: pathArray.value },
+    toDateRangeIso(range),
     scale.value,
     preferredInterpolationFormat.value
   );

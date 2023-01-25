@@ -115,11 +115,10 @@ export const useTimelineStore = defineStore("timeline", () => {
       }
   );
   const hoveringEventPaths = computed(() => appState.value?.hoveringPath);
-  // const editEventDateRange = editorOrchestrator.editEventDateRange;
+  const editEventDateRange = markwhenStore.editEventDateRange;
   const setHoveringEvent = markwhenStore.setHoveringPath;
   const clearHoveringEvent = () => markwhenStore.setHoveringPath();
   const setText = markwhenStore.setText;
-  // const editable = computed(() => editorOrchestrator.editable);
   const showInEditor = markwhenStore.showInEditor;
   const createEventFromRange = markwhenStore.createEventFromRange;
   const isDetailEventPath = markwhenStore.isDetailEventPath;
@@ -473,7 +472,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     setText,
     setHoveringEvent,
     clearHoveringEvent,
-    editEventDateRange: (...args: any) => {},
+    editEventDateRange,
     setViewport,
     setViewportGetter,
     setPageScale,
