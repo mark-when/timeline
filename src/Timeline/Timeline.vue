@@ -22,8 +22,39 @@ import DebugView from "./DebugView.vue";
 import { ranges } from "@/utilities/ranges";
 import { useNodePosition } from "./Events/composables/useNodePosition";
 import { useEventFinder } from "@/utilities/useEventFinder";
+import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 
 const timelineStore = useTimelineStore();
+const markwhenStore = useMarkwhenStore();
+
+markwhenStore.onJumpToRange = (range) => {
+  scrollToDateRangeImmediate(toDateRange(range));
+};
+
+markwhenStore.onJumpToPath = (path) => {
+  const node = useEventFinder(path).value;
+  if (!node) {
+    return;
+  }
+
+  const range = isEventNode(node)
+    ? eventValue(node).dateRangeIso
+    : ranges(node, recurrenceLimit);
+
+  if (!range) {
+    return;
+  }
+
+  scrollToDateRangeImmediate(
+    "fromDateTimeIso" in range ? toDateRange(range) : range
+  );
+  if (timelineElement.value && path) {
+    const nodeTop = (timelineElement.value.scrollTop = useNodePosition(
+      path.path
+    ).top.value);
+    timelineElement.value.scrollTop = nodeTop - viewport.value.height / 2;
+  }
+};
 
 const timelineElement = ref<HTMLDivElement>();
 
@@ -180,38 +211,6 @@ const scrollToDateRange = (dateRange?: DateRange) => {
     scrollToDate(dateMidpoint(dateRange), true);
   }
 };
-
-watch(
-  () => timelineStore.scrollToPath,
-  (path) => {
-    if (!timelineStore.shouldZoomWhenScrolling) {
-      return;
-    }
-
-    const node = useEventFinder(path).value;
-    if (!node) {
-      return;
-    }
-
-    const range = isEventNode(node)
-      ? eventValue(node).dateRangeIso
-      : ranges(node, recurrenceLimit);
-
-    if (!range) {
-      return;
-    }
-
-    scrollToDateRangeImmediate(
-      "fromDateTimeIso" in range ? toDateRange(range) : range
-    );
-    if (timelineElement.value && path?.pageFiltered?.path) {
-      const nodeTop = (timelineElement.value.scrollTop = useNodePosition(
-        path.pageFiltered.path
-      ).top.value);
-      timelineElement.value.scrollTop = nodeTop - viewport.value.height / 2;
-    }
-  }
-);
 
 watch(
   () => timelineStore.jumpToRange,

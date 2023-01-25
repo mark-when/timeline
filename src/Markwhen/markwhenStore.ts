@@ -14,10 +14,19 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   const app = ref<AppState>();
   const markwhen = ref<MarkwhenState>();
 
+  const onJumpToPath = ref((path: EventPath) => {});
+  const onJumpToRange = ref((range: DateRangeIso) => {});
+
   const { postRequest } = useLpc({
     state: (s) => {
       app.value = produce(app.value, () => s.app);
       markwhen.value = produce(markwhen.value, () => s.markwhen);
+    },
+    jumpToPath: ({ path }) => {
+      onJumpToPath.value?.(path);
+    },
+    jumpToRange: ({ dateRangeIso }) => {
+      onJumpToRange.value?.(dateRangeIso);
     },
   });
 
@@ -69,6 +78,9 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   return {
     app,
     markwhen,
+
+    onJumpToPath,
+    onJumpToRange,
 
     requestStateUpdate,
     setHoveringPath,

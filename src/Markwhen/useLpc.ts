@@ -51,10 +51,27 @@ interface MessageTypes {
     scale: DisplayScale;
     preferredInterpolationFormat: DateFormat | undefined;
   };
+  jumpToPath: {
+    path: EventPath;
+  };
+  jumpToRange: {
+    dateRangeIso: DateRangeIso;
+  };
 }
 
-type MessageType = keyof MessageTypes;
-type MessageParam<T extends keyof MessageTypes> = MessageTypes[T];
+interface TimelineSpecificMessages {
+  toggleMiniMap: void;
+  toggleNowLine: void;
+  zoom: {
+    level: number;
+  };
+  autoCenter: void;
+}
+
+type PossibleMessages = MessageTypes & TimelineSpecificMessages;
+
+type MessageType = keyof PossibleMessages;
+type MessageParam<T extends keyof PossibleMessages> = PossibleMessages[T];
 
 export interface Message<T extends MessageType> {
   type: T;
