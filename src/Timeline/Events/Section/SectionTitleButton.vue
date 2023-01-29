@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { GroupStyle, Path } from "@markwhen/parser/lib/Types";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import DepthIndicator from "./DepthIndicator.vue";
 import UpCaret from "./UpCaret.vue";
 const props = defineProps<{
@@ -20,10 +20,12 @@ const emit = defineEmits<{
 }>();
 
 const styleObject = computed(() => {
-  const obj = {
-    backgroundColor: `rgba(${props.color}, 0.5)`,
-  } as any;
-  return obj;
+  if (props.color) {
+    return {
+      backgroundColor: `rgba(${props.color}, 0.5)`,
+    };
+  }
+  return {};
 });
 
 const click = (e: MouseEvent) => emit("click", e);

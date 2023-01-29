@@ -9,8 +9,10 @@ import SectionHeader from "./SectionHeader.vue";
 import { ranges } from "@/utilities/ranges";
 import { equivalentPaths, type EventPath } from "@/Timeline/paths";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
+import { useCollapseStore } from "@/Timeline/collapseStore";
 
 const timelineStore = useTimelineStore();
+const collapseStore = useCollapseStore();
 const { setHoveringEvent, clearHoveringEvent } = timelineStore;
 const props = defineProps<{
   node: SomeNode;
@@ -26,8 +28,8 @@ const {
 } = timelineStore;
 
 const collapsed = computed({
-  get: () => timelineStore.isCollapsed(props.path),
-  set: (val) => timelineStore.setCollapsed(props.path, val),
+  get: () => collapseStore.isCollapsed(props.path),
+  set: (val) => collapseStore.setCollapsed(props.path, val),
 });
 const hovering = ref(false);
 const hoveringPath = computed(() => timelineStore.hoveringEventPaths);
@@ -54,7 +56,7 @@ const left = computed(() => {
   );
 });
 
-const { color } = useEventColor(props.node);
+const { color } = useEventColor(computed(() => props.node));
 
 const fullWidth = computed(() => {
   if (!props.node || !sectionRange.value) {
@@ -103,7 +105,7 @@ const height = computed(() => 30 + props.numChildren! * 30);
 const styleObject = computed(() => ({
   top: `${top.value}px`,
   transition: `top 200ms cubic-bezier(0.4, 0, 0.2, 1)`,
-  display: timelineStore.isCollapsedChild(props.path) ? "none" : "block",
+  display: collapseStore.isCollapsedChild(props.path) ? "none" : "block",
   ...(groupStyle.value === "section"
     ? {
         left: 0,

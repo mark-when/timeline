@@ -1,3 +1,4 @@
+import { useCollapseStore } from "@/Timeline/collapseStore";
 import type { Path } from "@markwhen/parser/lib/Types";
 import type { MaybeRef } from "@vueuse/core";
 import { computed, unref } from "vue";
@@ -5,11 +6,11 @@ import { useTimelineStore } from "../../timelineStore";
 import { useNodeStore } from "../../useNodeStore";
 
 export const useNodePosition = (path: MaybeRef<Path>) => {
-  const timelineStore = useTimelineStore();
+  const collapseStore = useCollapseStore();
   const nodeStore = useNodeStore();
 
   const collapsedParent = computed(() =>
-    timelineStore.isCollapsedChildOf(unref(path))
+    collapseStore.isCollapsedChildOf(unref(path))
   );
 
   const isCollapsed = computed(() => !!collapsedParent.value);

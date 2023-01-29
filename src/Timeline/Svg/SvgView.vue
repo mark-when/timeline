@@ -6,14 +6,14 @@ import { isEventNode } from "@markwhen/parser/lib/Noder";
 import type { Node, SomeNode } from "@markwhen/parser/lib/Node";
 import { useNodeStore } from "@/Timeline/useNodeStore";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
-import { useTimelineStore } from "@/Timeline/timelineStore";
 import EventRowSvg from "./EventRowSvg.vue";
 import MarkersSvg, { type ShowMarkers } from "./MarkersSvg.vue";
 import { ranges } from "@/utilities/ranges";
 import type { Era } from "./types";
+import { useCollapseStore } from "../collapseStore";
 
 const nodeStore = useNodeStore();
-const timelineStore = useTimelineStore();
+const collapseStore = useCollapseStore();
 
 const dist = (a: DateTime, b: DateTime, diffScale: "hours" = "hours") =>
   b.diff(a).as(diffScale);
@@ -159,7 +159,7 @@ onMounted(() => setWidth());
       <EventRowSvg
         ref="rows"
         :key="path.join(',') + node.value.dateText"
-        v-if="isEventNode(node) && !timelineStore.isCollapsedChild(path)"
+        v-if="isEventNode(node) && !collapseStore.isCollapsedChild(path)"
         v-bind="props(path, node)"
       ></EventRowSvg>
     </template>

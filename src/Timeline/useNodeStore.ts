@@ -7,6 +7,7 @@ import type { Path, Event, Block } from "@markwhen/parser/lib/Types";
 import { defineStore } from "pinia";
 import { computed, reactive, ref, watch, watchEffect } from "vue";
 import { useTimelineStore } from "./timelineStore";
+import { useCollapseStore } from "./collapseStore";
 
 const prevSiblingPath = (path: Path) => {
   if (path[path.length - 1] === 0) {
@@ -69,6 +70,7 @@ export interface PathAndSectionNode extends PathAndNode {
 
 export const useNodeStore = defineStore("nodes", () => {
   const timelineStore = useTimelineStore();
+  const collapseStore = useCollapseStore();
 
   const nodes = computed(() => timelineStore.transformedEvents);
 
@@ -92,7 +94,7 @@ export const useNodeStore = defineStore("nodes", () => {
       return childCount;
     };
 
-    if (timelineStore.isCollapsed(pathJoined) || isEventNode(node)) {
+    if (collapseStore.isCollapsed(pathJoined) || isEventNode(node)) {
       return cache(0);
     }
 
@@ -149,7 +151,7 @@ export const useNodeStore = defineStore("nodes", () => {
     for (const { path, node } of nodeArray.value) {
       const joinedPath = path.join(",");
       if (!isEventNode(node)) {
-        if (timelineStore.isCollapsedChild(path)) {
+        if (collapseStore.isCollapsedChild(path)) {
           continue;
         }
         if (path.length > 0) {

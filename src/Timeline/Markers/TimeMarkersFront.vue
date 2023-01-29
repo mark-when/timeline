@@ -64,14 +64,9 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
   <div class="fixed inset-0 pointer-events-none">
     <div class="flex relative" :style="`margin-left: -${leftMargin}px`">
       <div
-        class="timeMarkerShader w-full h-12 fixed top-0"
+        class="timeMarkerShader w-full h-12 fixed top-0 transition"
         :style="{
           marginLeft: `${leftMargin}px`,
-          background: `linear-gradient(${
-            dark
-              ? 'to bottom, rgb(51, 65, 85), 85%, #38404700'
-              : 'to bottom, #f8fafc, 85%, #ffffff00'
-          })`,
         }"
       ></div>
       <!-- <SquashBars /> -->
@@ -114,7 +109,13 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 <style scoped>
 .timeMarkerShader {
   z-index: -1;
+  background: linear-gradient to bottom, #f8fafc, 85%, #ffffff00;
 }
+
+.dark .timeMarkerShader {
+  background: linear-gradient to bottom, rgb(51, 65, 85), 85%, #38404700;
+}
+
 .timeMarkerTitle {
   margin: 0px 0px 0px -1px;
   padding: 9px 8px 2px 8px;
