@@ -16,6 +16,15 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
 
   const onJumpToPath = ref((path: EventPath) => {});
   const onJumpToRange = ref((range: DateRangeIso) => {});
+  const noop = () => {};
+  const onAutoCenter = ref(noop);
+  const onToggleMiniMap = ref(noop);
+  const onToggleNowLine = ref(noop);
+  const onCollapseAll = ref(noop);
+  const onExpandAll = ref(noop);
+  const onStartZoomingIn = ref(noop);
+  const onStartZoomingOut = ref(noop);
+  const onStopZooming = ref(noop);
 
   const { postRequest } = useLpc({
     state: (s) => {
@@ -27,6 +36,31 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     },
     jumpToRange: ({ dateRangeIso }) => {
       onJumpToRange.value?.(dateRangeIso);
+    },
+    autoCenter: () => {
+      onAutoCenter.value?.();
+    },
+    toggleMiniMap: () => {
+      onToggleMiniMap.value?.();
+    },
+    collapseAll: () => {
+      onCollapseAll.value?.();
+    },
+    expandAll: () => {
+      onExpandAll.value?.();
+    },
+    toggleNowLine: () => {
+      console.log("toggle now line");
+      onToggleNowLine.value?.();
+    },
+    startZoomingIn: () => {
+      onStartZoomingIn.value?.();
+    },
+    startZoomingOut: () => {
+      onStartZoomingOut.value?.();
+    },
+    stopZooming: () => {
+      onStopZooming.value?.();
     },
   });
 
@@ -81,6 +115,14 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
 
     onJumpToPath,
     onJumpToRange,
+    onAutoCenter,
+    onCollapseAll,
+    onExpandAll,
+    onToggleMiniMap,
+    onToggleNowLine,
+    onStartZoomingIn,
+    onStartZoomingOut,
+    onStopZooming,
 
     requestStateUpdate,
     setHoveringPath,

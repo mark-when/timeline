@@ -28,6 +28,16 @@ export interface State {
   markwhen: MarkwhenState;
 }
 
+export interface TimelineSpecificMessages {
+  toggleMiniMap: void;
+  toggleNowLine: void;
+  startZoomingIn: void;
+  startZoomingOut: void;
+  stopZooming: void;
+  autoCenter: void;
+  collapseAll: void;
+  expandAll: void;
+}
 interface MessageTypes {
   state: State;
   setHoveringPath: EventPath;
@@ -59,15 +69,6 @@ interface MessageTypes {
   };
 }
 
-interface TimelineSpecificMessages {
-  toggleMiniMap: void;
-  toggleNowLine: void;
-  zoom: {
-    level: number;
-  };
-  autoCenter: void;
-}
-
 type PossibleMessages = MessageTypes & TimelineSpecificMessages;
 
 type MessageType = keyof PossibleMessages;
@@ -91,7 +92,9 @@ export const getNonce = () => {
 };
 
 type MessageListeners = {
-  [Property in keyof MessageTypes]?: (event: MessageTypes[Property]) => any;
+  [Property in keyof PossibleMessages]?: (
+    event: PossibleMessages[Property]
+  ) => any;
 };
 
 const post = <T extends MessageType>(message: Message<T>) =>
@@ -134,7 +137,6 @@ export const useLpc = (listeners?: MessageListeners) => {
       if (!e.data.id || !e.data.id.startsWith("markwhen")) {
         return;
       }
-
       const data = e.data;
       if (data.response) {
         calls.get(data.id)?.resolve(data);

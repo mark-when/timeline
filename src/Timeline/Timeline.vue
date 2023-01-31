@@ -56,6 +56,8 @@ markwhenStore.onJumpToPath = (path) => {
   }
 };
 
+markwhenStore.onAutoCenter = () => setInitialScrollAndScale();
+
 const timelineElement = ref<HTMLDivElement>();
 
 const getViewport = (): Viewport => {
@@ -212,11 +214,6 @@ const scrollToDateRange = (dateRange?: DateRange) => {
   }
 };
 
-watch(
-  () => timelineStore.jumpToRange,
-  (range) => range && scrollToDateRange(range)
-);
-
 const scrollToNow = () => scrollToDate(DateTime.now(), true);
 watch(
   () => timelineStore.hideNowLine,
@@ -248,12 +245,6 @@ onMounted(() => {
   timelineStore.setViewportGetter(getViewport);
 });
 
-watch(
-  () => timelineStore.autoCenterSemaphore,
-  () => {
-    setInitialScrollAndScale();
-  }
-);
 </script>
 
 <template>

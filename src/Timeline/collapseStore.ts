@@ -101,6 +101,9 @@ export const useCollapseStore = defineStore("collapse", () => {
     });
   };
 
+  markwhenStore.onCollapseAll = collapseAll;
+  markwhenStore.onExpandAll = expandAll;
+
   return {
     collapsed,
     isCollapsed,

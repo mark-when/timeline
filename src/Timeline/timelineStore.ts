@@ -7,7 +7,7 @@ import {
   viewportLeftMarginPixels,
 } from "@/Timeline/utilities/dateTimeUtilities";
 import { usePageEffect } from "./usePageEffect";
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed, watchEffect, watch, nextTick } from "vue";
 import type { DateRangePart, Timeline } from "@markwhen/parser/lib/Types";
 import type { EventPath, EventPaths } from "@/Timeline/paths";
 import { ranges } from "@/utilities/ranges";
@@ -99,6 +99,8 @@ export const useTimelineStore = defineStore("timeline", () => {
     () => markwhenState.value.page.transformed!
   );
   const darkMode = computed(() => !!appState.value?.isDark);
+  const zoomingIn = ref(false);
+  const zoomingOut = ref(false);
 
   const pageRange = computed(
     () =>
@@ -128,8 +130,6 @@ export const useTimelineStore = defineStore("timeline", () => {
   const startedWidthChange = ref(false);
   const hideNowLine = ref(false);
   const scrollToPath = ref<EventPaths>();
-  const showingJumpToRange = ref(false);
-  const jumpToRange = ref<DateRangePart>();
   const shouldZoomWhenScrolling = ref<boolean>(true);
   const mode = ref<TimelineMode>("timeline");
   const ganttSidebarWidth = ref(200);
@@ -158,6 +158,10 @@ export const useTimelineStore = defineStore("timeline", () => {
   // );
 
   const toggleMiniMap = () => (miniMapShowing.value = !miniMapShowing.value);
+  markwhenStore.onToggleMiniMap = toggleMiniMap;
+  markwhenStore.onToggleNowLine = () => {
+    hideNowLine.value = !hideNowLine.value;
+  };
 
   const leftInsetWidth = computed(() =>
     mode.value === "gantt" ? ganttSidebarWidth.value : 0
@@ -291,15 +295,43 @@ export const useTimelineStore = defineStore("timeline", () => {
   const setScrollToPaths = (ep?: EventPaths) => {
     scrollToPath.value = ep;
   };
-  const setShowingJumpToRange = (show: boolean) => {
-    showingJumpToRange.value = show;
-  };
-  const setJumpToRange = (range: DateRangePart) => {
-    jumpToRange.value = range;
-  };
   const setShouldZoomWhenScrolling = (should: boolean) => {
     shouldZoomWhenScrolling.value = should;
   };
+
+  let zoomTimer: number;
+  markwhenStore.onStartZoomingIn = () => {
+    zoomingIn.value = true;
+    zoomingOut.value = false;
+  };
+
+  markwhenStore.onStartZoomingOut = () => {
+    zoomingIn.value = false;
+    zoomingOut.value = true;
+  };
+
+  markwhenStore.onStopZooming = () => {
+    zoomingIn.value = false;
+    zoomingOut.value = false;
+  };
+
+  watchEffect(() => {});
+
+  watch([zoomingIn, zoomingOut], ([zoomIn, zoomOut]) => {
+    if (!zoomIn && !zoomOut) {
+      clearTimeout(zoomTimer);
+      setStartedWidthChange(false);
+    } else {
+      setStartedWidthChange(true);
+      const zoom = () => {
+        nextTick(() => {
+          setPageScale(pageScale.value * (zoomIn ? 1.05 : 0.95));
+        });
+        zoomTimer = setTimeout(zoom, 10) as unknown as number;
+      };
+      zoom();
+    }
+  });
 
   const weights = computed(() => {
     const arbitraryNumber = 2000;
@@ -345,8 +377,6 @@ export const useTimelineStore = defineStore("timeline", () => {
     startedWidthChange,
     hideNowLine,
     scrollToPath,
-    showingJumpToRange,
-    jumpToRange,
     shouldZoomWhenScrolling,
     mode,
     ganttSidebarWidth,
@@ -396,8 +426,6 @@ export const useTimelineStore = defineStore("timeline", () => {
     setStartedWidthChange,
     setHideNowLine,
     setScrollToPaths,
-    setShowingJumpToRange,
-    setJumpToRange,
     setShouldZoomWhenScrolling,
     setMode,
     setGanttSidebarWidth,
