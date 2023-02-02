@@ -315,7 +315,9 @@ export const useTimelineStore = defineStore("timeline", () => {
     zoomingOut.value = false;
   };
 
-  watchEffect(() => {});
+  markwhenStore.onToggleMode = () => {
+    mode.value = mode.value === "gantt" ? "timeline" : "gantt";
+  };
 
   watch([zoomingIn, zoomingOut], ([zoomIn, zoomOut]) => {
     if (!zoomIn && !zoomOut) {

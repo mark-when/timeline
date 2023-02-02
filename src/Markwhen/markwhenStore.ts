@@ -25,6 +25,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   const onStartZoomingIn = ref(noop);
   const onStartZoomingOut = ref(noop);
   const onStopZooming = ref(noop);
+  const onToggleMode = ref(noop);
 
   const { postRequest } = useLpc({
     state: (s) => {
@@ -48,6 +49,10 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     },
     expandAll: () => {
       onExpandAll.value?.();
+    },
+    toggleMode: () => {
+      console.log('toggle mode')
+      onToggleMode.value?.();
     },
     toggleNowLine: () => {
       console.log("toggle now line");
@@ -123,6 +128,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     onStartZoomingIn,
     onStartZoomingOut,
     onStopZooming,
+    onToggleMode,
 
     requestStateUpdate,
     setHoveringPath,
