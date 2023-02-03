@@ -37,7 +37,7 @@ export interface TimelineSpecificMessages {
   autoCenter: void;
   collapseAll: void;
   expandAll: void;
-  toggleMode: void;
+  getSvg: any;
 }
 interface MessageTypes {
   state: State;

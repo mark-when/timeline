@@ -11,11 +11,9 @@ import {
   type TimeMarker,
 } from "./markersStore";
 import { clamp, useTimelineStore } from "../timelineStore";
-import MiniMap from "../MiniMap.vue/MiniMap.vue";
+import Settings from "../Settings/Settings.vue";
 const timelineStore = useTimelineStore();
 const markerStore = useMarkersStore();
-
-const dark = computed(() => !!timelineStore.darkMode);
 
 const leftMargin = viewportLeftMarginPixels;
 
@@ -102,7 +100,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
         </div>
       </div>
     </div>
-    <MiniMap v-if="timelineStore.miniMapShowing" />
+    <Settings />
   </div>
 </template>
 

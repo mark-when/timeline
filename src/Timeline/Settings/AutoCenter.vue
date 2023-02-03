@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { useTimelineStore } from "../timelineStore";
+import SettingsButton from "./SettingsButton.vue";
 
 const { autoCenter } = useTimelineStore();
 </script>
 
 <template>
-  <button
-    @click="autoCenter"
-    class="h-6 flex flex-row items-center rounded hover:bg-zinc-200 transition dark:border-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-100 px-1 text-sm lg:text-base font-bold relative"
-  >
+  <SettingsButton @click="autoCenter" hover-hint-title="Center">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="w-5 h-5"
@@ -26,7 +24,7 @@ const { autoCenter } = useTimelineStore();
       ></path>
       <rect x="9" y="9" width="6" height="6" rx="1" fill="currentColor"></rect>
     </svg>
-  </button>
+  </SettingsButton>
 </template>
 
 <style scoped></style>

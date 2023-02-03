@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { watch, ref, nextTick } from "vue";
 import { MAX_SCALE, MIN_SCALE, useTimelineStore } from "../timelineStore";
+import SettingsButton from "@/Timeline/Settings/SettingsButton.vue";
 
 const timelineStore = useTimelineStore();
 
@@ -93,64 +94,65 @@ const mouseUpIn = (e: MouseEvent | TouchEvent) => {
 </script>
 
 <template>
-  <div class="rounded mx-1 flex items-center justify-center gap-1">
-    <div
-      class=""
-      role="button"
-      @mousedown="mouseDownOut"
-      @touchstart="mouseDownOut"
-      @mouseup="mouseUpOut"
-      @touchend="mouseUpOut"
+  <SettingsButton
+    @mousedown.stop="mouseDownOut"
+    @touchstart.stop="mouseDownOut"
+    @mouseup="mouseUpOut"
+    @touchend="mouseUpOut"
+    @mouseout="mouseUpOut"
+    @mouseleave="mouseUpOut"
+    hover-hint-title="Zoom out"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      class="w-4 h-4"
+      stroke-width="2"
+      stroke="currentColor"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        class="w-4 h-4"
-        stroke-width="2"
-        stroke="currentColor"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M3 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H3.75A.75.75 0 013 10z"
-          clip-rule="evenodd"
-        />
-      </svg>
-    </div>
-    <div
-      class=""
-      role="button"
-      @mousedown="mouseDownIn"
-      @touchstart="mouseDownIn"
-      @mouseup="mouseUpIn"
-      @touchend="mouseUpIn"
+      <path
+        fill-rule="evenodd"
+        d="M3 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H3.75A.75.75 0 013 10z"
+        clip-rule="evenodd"
+      /></svg
+  ></SettingsButton>
+  <SettingsButton
+    @mousedown.stop="mouseDownIn"
+    @touchstart.stop="mouseDownIn"
+    @mouseup="mouseUpIn"
+    @touchend="mouseUpIn"
+    @mouseout="mouseUpIn"
+    @mouseleave="mouseUpIn"
+    hover-hint-title="Zoom in"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      class="w-4 h-4"
+      stroke-width="2"
+      stroke="currentColor"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        class="w-4 h-4"
-        stroke-width="2"
-        stroke="currentColor"
-      >
-        <path
-          d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
-        />
-      </svg>
-    </div>
-  </div>
-  <div class="flex-col mr-2 hidden lg:flex items-center justify-center">
+      <path
+        d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
+      /></svg
+  ></SettingsButton>
+  <div
+    class="flex-col hidden lg:flex items-center justify-center flex-shrink px-1"
+  >
     <input
       type="range"
       min="0"
-      max="1000"
+      max="800"
+      style="width: 5rem; height: 1.125rem"
       :value="width"
       @input="changed"
-      class="my-1 bg-transparent"
-      @mousedown="startYearWidthChange"
-      @mouseup="endYearWidthChange"
-      @touchstart="startYearWidthChange"
-      @touchEnd="endYearWidthChange"
+      class="bg-transparent flex-shrink"
+      @mousedown.stop="startYearWidthChange"
+      @mouseup.stop="endYearWidthChange"
+      @touchstart.stop="startYearWidthChange"
+      @touchEnd.stop="endYearWidthChange"
     />
   </div>
 </template>
@@ -179,6 +181,7 @@ input[type="range"]::-moz-range-track {
   background: currentColor;
   transition: 150ms all;
   height: 5px;
+  border-radius: 5px;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -197,5 +200,6 @@ input[type="range"]::-moz-range-thumb {
   margin-top: -5px;
   border-radius: 50%;
   box-shadow: 0px 1px 6px 0px #00000063;
+  border: none;
 }
 </style>

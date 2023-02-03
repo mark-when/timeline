@@ -56,7 +56,12 @@ markwhenStore.onJumpToPath = (path) => {
   }
 };
 
-markwhenStore.onAutoCenter = () => setInitialScrollAndScale();
+watch(
+  () => timelineStore.autoCenterSemaphore,
+  () => {
+    setInitialScrollAndScale();
+  }
+);
 
 const timelineElement = ref<HTMLDivElement>();
 
@@ -244,7 +249,6 @@ onMounted(() => {
   setInitialScrollAndScale();
   timelineStore.setViewportGetter(getViewport);
 });
-
 </script>
 
 <template>

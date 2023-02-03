@@ -158,10 +158,6 @@ export const useTimelineStore = defineStore("timeline", () => {
   // );
 
   const toggleMiniMap = () => (miniMapShowing.value = !miniMapShowing.value);
-  markwhenStore.onToggleMiniMap = toggleMiniMap;
-  markwhenStore.onToggleNowLine = () => {
-    hideNowLine.value = !hideNowLine.value;
-  };
 
   const leftInsetWidth = computed(() =>
     mode.value === "gantt" ? ganttSidebarWidth.value : 0
@@ -298,42 +294,6 @@ export const useTimelineStore = defineStore("timeline", () => {
   const setShouldZoomWhenScrolling = (should: boolean) => {
     shouldZoomWhenScrolling.value = should;
   };
-
-  let zoomTimer: number;
-  markwhenStore.onStartZoomingIn = () => {
-    zoomingIn.value = true;
-    zoomingOut.value = false;
-  };
-
-  markwhenStore.onStartZoomingOut = () => {
-    zoomingIn.value = false;
-    zoomingOut.value = true;
-  };
-
-  markwhenStore.onStopZooming = () => {
-    zoomingIn.value = false;
-    zoomingOut.value = false;
-  };
-
-  markwhenStore.onToggleMode = () => {
-    mode.value = mode.value === "gantt" ? "timeline" : "gantt";
-  };
-
-  watch([zoomingIn, zoomingOut], ([zoomIn, zoomOut]) => {
-    if (!zoomIn && !zoomOut) {
-      clearTimeout(zoomTimer);
-      setStartedWidthChange(false);
-    } else {
-      setStartedWidthChange(true);
-      const zoom = () => {
-        nextTick(() => {
-          setPageScale(pageScale.value * (zoomIn ? 1.05 : 0.95));
-        });
-        zoomTimer = setTimeout(zoom, 10) as unknown as number;
-      };
-      zoom();
-    }
-  });
 
   const weights = computed(() => {
     const arbitraryNumber = 2000;

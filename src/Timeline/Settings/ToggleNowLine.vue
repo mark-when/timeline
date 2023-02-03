@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useTimelineStore } from "../timelineStore";
+import SettingsButton from "./SettingsButton.vue";
 
 const timelineStore = useTimelineStore();
 
@@ -9,9 +10,9 @@ const toggleHideNowLine = () => {
 </script>
 
 <template>
-  <button
-    class="h-6 flex flex-row items-center rounded hover:bg-zinc-200 transition dark:border-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-100 px-1 text-sm lg:text-base font-bold"
+  <SettingsButton
     title="Toggle now line"
+    hoverHintTitle="Toggle now line"
     @click="toggleHideNowLine"
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 17 12" class="h-5 w-5">
@@ -21,7 +22,7 @@ const toggleHideNowLine = () => {
       />
       <path d="M 9 1 L 9 15 L 11 15 L 11 1 L 11 1 Z" fill="currentColor"></path>
     </svg>
-  </button>
+  </SettingsButton>
 </template>
 
 <style scoped></style>
