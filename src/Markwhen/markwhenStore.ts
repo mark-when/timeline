@@ -16,7 +16,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
 
   const onJumpToPath = ref((path: EventPath) => {});
   const onJumpToRange = ref((range: DateRangeIso) => {});
-  const onGetSvg = ref((params: any) => {});
+  const onGetSvg = ref((params: any): any => {});
 
   const { postRequest } = useLpc({
     state: (s) => {
@@ -29,9 +29,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     jumpToRange: ({ dateRangeIso }) => {
       onJumpToRange.value?.(dateRangeIso);
     },
-    getSvg: (params: any) => {
-      onGetSvg.value?.(params);
-    },
+    getSvg: (params: any) => onGetSvg.value?.(params),
   });
 
   const setHoveringPath = (path?: EventPath) => {
@@ -85,6 +83,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
 
     onJumpToPath,
     onJumpToRange,
+    onGetSvg,
 
     requestStateUpdate,
     setHoveringPath,

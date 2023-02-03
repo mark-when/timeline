@@ -130,6 +130,7 @@ onMounted(() => setWidth());
     }`"
     fill="currentColor"
     preserveAspectRatio="xMinYMin meet"
+    class="w-full h-full"
   >
     <svg:style>
       .svgDateText {

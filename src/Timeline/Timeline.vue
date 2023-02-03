@@ -23,6 +23,7 @@ import { ranges } from "@/utilities/ranges";
 import { useNodePosition } from "./Events/composables/useNodePosition";
 import { useEventFinder } from "@/utilities/useEventFinder";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
+import SvgView from "./Svg/SvgView.vue";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -249,6 +250,45 @@ onMounted(() => {
   setInitialScrollAndScale();
   timelineStore.setViewportGetter(getViewport);
 });
+
+const svgParams = ref();
+const svgHolder = ref<HTMLDivElement>();
+const svgView = ref<typeof SvgView>();
+
+const totalWidth = computed(() => {
+  const range = ranges(timelineStore.pageTimeline.events, recurrenceLimit) || {
+    fromDateTime: DateTime.now(),
+    toDateTime: DateTime.now(),
+  };
+  return timelineStore.scalelessDistanceBetweenDates(
+    range.fromDateTime,
+    range.toDateTime
+  );
+});
+
+markwhenStore.onGetSvg = (params) => {
+  svgParams.value = params;
+  return new Promise((resolve, reject) => {
+    // Set timeout seems to work better than nextTick (or nested nextTicks)
+    setTimeout(() => {
+      if (svgHolder.value?.firstChild) {
+        const svgWidth = svgView.value!.getRightmostX();
+        const svgHeight = totalWidth.value;
+        const ratio = svgWidth / svgHeight;
+
+        const data = new XMLSerializer().serializeToString(
+          svgHolder.value.firstChild
+        );
+
+        resolve({
+          svg: data,
+          ratio,
+        });
+      }
+      resolve(null);
+    }, 500);
+  });
+};
 </script>
 
 <template>
@@ -267,6 +307,9 @@ onMounted(() => {
       <Events />
       <TimeMarkersFront />
       <DebugView v-if="false" />
+      <div ref="svgHolder" style="width: 0; height: 0">
+        <SvgView v-if="svgParams" v-bind="svgParams" ref="svgView"></SvgView>
+      </div>
     </div>
   </div>
 </template>
