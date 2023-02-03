@@ -35,8 +35,8 @@ const currentWidth = computed(() => {
             class="pointer-events-auto sticky right-0 inline-flex items-center justify-center transition bg-slate-50 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-gray-600 top-0 bottom-0 z-[5]"
             style="cursor: ew-resize"
             :style="`height: ${timelineStore.pageSettings.viewport.height}px; left: ${currentWidth}px`"
-            @mousedown.prevent="resizeMouseDown"
-            @touchstart.prevent="resizeMouseDown"
+            @mousedown.prevent.stop="resizeMouseDown"
+            @touchstart.prevent.stop="resizeMouseDown"
           >
             <svg
               class="w-3 h-3"
