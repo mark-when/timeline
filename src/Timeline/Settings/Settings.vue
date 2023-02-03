@@ -31,7 +31,7 @@ const styleLeftInset = computed(() => {
     :style="`left: calc(${styleLeftInset}px + 1rem); bottom: 1rem;`"
   >
     <div
-      class="flex flex row overflow-visible p-[2px] pointer-events-auto dark:bg-slate-800 bg-slate-100 shadow rounded"
+      class="flex flex row overflow-visible p-[2px] pointer-events-auto dark:bg-slate-800 bg-white shadow rounded"
       style="grid-area: gantt"
     >
       <ToggleMode></ToggleMode>
@@ -42,13 +42,13 @@ const styleLeftInset = computed(() => {
       v-if="timelineStore.miniMapShowing"
     >
       <div
-        class="p-2 pointer-events-auto dark:bg-slate-800 bg-slate-100 shadow rounded"
+        class="p-2 pointer-events-auto dark:bg-slate-800 bg-white shadow rounded"
       >
         <Minimap />
       </div>
     </div>
     <div
-      class="flex flex row overflow-visible p-[2px] pointer-events-auto dark:bg-slate-800 bg-slate-100 shadow rounded"
+      class="flex flex row overflow-visible p-[2px] pointer-events-auto dark:bg-slate-800 bg-white shadow rounded"
       style="grid-area: view"
     >
       <ToggleMiniMap></ToggleMiniMap>
@@ -57,7 +57,7 @@ const styleLeftInset = computed(() => {
     </div>
     <!-- </div> -->
     <div
-      class="dark:bg-slate-800 bg-slate-100 shadow rounded overflow-visible p-[2px] pointer-events-auto flex flex-row"
+      class="dark:bg-slate-800 bg-white shadow rounded overflow-visible p-[2px] pointer-events-auto flex flex-row"
       style="grid-area: collapse"
     >
       <ExpandAll></ExpandAll>

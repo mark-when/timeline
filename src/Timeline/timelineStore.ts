@@ -129,17 +129,19 @@ export const useTimelineStore = defineStore("timeline", () => {
   const hideNowLine = ref(false);
   const scrollToPath = ref<EventPaths>();
   const shouldZoomWhenScrolling = ref<boolean>(true);
-  const mode = ref<TimelineMode>(localStorage.getItem('preferredMode') as TimelineMode || "timeline");
+  const mode = ref<TimelineMode>(
+    (localStorage.getItem("preferredMode") as TimelineMode) || "timeline"
+  );
   const ganttSidebarWidth = ref(200);
   const ganttSidebarTempWidth = ref(0);
   const autoCenterSemaphore = ref(0);
   const miniMapShowing = ref(false);
 
-  watch(mode, m => {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('preferredMode', m)
+  watch(mode, (m) => {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("preferredMode", m);
     }
-  })
+  });
 
   const autoCenter = () => {
     autoCenterSemaphore.value++;
@@ -164,7 +166,11 @@ export const useTimelineStore = defineStore("timeline", () => {
   const toggleMiniMap = () => (miniMapShowing.value = !miniMapShowing.value);
 
   const leftInsetWidth = computed(() =>
-    mode.value === "gantt" ? ganttSidebarWidth.value : 0
+    mode.value === "gantt"
+      ? ganttSidebarTempWidth.value
+        ? ganttSidebarTempWidth.value
+        : ganttSidebarWidth.value
+      : 0
   );
 
   const setGanttSidebarTempWidth = (width: number) => {
