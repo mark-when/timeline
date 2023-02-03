@@ -99,8 +99,6 @@ export const useTimelineStore = defineStore("timeline", () => {
     () => markwhenState.value.page.transformed!
   );
   const darkMode = computed(() => !!appState.value?.isDark);
-  const zoomingIn = ref(false);
-  const zoomingOut = ref(false);
 
   const pageRange = computed(
     () =>
@@ -131,11 +129,17 @@ export const useTimelineStore = defineStore("timeline", () => {
   const hideNowLine = ref(false);
   const scrollToPath = ref<EventPaths>();
   const shouldZoomWhenScrolling = ref<boolean>(true);
-  const mode = ref<TimelineMode>("timeline");
+  const mode = ref<TimelineMode>(localStorage.getItem('preferredMode') as TimelineMode || "timeline");
   const ganttSidebarWidth = ref(200);
   const ganttSidebarTempWidth = ref(0);
   const autoCenterSemaphore = ref(0);
   const miniMapShowing = ref(false);
+
+  watch(mode, m => {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('preferredMode', m)
+    }
+  })
 
   const autoCenter = () => {
     autoCenterSemaphore.value++;
