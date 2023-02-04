@@ -1,12 +1,14 @@
+import { useCanPanStore } from "@/Timeline/composables/canPan";
 import { useMarkersStore } from "@/Timeline/Markers/markersStore";
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import type { OffsetRange } from "@/Timeline/utilities/dateTimeUtilities";
 import { toDateRangeIso, type DateFormat } from "@markwhen/parser/lib/Types";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 export const useCreateEvent = () => {
   const timelineStore = useTimelineStore();
   const markersStore = useMarkersStore();
+  const canPan = useCanPanStore();
 
   const startEventCreationRange = ref<OffsetRange>();
   const creatingEventRange = ref<OffsetRange>();
@@ -86,6 +88,9 @@ export const useCreateEvent = () => {
   );
 
   const creating = computed(() => !!startEventCreationRange.value);
+  watch(creating, (c) => {
+    canPan.canPan = !c;
+  });
 
   return { mouseDownTouchStartListener, newEventPosition, creating };
 };

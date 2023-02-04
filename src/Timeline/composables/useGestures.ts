@@ -4,6 +4,7 @@ import { computed, onMounted, onUnmounted, ref, watch, type Ref } from "vue";
 // @ts-ignore
 import Hammer from "@squadette/hammerjs";
 import { useThrottleFn } from "@vueuse/core";
+import { useCanPanStore } from "./canPan";
 
 export const useGestures = (
   el: Ref<HTMLElement | undefined>,
@@ -24,6 +25,7 @@ export const useGestures = (
   let panStartY: number | undefined = undefined;
   let panStartScrollLeft: number | undefined = undefined;
   let panStartScrollTop: number | undefined = undefined;
+  const canPan = useCanPanStore();
   const isPanning = computed(() => panStartX.value !== undefined);
 
   let mc: Hammer.Manager;
@@ -131,10 +133,7 @@ export const useGestures = (
   };
 
   const panStart = (e: any) => {
-    if (
-      !(e.srcEvent.target instanceof HTMLButtonElement) &&
-      typeof panStartX.value === "undefined"
-    ) {
+    if (canPan.canPan && typeof panStartX.value === "undefined") {
       e.preventDefault();
       panStartScrollLeft = el.value!.scrollLeft;
       panStartScrollTop = el.value!.scrollTop;
@@ -144,7 +143,7 @@ export const useGestures = (
   };
 
   const pan = (e: any) => {
-    if (!panStartX.value || e.isFinal) {
+    if (!canPan.canPan || !panStartX.value || e.isFinal) {
       return;
     }
     el.value!.scrollLeft =

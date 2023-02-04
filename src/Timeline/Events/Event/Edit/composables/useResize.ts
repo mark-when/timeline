@@ -9,12 +9,14 @@ import type { DateTimeIso } from "@markwhen/parser/lib/Types";
 import type { MaybeRef } from "@vueuse/core";
 import { DateTime } from "luxon";
 import { computed, ref, unref } from "vue";
+import { useCanPanStore } from "@/Timeline/composables/canPan";
 
 export const useResize = (
   rangeFrom: MaybeRef<DateTimeIso>,
   rangeTo: MaybeRef<DateTimeIso>,
   done?: (tempFrom: DateTime | undefined, tempTo: DateTime | undefined) => void
 ) => {
+  const canPan = useCanPanStore();
   const tempFromIso = ref<string>();
   const tempFrom = computed<DateTime | undefined>(() => {
     if (!!tempFromIso.value) return DateTime.fromISO(tempFromIso.value);
@@ -47,6 +49,7 @@ export const useResize = (
   };
 
   const delayedStop = () => {
+    canPan.canPan = true;
     removeListeners();
     setTimeout(() => {
       tempFromIso.value = undefined;
@@ -55,6 +58,7 @@ export const useResize = (
   };
 
   const stop = () => {
+    canPan.canPan = true;
     tempFromIso.value = undefined;
     tempToIso.value = undefined;
 
@@ -115,6 +119,7 @@ export const useResize = (
   };
 
   const dragHandleListenerLeft = (e: MouseEvent | TouchEvent) => {
+    canPan.canPan = false;
     document.addEventListener("mousemove", moveListenerLeft);
     document.addEventListener("mouseup", upListener);
     document.addEventListener("touchmove", moveListenerLeft);
@@ -123,6 +128,7 @@ export const useResize = (
   };
 
   const dragHandleListenerRight = (e: MouseEvent | TouchEvent) => {
+    canPan.canPan = false;
     document.addEventListener("mousemove", moveListenerRight);
     document.addEventListener("mouseup", upListener);
     document.addEventListener("touchmove", moveListenerRight);
@@ -131,6 +137,7 @@ export const useResize = (
   };
 
   const moveListener = (e: MouseEvent | TouchEvent) => {
+    canPan.canPan = false;
     let x;
     if (typeof TouchEvent !== "undefined" && e instanceof TouchEvent) {
       x = e.touches[0].clientX;
@@ -158,6 +165,7 @@ export const useResize = (
   };
 
   const moveHandleListener = (e: MouseEvent | TouchEvent) => {
+    canPan.canPan = false;
     tempFromIso.value = unref(rangeFrom);
     tempToIso.value = unref(rangeTo);
     diff.value = tempTo.value?.diff(tempFrom.value!).as(diffScale);

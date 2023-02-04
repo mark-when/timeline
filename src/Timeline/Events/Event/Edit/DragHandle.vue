@@ -10,7 +10,7 @@ const styleObj = computed(() => ({ left: `${props.left}px` }));
 </script>
 
 <template>
-  <div
+  <button
     class="absolute flex items-center justify-center cursor-ew-resize touch-none top-0 bottom-0 z-[4]"
     :style="styleObj"
     @touchstart.passive="mouseDownTouchStartListener"
@@ -24,7 +24,7 @@ const styleObj = computed(() => ({ left: `${props.left}px` }));
         class="w-2 h-2 rounded-full border border-white dark:border-gray-300 bg-gray-600 dark:bg-gray-900 shadow"
       ></div>
     </div>
-  </div>
+  </button>
 </template>
 
 <style scoped></style>

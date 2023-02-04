@@ -1,5 +1,6 @@
 import type { MaybeRef } from "@vueuse/shared";
-import { ref, unref } from "vue";
+import { computed, ref, unref, watch } from "vue";
+import { useCanPanStore } from "./canPan";
 
 export const usePanelResize = (
   isLeft: MaybeRef<boolean>,
@@ -67,8 +68,14 @@ export const usePanelResize = (
     document.addEventListener("keydown", escapeListener);
   };
 
+  const isResizing = computed(() => resizeXStarted.value);
+  watch(isResizing, (r) => {
+    useCanPanStore().canPan = !r;
+  });
+
   return {
     tempWidth,
     resizeMouseDown,
+    isResizing,
   };
 };
