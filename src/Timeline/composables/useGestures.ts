@@ -1,8 +1,9 @@
 import { zoomer, type WheelGesture } from "../utilities/zoomer";
 import { MAX_SCALE, useTimelineStore } from "../../Timeline/timelineStore";
-import { onMounted, onUnmounted, ref, watch, type Ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch, type Ref } from "vue";
 // @ts-ignore
 import Hammer from "@squadette/hammerjs";
+import { useThrottleFn } from "@vueuse/core";
 
 export const useGestures = (
   el: Ref<HTMLElement | undefined>,
@@ -13,10 +14,17 @@ export const useGestures = (
   let endGesture = () => {};
   const isZooming = ref(false);
   let startingZoom: number | null = null;
+
   let pinchStartScrollTop: number | null,
     pinchStartScrollLeft: number | null,
     pinchStartCenterX: number | null,
     pinchStartCenterY: number | null;
+
+  let panStartX: null | undefined = undefined;
+  let panStartY: null | undefined = undefined;
+  let panStartScrollLeft: undefined | number = undefined;
+  let panStartScrollTop: undefined | number = undefined;
+  const isPanning = computed(() => typeof panStart !== "undefined");
 
   let mc: Hammer.Manager;
 
@@ -122,16 +130,49 @@ export const useGestures = (
     }
   };
 
+  const panStart = (e: any) => {
+    e.preventDefault();
+    if (typeof panStartX === "undefined") {
+      panStartScrollLeft = el.value!.scrollLeft;
+      panStartScrollTop = el.value!.scrollTop;
+      panStartX = e.srcEvent.clientX;
+      panStartY = e.srcEvent.clientY;
+    }
+  };
+
+  const pan = (e: any) => {
+    if (!panStartX) {
+      return;
+    }
+    el.value!.scrollLeft =
+      panStartScrollLeft! + panStartX! - e.srcEvent.clientX;
+    el.value!.scrollTop = panStartScrollTop! + panStartY! - e.srcEvent.clientY;
+  };
+
+  const panEnd = (e: any) => {
+    panStartX = undefined;
+    panStartY = undefined;
+    panStartScrollLeft = undefined;
+    panStartScrollTop = undefined;
+  };
+
   const setupHammer = () => {
     mc = new Hammer.Manager(el.value, {
       recognizers: [
-        [Hammer.Pinch, { enable: false, touchAction: 'none' }]
-      ]
+        [Hammer.Pinch, { enable: true, touchAction: "pan-x pan-y" }],
+        [Hammer.Pan, { enable: true }],
+      ],
     });
-    mc.on("pinch", pinch);
+    mc.on(
+      "pinch",
+      useThrottleFn((e) => pinch(e), 40, false, true)
+    );
     mc.on("pinchend", pinchEnd);
-    el.value?.addEventListener("touchstart", touchStart);
-    el.value?.addEventListener("touchend", touchEnd, { passive: true });
+    mc.on("panstart", panStart);
+    mc.on("pan", pan);
+    mc.on("panend", panEnd);
+    // el.value?.addEventListener("touchstart", touchStart);
+    // el.value?.addEventListener("touchend", touchEnd, { passive: true });
   };
 
   onMounted(() => {
@@ -144,5 +185,5 @@ export const useGestures = (
     el.value?.removeEventListener("touchend", touchEnd);
   });
 
-  return isZooming;
+  return { isZooming, isPanning };
 };
