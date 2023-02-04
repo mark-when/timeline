@@ -20,11 +20,11 @@ export const useGestures = (
     pinchStartCenterX: number | null,
     pinchStartCenterY: number | null;
 
-  let panStartX: null | undefined = undefined;
-  let panStartY: null | undefined = undefined;
-  let panStartScrollLeft: undefined | number = undefined;
-  let panStartScrollTop: undefined | number = undefined;
-  const isPanning = computed(() => typeof panStart !== "undefined");
+  let panStartX = ref<number | undefined>();
+  let panStartY: number | undefined = undefined;
+  let panStartScrollLeft: number | undefined = undefined;
+  let panStartScrollTop: number | undefined = undefined;
+  const isPanning = computed(() => panStartX.value !== undefined);
 
   let mc: Hammer.Manager;
 
@@ -133,12 +133,12 @@ export const useGestures = (
   const panStart = (e: any) => {
     if (
       !(e.srcEvent.target instanceof HTMLButtonElement) &&
-      typeof panStartX === "undefined"
+      typeof panStartX.value === "undefined"
     ) {
       e.preventDefault();
       panStartScrollLeft = el.value!.scrollLeft;
       panStartScrollTop = el.value!.scrollTop;
-      panStartX = e.srcEvent.clientX;
+      panStartX.value = e.srcEvent.clientX;
       panStartY = e.srcEvent.clientY;
     }
   };
@@ -148,12 +148,12 @@ export const useGestures = (
       return;
     }
     el.value!.scrollLeft =
-      panStartScrollLeft! + panStartX! - e.srcEvent.clientX;
+      panStartScrollLeft! + panStartX.value! - e.srcEvent.clientX;
     el.value!.scrollTop = panStartScrollTop! + panStartY! - e.srcEvent.clientY;
   };
 
   const panEnd = (e: any) => {
-    panStartX = undefined;
+    panStartX.value = undefined;
     panStartY = undefined;
     panStartScrollLeft = undefined;
     panStartScrollTop = undefined;

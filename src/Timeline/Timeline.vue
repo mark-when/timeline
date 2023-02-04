@@ -11,7 +11,6 @@ import TimeMarkersFront from "@/Timeline/Markers/TimeMarkersFront.vue";
 import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
-import { usePanning } from "./composables/usePanning";
 import { DateTime } from "luxon";
 import { useResizeObserver } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser/lib/Types";
@@ -156,8 +155,7 @@ const scroll = () => {
   setViewportDateInterval();
   trigger();
 };
-const { isPanning } = usePanning(timelineElement);
-useGestures(timelineElement, () => {
+const { isPanning } = useGestures(timelineElement, () => {
   setViewportDateInterval();
 });
 
