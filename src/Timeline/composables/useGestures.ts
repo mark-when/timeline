@@ -19,15 +19,6 @@ export const useGestures = (
     pinchStartCenterY: number | null;
 
   let mc: Hammer.Manager;
-  const setupHammer = () => {
-    el.value?.addEventListener("touchstart", touchStart);
-    el.value?.addEventListener("touchend", touchEnd, { passive: true });
-
-    mc = new Hammer.Manager(el.value);
-    mc.add(new Hammer.Pinch({ touchAction: "none" }));
-    mc.on("pinch", pinch);
-    mc.on("pinchend", pinchEnd);
-  };
 
   const pinch = (e: any) => {
     e.preventDefault();
@@ -118,17 +109,12 @@ export const useGestures = (
     doGesture,
   };
 
-  const touchListener = (e: TouchEvent) => {
-    if (!mc) {
-      setupHammer();
-      el.value?.removeEventListener("touchstart", touchListener);
-    }
-  };
-
   const touchStart = (e: TouchEvent) => {
     if (e.touches.length >= 2) {
       mc.get("pinch").set({ enable: true });
       e.preventDefault();
+    } else {
+      mc.get("pinch").set({ enable: false });
     }
   };
 
@@ -138,13 +124,26 @@ export const useGestures = (
     }
   };
 
+  const setupHammer = () => {
+    mc = new Hammer.Manager(el.value, {
+      recognizers: [
+        [Hammer.Pinch, { enable: false, touchAction: 'none' }]
+      ]
+    });
+    mc.on("pinch", pinch);
+    mc.on("pinchend", pinchEnd);
+    el.value?.addEventListener("touchstart", touchStart);
+    el.value?.addEventListener("touchend", touchEnd, { passive: true });
+  };
+
   onMounted(() => {
     endGesture = zoomer(el.value!, gestures);
-    el.value?.addEventListener("touchstart", touchListener, { passive: true });
+    setupHammer();
   });
 
   onUnmounted(() => {
-    el.value?.removeEventListener("touchstart", touchListener);
+    el.value?.removeEventListener("touchstart", touchStart);
+    el.value?.removeEventListener("touchend", touchEnd);
   });
 
   return isZooming;
