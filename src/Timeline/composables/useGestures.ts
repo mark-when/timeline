@@ -113,8 +113,6 @@ export const useGestures = (
     if (e.touches.length >= 2) {
       mc.get("pinch").set({ enable: true });
       e.preventDefault();
-    } else {
-      mc.get("pinch").set({ enable: false });
     }
   };
 
