@@ -144,7 +144,7 @@ export const useGestures = (
   };
 
   const pan = (e: any) => {
-    if (!panStartX || e.isFinal) {
+    if (!panStartX.value || e.isFinal) {
       return;
     }
     el.value!.scrollLeft =
