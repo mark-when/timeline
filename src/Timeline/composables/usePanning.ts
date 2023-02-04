@@ -36,9 +36,7 @@ export const usePanning = (el: Ref<HTMLElement | undefined>) => {
     window.addEventListener("mouseup", endPanning);
   };
 
-  onMounted(() =>
-    el.value ? el.value.addEventListener("mousedown", panStart) : {}
-  );
+  onMounted(() => el.value?.addEventListener("mousedown", panStart));
 
   onUnmounted(() => el.value?.removeEventListener("mousedown", panStart));
 

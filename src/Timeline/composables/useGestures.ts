@@ -131,8 +131,11 @@ export const useGestures = (
   };
 
   const panStart = (e: any) => {
-    e.preventDefault();
-    if (typeof panStartX === "undefined") {
+    if (
+      !(e.srcEvent.target instanceof HTMLButtonElement) &&
+      typeof panStartX === "undefined"
+    ) {
+      e.preventDefault();
       panStartScrollLeft = el.value!.scrollLeft;
       panStartScrollTop = el.value!.scrollTop;
       panStartX = e.srcEvent.clientX;
@@ -141,7 +144,7 @@ export const useGestures = (
   };
 
   const pan = (e: any) => {
-    if (!panStartX) {
+    if (!panStartX || e.isFinal) {
       return;
     }
     el.value!.scrollLeft =
@@ -171,8 +174,6 @@ export const useGestures = (
     mc.on("panstart", panStart);
     mc.on("pan", pan);
     mc.on("panend", panEnd);
-    // el.value?.addEventListener("touchstart", touchStart);
-    // el.value?.addEventListener("touchend", touchEnd, { passive: true });
   };
 
   onMounted(() => {
