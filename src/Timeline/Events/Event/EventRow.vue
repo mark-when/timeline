@@ -358,7 +358,7 @@ const ganttTitleStyle = computed(() => {
     @mouseleave.passive="elementHover = false"
   >
     <div class="flex h-full">
-      <div class="sticky left-0 bg-slate-50 dark:bg-slate-700 z-10 h-full">
+      <div class="sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 h-full">
         <div
           class="h-full border"
           :class="{

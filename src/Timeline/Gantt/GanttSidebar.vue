@@ -32,7 +32,7 @@ const currentWidth = computed(() => {
       >
         <div class="h-full w-full">
           <div
-            class="pointer-events-auto sticky right-0 inline-flex items-center justify-center transition bg-slate-50 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-gray-600 top-0 bottom-0 z-[5]"
+            class="pointer-events-auto sticky right-0 inline-flex items-center justify-center hover:transition bg-slate-50 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-gray-600 top-0 bottom-0 z-[5]"
             style="cursor: ew-resize"
             :style="`height: ${timelineStore.pageSettings.viewport.height}px; left: ${currentWidth}px`"
             @mousedown.prevent.stop="resizeMouseDown"

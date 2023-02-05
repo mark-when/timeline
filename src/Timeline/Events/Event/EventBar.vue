@@ -119,35 +119,6 @@ const recurrenceTotalWidth = computed(
             :left="width"
             :mouse-down-touch-start-listener="dragHandleListenerRight"
         /></template>
-        <!-- <div
-        :class="{
-          'eventBar transition shadow': true,
-          'dark:bg-slate-400 bg-slate-700 opacity-30': !color,
-        }"
-        :style="barStyleObj"
-      ></div>
-      <div
-        class="absolute top-0 bottom-0 percentBar transition"
-        :class="{
-          'dark:bg-gray-400 bg-slate-700 border border-gray-800 dark:border-gray-300':
-            !color,
-          'opacity-100 shadow-lg': hovering,
-          'opacity-60': !hovering,
-        }"
-        :style="percentBarStyleObj"
-      ></div> -->
-        <!-- <drag-handle
-          class="pointer-events-auto"
-          v-show="editable && hovering"
-          :is-left="true"
-          :mouse-down-touch-start-listener="dragHandleListenerLeft"
-        />
-        <drag-handle
-          class="pointer-events-auto"
-          v-show="editable && hovering"
-          :is-left="false"
-          :mouse-down-touch-start-listener="dragHandleListenerRight"
-        /> -->
       </div>
     </template>
   </div>

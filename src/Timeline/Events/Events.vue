@@ -47,7 +47,7 @@ const currentWidth = computed(() => {
     <now-line />
     <div
       v-if="timelineStore.mode === 'gantt'"
-      class="sticky left-0 relative flex flex-col bg-slate-50 dark:bg-slate-700 top-0 bottom-0 z-[2] h-full"
+      class="sticky left-0 relative flex flex-col bg-slate-50 dark:bg-slate-800 top-0 bottom-0 z-[2] h-full"
       :style="`width: calc(${currentWidth}px);`"
     ></div>
     <template
