@@ -29,14 +29,6 @@ export interface State {
 }
 
 export interface TimelineSpecificMessages {
-  toggleMiniMap: void;
-  toggleNowLine: void;
-  startZoomingIn: void;
-  startZoomingOut: void;
-  stopZooming: void;
-  autoCenter: void;
-  collapseAll: void;
-  expandAll: void;
   getSvg: any;
 }
 interface MessageTypes {
