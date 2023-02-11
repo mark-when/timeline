@@ -21,7 +21,8 @@ export type DisplayScale =
   | "day"
   | "month"
   | "year"
-  | "decade";
+  | "decade"
+  | "cent";
 
 export const scales: DisplayScale[] = [
   "second",
@@ -33,6 +34,7 @@ export const scales: DisplayScale[] = [
   "month",
   "year",
   "decade",
+  "cent",
 ];
 
 export function dateScale(dateTime: DateTime) {
@@ -41,6 +43,9 @@ export function dateScale(dateTime: DateTime) {
       if (dateTime.hour === 0) {
         if (dateTime.day === 1) {
           if (dateTime.month === 1) {
+            if (dateTime.year % 100 === 0) {
+              return Weight.CENT;
+            }
             if (dateTime.year % 10 === 0) {
               return Weight.DECADE;
             }
@@ -71,6 +76,10 @@ export interface DateInterval {
 
 export function floorDateTime(dateTime: DateTime, toScale: DisplayScale) {
   const year = dateTime.year;
+  if (toScale === "cent") {
+    const roundedYear = year - (year % 100);
+    return DateTime.fromObject({ year: roundedYear });
+  }
   if (toScale === "decade") {
     const roundedYear = year - (year % 10);
     return DateTime.fromObject({ year: roundedYear });
@@ -119,7 +128,9 @@ export function floorDateTime(dateTime: DateTime, toScale: DisplayScale) {
 
 export function ceilDateTime(dateTime: DateTime, toScale: DisplayScale) {
   let increment;
-  if (toScale === "decade") {
+  if (toScale === "cent") {
+    increment = { years: 100 };
+  } else if (toScale === "decade") {
     increment = { years: 10 };
   } else if (toScale === "quarterhour") {
     increment = { minutes: 15 };

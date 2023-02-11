@@ -23,6 +23,7 @@ export enum Weight {
   MONTH = 6,
   YEAR = 7,
   DECADE = 8,
+  CENT = 9,
 }
 
 const SECOND = 1;
@@ -34,6 +35,7 @@ const DAY = 24 * HOUR;
 const MONTH = 30 * DAY;
 const YEAR = 12 * MONTH;
 const DECADE = 10 * YEAR;
+const CENT = 10 * DECADE;
 
 export const timeMarkerWeightMinimum = 0.25;
 
@@ -53,7 +55,8 @@ export type TimeMarkerWeights = [
   number /* day */,
   number /* month */,
   number /* year */,
-  number /* decade */
+  number /* decade */,
+  number /* cent */
 ];
 
 export const useMarkersStore = defineStore("markers", () => {
@@ -91,7 +94,9 @@ export const useMarkersStore = defineStore("markers", () => {
         ts: nextLeft.toMillis(),
         accumulated: acc,
       });
-      if (scale === "decade") {
+      if (scale === "cent") {
+        nextLeft = nextLeft.plus({ years: 100 });
+      } else if (scale === "decade") {
         nextLeft = nextLeft.plus({ years: 10 });
       } else if (scale === "quarterhour") {
         nextLeft = nextLeft.plus({ minutes: 15 });

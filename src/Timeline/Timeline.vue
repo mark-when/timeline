@@ -265,7 +265,7 @@ const totalWidth = computed(() => {
 });
 
 markwhenStore.onGetSvg = (params) => {
-  svgParams.value = params;
+  svgParams.value = { diffScale: "hours", showViewport: false, ...params };
   return new Promise((resolve, reject) => {
     // Set timeout seems to work better than nextTick (or nested nextTicks)
     setTimeout(() => {

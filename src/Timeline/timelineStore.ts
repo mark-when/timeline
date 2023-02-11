@@ -31,6 +31,7 @@ export enum Weight {
   MONTH = 6,
   YEAR = 7,
   DECADE = 8,
+  CENT = 9
 }
 
 const SECOND = 1;
@@ -42,6 +43,7 @@ const DAY = 24 * HOUR;
 const MONTH = 30 * DAY;
 const YEAR = 12 * MONTH;
 const DECADE = 10 * YEAR;
+const CENT = 10 * DECADE
 
 export type TimelineMode = "timeline" | "gantt";
 export const timeMarkerWeightMinimum = 0.25;
@@ -62,7 +64,7 @@ export interface Viewport {
   offsetLeft: number;
 }
 
-export const MIN_SCALE = 0.04;
+export const MIN_SCALE = 0.002;
 export const MAX_SCALE = 30000000;
 
 export const eqPath = (ep: EventPath, eps: EventPaths): boolean => {
@@ -330,7 +332,8 @@ export const useTimelineStore = defineStore("timeline", () => {
       clamp(roundToTwoDecimalPlaces((40 * DAY) / denom)),
       clamp(roundToTwoDecimalPlaces((30 * MONTH) / denom)),
       clamp(roundToTwoDecimalPlaces((25 * YEAR) / denom)),
-      clamp(roundToTwoDecimalPlaces((10 * DECADE) / denom)),
+      clamp(roundToTwoDecimalPlaces((25 * DECADE) / denom)),
+      clamp(roundToTwoDecimalPlaces((20 * CENT) / denom)),
     ];
   });
 
@@ -340,7 +343,7 @@ export const useTimelineStore = defineStore("timeline", () => {
         return scales[i];
       }
     }
-    return "decade";
+    return "cent";
   });
 
   return {
