@@ -296,7 +296,7 @@ markwhenStore.onGetSvg = (params) => {
   >
     <div
       id="timeline"
-      class="relative h-full overflow-auto w-full noScrollBar dark:text-white text-gray-900"
+      class="relative h-full overflow-auto w-full noScrollBar dark:text-white text-gray-900 bg-slate-50 dark:bg-slate-700"
       ref="timelineElement"
       @scroll="scroll"
       :style="{ cursor: isPanning ? 'grabbing' : 'grab' }"

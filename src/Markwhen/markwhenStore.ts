@@ -1,6 +1,6 @@
 import { equivalentPaths, type EventPath } from "@/Timeline/paths";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { useLpc, type AppState, type MarkwhenState } from "./useLpc";
 import produce from "immer";
 import type {
@@ -9,14 +9,45 @@ import type {
   DateTimeGranularity,
 } from "@markwhen/parser/lib/Types";
 import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
+import { useRoute } from "vue-router";
+import { parse } from "@markwhen/parser";
 
 export const useMarkwhenStore = defineStore("markwhen", () => {
+  const route = useRoute();
   const app = ref<AppState>();
   const markwhen = ref<MarkwhenState>();
 
   const onJumpToPath = ref((path: EventPath) => {});
   const onJumpToRange = ref((range: DateRangeIso) => {});
   const onGetSvg = ref((params: any): any => {});
+
+  watchEffect(async () => {
+    const { user, timeline } = route.params;
+    if (user) {
+      try {
+        const url = timeline
+          ? `https://markwhen.com/${user}/${timeline}.mw`
+          : `https://markwhen.com/${user}.mw`;
+        const resp = await fetch(url);
+        if (resp.ok) {
+          const text = await resp.text();
+          const mw = parse(text);
+          app.value = {
+            pageIndex: 0,
+            isDark: false,
+          };
+          markwhen.value = {
+            rawText: text,
+            parsed: mw.timelines,
+            page: {
+              parsed: mw.timelines[0],
+              transformed: mw.timelines[0].events,
+            },
+          };
+        }
+      } catch {}
+    }
+  });
 
   const { postRequest } = useLpc({
     state: (s) => {

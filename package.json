@@ -17,7 +17,8 @@
     "immer": "^9.0.18",
     "luxon": "^3.2.1",
     "pinia": "^2.0.30",
-    "vue": "^3.2.45"
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@types/luxon": "^3.2.0",
