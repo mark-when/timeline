@@ -13,6 +13,7 @@ export interface AppState {
   hoveringPath?: EventPaths;
   detailPath?: EventPath;
   pageIndex: number;
+  path?: string;
 }
 export interface MarkwhenState {
   rawText?: string;
@@ -91,7 +92,7 @@ type MessageListeners = {
 };
 
 const post = <T extends MessageType>(message: Message<T>) =>
-  window.parent.postMessage(message, "*");
+  window.parent !== window.self && window.parent.postMessage(message, "*");
 
 export const useLpc = (listeners?: MessageListeners) => {
   const calls: Map<

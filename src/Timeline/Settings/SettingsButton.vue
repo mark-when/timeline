@@ -7,6 +7,7 @@ defineProps<{
   hoverHintTitle?: string;
   hoverHintShortcut?: string;
   selected?: boolean;
+  hoverHintLeft?: number
 }>();
 const emit = defineEmits<{ (event: "click"): void }>();
 
@@ -48,6 +49,7 @@ const click = () => {
       :hovering="hovering"
       :title="hoverHintTitle"
       :shortcut="hoverHintShortcut"
+      :left="hoverHintLeft"
     />
   </button>
 </template>
