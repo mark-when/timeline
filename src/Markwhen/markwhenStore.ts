@@ -23,6 +23,11 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   const onJumpToRange = ref((range: DateRangeIso) => {});
   const onGetSvg = ref((params: any): any => {});
 
+  const hadInitialState = ref(
+    // @ts-ignore
+    typeof window !== "undefined" && window.__markwhen_initial_state
+  );
+
   const hash = computed(() =>
     markwhen.value?.rawText ? btoa(markwhen.value?.rawText) : ""
   );
@@ -155,6 +160,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   return {
     app,
     markwhen,
+    hadInitialState,
 
     onJumpToPath,
     onJumpToRange,
