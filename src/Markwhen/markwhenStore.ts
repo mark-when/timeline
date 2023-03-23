@@ -28,9 +28,16 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     typeof window !== "undefined" && window.__markwhen_initial_state
   );
 
-  const hash = computed(() =>
-    markwhen.value?.rawText ? btoa(markwhen.value?.rawText) : ""
-  );
+  const hash = computed(() => {
+    if (markwhen.value?.rawText) {
+      try {
+        return btoa(markwhen.value?.rawText);
+      } catch (e) {
+        return "";
+      }
+    }
+    return "";
+  });
 
   const pathOrHash = computed(() => {
     const { user, timeline } = route.params;
