@@ -85,12 +85,6 @@ export const useTimelineStore = defineStore("timeline", () => {
   const appState = computed(() => markwhenStore.app!);
   const markwhenState = computed(() => markwhenStore.markwhen!);
 
-  // const editorOrchestrator = useEditorOrchestratorStore();
-  // const eventDetailStore = useEventDetailStore();
-
-  // const routeWatcherStore = useRouteWatcherStore();
-  // const storageStore = useStorageStore();
-
   const pageIndex = computed(() => appState.value.pageIndex);
   const pageTimeline = computed<Timeline>(
     () => markwhenState.value.parsed[pageIndex.value]
@@ -149,21 +143,6 @@ export const useTimelineStore = defineStore("timeline", () => {
     autoCenterSemaphore.value++;
   };
 
-  // watch(
-  //   () => storageStore.loadedFromDraftSemaphore,
-  //   () => {
-  //     console.log("loaded from draft");
-  //     autoCenter();
-  //   }
-  // );
-  // watch(
-  //   () => routeWatcherStore.watchState,
-  //   (s) => {
-  //     if (s !== "loading") {
-  //       autoCenter();
-  //     }
-  //   }
-  // );
 
   const toggleMiniMap = () => (miniMapShowing.value = !miniMapShowing.value);
 
