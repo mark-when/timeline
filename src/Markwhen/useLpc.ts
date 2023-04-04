@@ -91,9 +91,6 @@ type MessageListeners = {
   ) => any;
 };
 
-const post = <T extends MessageType>(message: Message<T>) =>
-  window.parent !== window.self && window.parent.postMessage(message, "*");
-
 export const useLpc = (listeners?: MessageListeners) => {
   const calls: Map<
     string,
@@ -102,6 +99,29 @@ export const useLpc = (listeners?: MessageListeners) => {
       reject: (a: any) => void;
     }
   > = new Map();
+
+  const wssUrl =
+    typeof window !== "undefined" &&
+    // @ts-ignore
+    (window.__markwhen_wss_url as string | undefined);
+
+  let socket: WebSocket | undefined;
+  let hasConnected = false;
+  if (wssUrl) {
+    socket = new WebSocket(wssUrl);
+    socket.onopen = () => {
+      hasConnected = true;
+      postRequest("state");
+    };
+  }
+
+  const post = <T extends MessageType>(message: Message<T>) => {
+    if (socket && hasConnected) {
+      socket.send(JSON.stringify(message));
+    } else if (typeof window !== "undefined" && window.parent !== window.self) {
+      window.parent.postMessage(message, "*");
+    }
+  };
 
   const postRequest = <T extends MessageType>(
     type: T,
