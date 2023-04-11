@@ -68,16 +68,12 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
           const text = await resp.text();
           const mw = parse(text);
           app.value = {
-            pageIndex: 0,
             isDark: false,
           };
           markwhen.value = {
             rawText: text,
             parsed: mw.timelines,
-            page: {
-              parsed: mw.timelines[0],
-              transformed: mw.timelines[0].events,
-            },
+            transformed: mw.timelines[0].events,
           };
           showEditButton.value = true;
           showCopyLinkButton.value = false;
@@ -87,16 +83,12 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
       const decoded = atob(route.hash.substring("#mw=".length));
       const mw = parse(decoded);
       app.value = {
-        pageIndex: 0,
         isDark: false,
       };
       markwhen.value = {
         rawText: decoded,
         parsed: mw.timelines,
-        page: {
-          parsed: mw.timelines[0],
-          transformed: mw.timelines[0].events,
-        },
+        transformed: mw.timelines[0].events,
       };
       showEditButton.value = true;
       showCopyLinkButton.value = false;

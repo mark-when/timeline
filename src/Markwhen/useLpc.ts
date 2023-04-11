@@ -12,18 +12,14 @@ export interface AppState {
   isDark?: boolean;
   hoveringPath?: EventPaths;
   detailPath?: EventPath;
-  pageIndex: number;
   path?: string;
 }
 export interface MarkwhenState {
   rawText?: string;
   parsed: Timeline[];
-  page: PageState;
-}
-export interface PageState {
-  parsed?: Timeline;
   transformed?: Node<NodeArray>;
 }
+
 export interface State {
   app: AppState;
   markwhen: MarkwhenState;

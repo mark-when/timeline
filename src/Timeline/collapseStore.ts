@@ -1,30 +1,32 @@
-import { usePageEffect } from "@/Timeline/usePageEffect";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import { defineStore } from "pinia";
 import { walk } from "@/Timeline/useNodeStore";
 import { isEventNode } from "@markwhen/parser/lib/Noder";
 import type { Path } from "@markwhen/parser/lib/Types";
 import { useTimelineStore } from "./timelineStore";
+import { ref } from "vue";
 
 export const useCollapseStore = defineStore("collapse", () => {
   const markwhenStore = useMarkwhenStore();
   const timelineStore = useTimelineStore();
 
   // Initial state
-  const collapsed = usePageEffect((index) => {
-    const mw = markwhenStore.markwhen?.parsed[index];
-    const set = new Set<string>();
-    if (mw) {
-      walk(mw.events, [], (node, path) => {
-        if (!isEventNode(node)) {
-          if (!node.startExpanded) {
-            set.add(path.join(","));
+  const collapsed = ref(
+    (() => {
+      const mw = markwhenStore.markwhen?.parsed[0];
+      const set = new Set<string>();
+      if (mw) {
+        walk(mw.events, [], (node, path) => {
+          if (!isEventNode(node)) {
+            if (!node.startExpanded) {
+              set.add(path.join(","));
+            }
           }
-        }
-      });
-    }
-    return set;
-  });
+        });
+      }
+      return set;
+    })()
+  );
 
   const collapse = (path: Path) => {
     collapsed.value.add(path.join(","));

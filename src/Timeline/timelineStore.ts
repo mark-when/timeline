@@ -6,9 +6,7 @@ import {
   scales,
   viewportLeftMarginPixels,
 } from "@/Timeline/utilities/dateTimeUtilities";
-import { usePageEffect } from "./usePageEffect";
-import { ref, computed, watchEffect, watch, nextTick } from "vue";
-import type { DateRangePart, Timeline } from "@markwhen/parser/lib/Types";
+import { ref, computed, watchEffect, watch } from "vue";
 import type { EventPath, EventPaths } from "@/Timeline/paths";
 import { ranges } from "@/utilities/ranges";
 import {
@@ -31,7 +29,7 @@ export enum Weight {
   MONTH = 6,
   YEAR = 7,
   DECADE = 8,
-  CENT = 9
+  CENT = 9,
 }
 
 const SECOND = 1;
@@ -43,7 +41,7 @@ const DAY = 24 * HOUR;
 const MONTH = 30 * DAY;
 const YEAR = 12 * MONTH;
 const DECADE = 10 * YEAR;
-const CENT = 10 * DECADE
+const CENT = 10 * DECADE;
 
 export type TimelineMode = "timeline" | "gantt";
 export const timeMarkerWeightMinimum = 0.25;
@@ -85,14 +83,11 @@ export const useTimelineStore = defineStore("timeline", () => {
   const appState = computed(() => markwhenStore.app!);
   const markwhenState = computed(() => markwhenStore.markwhen!);
 
-  const pageIndex = computed(() => appState.value.pageIndex);
-  const pageTimeline = computed<Timeline>(
-    () => markwhenState.value.parsed[pageIndex.value]
-  );
+  const pageTimeline = computed(() => markwhenState.value.parsed[0]);
   const pageTimelineMetadata = computed(() => pageTimeline.value.metadata);
   const tags = computed(() => pageTimeline.value.tags);
   const transformedEvents = computed<Node<NodeArray>>(
-    () => markwhenState.value.page.transformed!
+    () => markwhenState.value.transformed!
   );
   const darkMode = computed(() => !!appState.value?.isDark);
 
@@ -114,13 +109,12 @@ export const useTimelineStore = defineStore("timeline", () => {
   const setDetailEventPath = markwhenStore.setDetailEventPath;
 
   const viewportGetter = ref<() => Viewport>();
-  const pageSettings = usePageEffect((index) => {
-    const viewport = viewportGetter.value?.();
-    return initialPageSettings(
-      markwhenState.value?.parsed[pageIndex.value],
-      viewport
-    );
-  });
+  const pageSettings = ref(
+    (() => {
+      const viewport = viewportGetter.value?.();
+      return initialPageSettings(markwhenState.value?.parsed[0], viewport);
+    })()
+  );
   const startedWidthChange = ref(false);
   const hideNowLine = ref(false);
   const scrollToPath = ref<EventPaths>();
@@ -142,7 +136,6 @@ export const useTimelineStore = defineStore("timeline", () => {
   const autoCenter = () => {
     autoCenterSemaphore.value++;
   };
-
 
   const toggleMiniMap = () => (miniMapShowing.value = !miniMapShowing.value);
 
@@ -341,7 +334,6 @@ export const useTimelineStore = defineStore("timeline", () => {
 
     // getters
     darkMode,
-    pageIndex,
     pageTimeline,
     tags,
     pageTimelineMetadata,

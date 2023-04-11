@@ -126,7 +126,6 @@ watch(
 );
 watch(
   [
-    () => timelineStore.pageIndex,
     () => timelineStore.pageTimelineMetadata.earliestTime,
     () => timelineStore.pageTimelineMetadata.latestTime,
   ],
@@ -138,7 +137,6 @@ useResizeObserver(timelineElement, (entries) => {
   nextTick(setViewportDateInterval);
 });
 
-let ticking = false;
 const setViewportDateInterval = () => {
   // if (!ticking) {
   //   requestAnimationFrame(() => {
