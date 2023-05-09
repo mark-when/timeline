@@ -63,7 +63,10 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
         const url = timeline
           ? `https://markwhen.com/${user}/${timeline}.mw`
           : `https://markwhen.com/${user}.mw`;
-        const resp = await fetch(url, { redirect: "follow" });
+        const resp = await fetch(url);
+        if (resp.redirected) {
+          window.location.href = resp.url;
+        }
         if (resp.ok) {
           const text = await resp.text();
           const mw = parse(text);
