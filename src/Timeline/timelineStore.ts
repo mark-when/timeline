@@ -85,7 +85,17 @@ export const useTimelineStore = defineStore("timeline", () => {
 
   const pageTimeline = computed(() => markwhenState.value.parsed[0]);
   const pageTimelineMetadata = computed(() => pageTimeline.value.metadata);
-  const tags = computed(() => pageTimeline.value.tags);
+  const tags = computed(() =>
+    Object.keys(pageTimeline.value.header)
+      .filter((entry) => entry.startsWith(")"))
+      .reduce(
+        (prev, curr) => ({
+          ...prev,
+          [curr.replace(")", "")]: pageTimeline.value.header[curr],
+        }),
+        {} as { [key: string]: any }
+      )
+  );
   const transformedEvents = computed<Node<NodeArray>>(
     () => markwhenState.value.transformed!
   );
@@ -330,6 +340,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     ganttSidebarTempWidth,
     autoCenterSemaphore,
     miniMapShowing,
+    colors: computed(() => appState.value.colorMap),
     // editable,
 
     // getters

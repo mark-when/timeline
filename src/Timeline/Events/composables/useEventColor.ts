@@ -19,7 +19,7 @@ export const useEventColor = (eventRef: MaybeRef<SomeNode | Event>) => {
         ? eventValue(node).eventDescription.tags
         : node.tags;
     }
-    color.value = ourTags ? timelineStore.tags[ourTags[0]] : undefined;
+    color.value = ourTags ? timelineStore.colors[ourTags[0]] : undefined;
   });
 
   return { color };

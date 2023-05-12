@@ -72,6 +72,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
           const mw = parse(text);
           app.value = {
             isDark: false,
+            colorMap: {},
           };
           markwhen.value = {
             rawText: text,
@@ -87,6 +88,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
       const mw = parse(decoded);
       app.value = {
         isDark: false,
+        colorMap: {},
       };
       markwhen.value = {
         rawText: decoded,
