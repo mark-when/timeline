@@ -104,8 +104,12 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     state: (s) => {
       showEditButton.value = false;
       showCopyLinkButton.value = true;
-      app.value = produce(app.value, () => s.app);
-      markwhen.value = produce(markwhen.value, () => s.markwhen);
+      if (JSON.stringify(app.value) !== JSON.stringify(s.app)) {
+        app.value = s.app;
+      }
+      if (JSON.stringify(markwhen.value) !== JSON.stringify(s.markwhen)) {
+        markwhen.value = s.markwhen;
+      }
     },
     jumpToPath: ({ path }) => {
       onJumpToPath.value?.(path);
