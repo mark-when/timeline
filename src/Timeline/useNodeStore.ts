@@ -308,36 +308,6 @@ export const useNodeStore = defineStore("nodes", () => {
     return map;
   });
 
-  const ancestorMap = computed(() => {
-    const map = new Map<string, number>();
-    for (const { path, node } of nodeArray.value) {
-    }
-    return map;
-  });
-
-  const numAncestors = (
-    node: SomeNode,
-    path: Path,
-    map: Map<string, number>,
-    childrenMap: Map<string, number>
-  ) => {
-    const pathJoined = path.join(",");
-    const saved = map.get(pathJoined);
-    if (saved) {
-      return saved;
-    }
-
-    const cache = (ancestorCount: number) => {
-      map.set(pathJoined, ancestorCount);
-      return ancestorCount;
-    };
-
-    const children = childrenMap.get(pathJoined);
-
-    // get all siblings children count
-    // get parent's sibling
-  };
-
   const height = computed(() => {
     let max = 0;
     for (const p of predecessorMap.value.values()) {
