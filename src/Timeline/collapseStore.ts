@@ -61,8 +61,6 @@ export const useCollapseStore = defineStore("collapse", () => {
   };
   const isCollapsedChild = (path: Path | string) => {
     const pathJoined = typeof path === "string" ? path : path.join(",");
-    const pathAsArray =
-      typeof path === "string" ? path.split(",").map((i) => parseInt(i)) : path;
     for (const entry of collapsed.value.keys()) {
       if (pathJoined !== entry && pathJoined.startsWith(`${entry},`)) {
         return true;
