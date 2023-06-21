@@ -27,10 +27,6 @@ export const rangeComparator = (a: Range, b: Range) =>
   a.type === b.type &&
   a.content === b.content &&
   a.from === b.from &&
-  a.lineFrom.index === b.lineFrom.index &&
-  b.lineFrom.line === b.lineFrom.line &&
-  a.lineTo.index === b.lineTo.index &&
-  a.lineTo.line === b.lineTo.line &&
   a.to === b.to;
 
 export const dateRangeIsoComparator = (a: DateRangeIso, b: DateRangeIso) =>

@@ -107,9 +107,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
       if (JSON.stringify(app.value) !== JSON.stringify(s.app)) {
         app.value = s.app;
       }
-      if (JSON.stringify(markwhen.value) !== JSON.stringify(s.markwhen)) {
-        markwhen.value = s.markwhen;
-      }
+      markwhen.value = s.markwhen;
     },
     jumpToPath: ({ path }) => {
       onJumpToPath.value?.(path);

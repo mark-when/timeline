@@ -34,7 +34,7 @@ const click = () => {
 <template>
   <button
     @click="click"
-    class="h-6 flex flex-row items-center rounded hover:bg-zinc-200 transition dark:border-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-100 px-1 text-sm lg:text-base font-bold relative"
+    class="h-6 flex flex-row items-center hover:bg-zinc-200 transition dark:border-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-100 px-1 text-sm lg:text-base font-bold relative"
     v-on="events"
     @mousedown.stop=""
     @touchstart.stop=""
