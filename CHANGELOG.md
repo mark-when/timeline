@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.1
+- Add toggles for showing date range and progress indicator next to event bar
+
 ## 1.1.0
 - Bump view client
 
