@@ -82,6 +82,16 @@ export const useTimelineStore = defineStore("timeline", () => {
   const markwhenStore = useMarkwhenStore();
   const appState = computed(() => markwhenStore.app!);
   const markwhenState = computed(() => markwhenStore.markwhen!);
+  const dateTimeDisplay = ref<"original" | "off">(
+    (typeof localStorage !== "undefined" &&
+      (localStorage.getItem("dateTimeDisplay") as "original" | "off")) ||
+      "original"
+  );
+  const progressDisplay = ref<"on" | "off">(
+    (typeof localStorage !== "undefined" &&
+      (localStorage.getItem("progressDisplay") as "on" | "off")) ||
+      "on"
+  );
 
   const pageTimeline = computed(() => markwhenState.value.parsed[0]);
   const pageTimelineMetadata = computed(() => pageTimeline.value.metadata);
@@ -130,7 +140,9 @@ export const useTimelineStore = defineStore("timeline", () => {
   const scrollToPath = ref<EventPaths>();
   const shouldZoomWhenScrolling = ref<boolean>(true);
   const mode = ref<TimelineMode>(
-    (localStorage.getItem("preferredMode") as TimelineMode) || "timeline"
+    (typeof localStorage !== "undefined" &&
+      (localStorage.getItem("preferredMode") as TimelineMode)) ||
+      "timeline"
   );
   const ganttSidebarWidth = ref(200);
   const ganttSidebarTempWidth = ref(0);
@@ -140,6 +152,18 @@ export const useTimelineStore = defineStore("timeline", () => {
   watch(mode, (m) => {
     if (typeof localStorage !== "undefined") {
       localStorage.setItem("preferredMode", m);
+    }
+  });
+
+  watch(dateTimeDisplay, (dtd) => {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("dateTimeDisplay", dtd);
+    }
+  });
+
+  watch(progressDisplay, (pd) => {
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("progressDisplay", pd);
     }
   });
 
@@ -340,6 +364,8 @@ export const useTimelineStore = defineStore("timeline", () => {
     ganttSidebarTempWidth,
     autoCenterSemaphore,
     miniMapShowing,
+    dateTimeDisplay,
+    progressDisplay,
     colors: computed(() => appState.value.colorMap),
     // editable,
 

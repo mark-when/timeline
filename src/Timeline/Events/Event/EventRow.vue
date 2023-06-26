@@ -321,7 +321,9 @@ const ganttTitleStyle = computed(() => {
         <Fade>
           <p
             class="eventDate py-1"
-            v-show="!isCollapsed"
+            v-show="
+              !isCollapsed && timelineStore.dateTimeDisplay === 'original'
+            "
             :class="
               recurrence
                 ? 'dark:text-orange-300 text-orange-500'

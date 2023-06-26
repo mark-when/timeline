@@ -11,6 +11,8 @@ import ToggleMode from "./ToggleMode.vue";
 import ToggleNowLine from "./ToggleNowLine.vue";
 import SettingsButton from "./SettingsButton.vue";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
+import ToggleDateTimeDisplay from "./ToggleDateTimeDisplay.vue";
+import ToggleShowProgress from "./ToggleShowProgress.vue";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -50,7 +52,7 @@ const copyEmbedLink = async () =>
 
 <template>
   <div
-    class="absolute  dark:text-gray-300 text-gray-500"
+    class="absolute dark:text-gray-300 text-gray-500"
     :style="`left: calc(${styleLeftInset}px); bottom: 0rem;`"
   >
     <div
@@ -79,6 +81,14 @@ const copyEmbedLink = async () =>
         <AutoCenter></AutoCenter>
       </div>
       <!-- </div> -->
+      <div
+        class="overflow-visible p-[2px] pointer-events-auto flex flex-row"
+        style="grid-area: collapse"
+      >
+        <ToggleDateTimeDisplay></ToggleDateTimeDisplay>
+        <ToggleShowProgress></ToggleShowProgress>
+      </div>
+
       <div
         class="overflow-visible p-[2px] pointer-events-auto flex flex-row"
         style="grid-area: collapse"
@@ -161,5 +171,4 @@ const copyEmbedLink = async () =>
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

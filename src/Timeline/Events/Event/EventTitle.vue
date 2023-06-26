@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onUpdated } from "vue";
 import TaskCompletion from "./TaskCompletion.vue";
+import { useTimelineStore } from "@/Timeline/timelineStore";
 
 const emits = defineEmits<{ (event: "toggleMeta", e: MouseEvent): void }>();
 const props = defineProps<{
@@ -14,6 +15,8 @@ const props = defineProps<{
   taskNumerator: number;
   titleHtml: string;
 }>();
+
+const timelineStore = useTimelineStore();
 </script>
 
 <template>
@@ -64,7 +67,10 @@ const props = defineProps<{
         ></path>
       </svg>
       <task-completion
-        v-if="taskDenominator || typeof completed !== 'undefined'"
+        v-if="
+          timelineStore.progressDisplay === 'on' &&
+          (taskDenominator || typeof completed !== 'undefined')
+        "
         :taskNumerator="taskNumerator"
         :taskDenominator="taskDenominator"
         :completed="completed"
