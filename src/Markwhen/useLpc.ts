@@ -1,4 +1,4 @@
-import type { EventPath, EventPaths } from "@/Timeline/paths";
+import type { EventPath } from "@/Timeline/paths";
 import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
 import type { Node, NodeArray } from "@markwhen/parser/lib/Node";
 import type {
@@ -10,7 +10,7 @@ import type {
 
 export interface AppState {
   isDark?: boolean;
-  hoveringPath?: EventPaths;
+  hoveringPath?: EventPath;
   detailPath?: EventPath;
   path?: string;
   colorMap: Record<string, string>;

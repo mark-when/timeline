@@ -200,7 +200,7 @@ const percent = computed(() => {
   return 100;
 });
 
-const { top, isCollapsed } = useNodePosition(computed(() => props.path.path));
+const { top, isCollapsed } = useNodePosition(computed(() => props.path));
 
 const edit = () => timelineStore.showInEditor(props.path);
 

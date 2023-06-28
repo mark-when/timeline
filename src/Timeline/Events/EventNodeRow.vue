@@ -26,7 +26,6 @@ const { editEventDateRange } = timelineStore;
 // We have to do this otherwise props will be 'changed', causing an unnecessary patch
 const pathArray = computed(() => props.path.split(",").map((i) => parseInt(i)));
 const isEventRow = computed(() => isEventNode(props.node));
-const type = "pageFiltered" as "pageFiltered";
 
 const hoveringPath = computed(() => timelineStore.hoveringEventPaths);
 
@@ -46,7 +45,7 @@ const {
   recurrence,
 } = useEventRefs(event, () => isEventRow.value);
 
-const eventPath = computed(() => ({ type, path: pathArray.value }));
+const eventPath = computed(() => pathArray.value);
 const scale = computed(() => timelineStore.scaleOfViewportDateInterval);
 
 const preferredInterpolationFormat = computed(
@@ -57,7 +56,7 @@ const preferredInterpolationFormat = computed(
 );
 const editDateRange = (range: DateRange) =>
   editEventDateRange(
-    { type: "pageFiltered", path: pathArray.value },
+    pathArray.value,
     toDateRangeIso(range),
     scale.value,
     preferredInterpolationFormat.value
@@ -65,10 +64,9 @@ const editDateRange = (range: DateRange) =>
 
 const hover = (hovering: boolean) => {
   if (hovering) {
-    timelineStore.setHoveringEvent({
-      type: "pageFiltered",
-      path: props.path.split(",").map((i) => parseInt(i)),
-    });
+    timelineStore.setHoveringEvent(
+      props.path.split(",").map((i) => parseInt(i))
+    );
   } else {
     timelineStore.clearHoveringEvent();
   }
@@ -97,7 +95,7 @@ const isDetailEvent = computed(() =>
     @edit-date-range="editDateRange"
     @hover="hover"
     :is-detail-event="isDetailEvent"
-    :hovering="equivalentPaths(hoveringPath?.pageFiltered, eventPath)"
+    :hovering="equivalentPaths(hoveringPath, eventPath)"
     :numAbove="numAbove"
   ></EventRow>
 </template>

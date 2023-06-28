@@ -33,10 +33,9 @@ const collapsed = computed({
 });
 const hovering = ref(false);
 const hoveringPath = computed(() => timelineStore.hoveringEventPaths);
-const ourPath = computed<EventPath>(() => ({
-  type: "pageFiltered",
-  path: props.path.split(",").map((i) => parseInt(i)),
-}));
+const ourPath = computed<EventPath>(() =>
+  props.path.split(",").map((i) => parseInt(i))
+);
 const toggle = (e: MouseEvent) => {
   if (e.target instanceof HTMLAnchorElement) {
     return;
@@ -75,10 +74,7 @@ const hover = (isHovering: boolean) => {
 
 watch(hovering, (h) => {
   if (h) {
-    setHoveringEvent({
-      type: "pageFiltered",
-      path: props.path.split(",").map((i) => parseInt(i)),
-    });
+    setHoveringEvent(props.path.split(",").map((i) => parseInt(i)));
   } else {
     clearHoveringEvent();
   }
@@ -115,9 +111,7 @@ const styleObject = computed(() => ({
 }));
 
 const hovered = computed(
-  () =>
-    hovering.value ||
-    equivalentPaths(hoveringPath.value?.pageFiltered, ourPath.value)
+  () => hovering.value || equivalentPaths(hoveringPath.value, ourPath.value)
 );
 </script>
 

@@ -7,7 +7,7 @@ import {
   viewportLeftMarginPixels,
 } from "@/Timeline/utilities/dateTimeUtilities";
 import { ref, computed, watchEffect, watch } from "vue";
-import type { EventPath, EventPaths } from "@/Timeline/paths";
+import type { EventPath } from "@/Timeline/paths";
 import { ranges } from "@/utilities/ranges";
 import {
   initialPageSettings,
@@ -64,19 +64,6 @@ export interface Viewport {
 
 export const MIN_SCALE = 0.002;
 export const MAX_SCALE = 30000000;
-
-export const eqPath = (ep: EventPath, eps: EventPaths): boolean => {
-  const path = eps[ep.type]?.path;
-  if (path?.length !== ep.path.length) {
-    return false;
-  }
-  for (let i = 0; i < path.length; i++) {
-    if (path[i] !== ep.path[i]) {
-      return false;
-    }
-  }
-  return true;
-};
 
 export const useTimelineStore = defineStore("timeline", () => {
   const markwhenStore = useMarkwhenStore();
@@ -137,7 +124,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   );
   const startedWidthChange = ref(false);
   const hideNowLine = ref(false);
-  const scrollToPath = ref<EventPaths>();
+  const scrollToPath = ref<EventPath>();
   const shouldZoomWhenScrolling = ref<boolean>(true);
   const mode = ref<TimelineMode>(
     (typeof localStorage !== "undefined" &&
@@ -304,7 +291,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const setHideNowLine = (hide: boolean) => {
     hideNowLine.value = hide;
   };
-  const setScrollToPaths = (ep?: EventPaths) => {
+  const setScrollToPaths = (ep?: EventPath) => {
     scrollToPath.value = ep;
   };
   const setShouldZoomWhenScrolling = (should: boolean) => {

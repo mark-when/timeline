@@ -49,9 +49,8 @@ markwhenStore.onJumpToPath = (path) => {
     "fromDateTimeIso" in range ? toDateRange(range) : range
   );
   if (timelineElement.value && path) {
-    const nodeTop = (timelineElement.value.scrollTop = useNodePosition(
-      path.path
-    ).top.value);
+    const nodeTop = (timelineElement.value.scrollTop =
+      useNodePosition(path).top.value);
     timelineElement.value.scrollTop = nodeTop - viewport.value.height / 2;
   }
 };

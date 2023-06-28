@@ -24,10 +24,7 @@ const computedPath = computed(() =>
 );
 
 const isDetailEvent = computed(() =>
-  timelineStore.isDetailEventPath({
-    type: "pageFiltered",
-    path: computedPath.value,
-  })
+  timelineStore.isDetailEventPath(computedPath.value)
 );
 const isDeep = computed(() => props.path.split(",").length > 4);
 

@@ -55,7 +55,7 @@ const borderColor = computed(() => (tm: TimeMarker) => {
 const eras = computed(() => {
   const erasAndMilestoneEvents = [] as any[];
   if (!timelineStore.transformedEvents) {
-    return []
+    return [];
   }
   walk(timelineStore.transformedEvents, [], (node, path) => {
     if (
@@ -67,8 +67,8 @@ const eras = computed(() => {
       const { fromDateTime, toDateTime } = toDateRange(node.value.dateRangeIso);
       const color = useEventColor(node).color.value;
       const isHovering = equivalentPaths(
-        timelineStore.hoveringEventPaths?.pageFiltered,
-        { type: "pageFiltered", path }
+        timelineStore.hoveringEventPaths,
+        path
       );
       const styleObj = {
         left:

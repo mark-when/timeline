@@ -1,4 +1,3 @@
-import { eqPath } from "./timelineStore";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { ranges } from "@/utilities/ranges";
 import type { NodeArray, SomeNode, Node } from "@markwhen/parser/lib/Node";
@@ -8,6 +7,7 @@ import { defineStore } from "pinia";
 import { computed, reactive, ref, watch, watchEffect } from "vue";
 import { useTimelineStore } from "./timelineStore";
 import { useCollapseStore } from "./collapseStore";
+import { equivalentPaths } from "./paths";
 
 const prevSiblingPath = (path: Path) => {
   if (path[path.length - 1] === 0) {
@@ -75,7 +75,11 @@ export const useNodeStore = defineStore("nodes", () => {
   const nodes = computed(() => timelineStore.transformedEvents);
 
   const nodeArray = computed(
-    () => toArray(timelineStore.transformedEvents) as { path: Path; node: SomeNode }[]
+    () =>
+      toArray(timelineStore.transformedEvents) as {
+        path: Path;
+        node: SomeNode;
+      }[]
   );
 
   const _numChildren = (
@@ -184,13 +188,7 @@ export const useNodeStore = defineStore("nodes", () => {
         };
         if (
           timelineStore.scrollToPath &&
-          eqPath(
-            {
-              type: "pageFiltered",
-              path: path,
-            },
-            timelineStore.scrollToPath
-          )
+          equivalentPaths(path, timelineStore.scrollToPath)
         ) {
           visibleEvents.push(pAndN);
         } else {

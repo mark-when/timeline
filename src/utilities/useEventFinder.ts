@@ -1,39 +1,17 @@
-import type { EventPath, EventPaths } from "@/Timeline/paths";
+import type { EventPath } from "@/Timeline/paths";
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import type { SomeNode } from "@markwhen/parser/lib/Node";
-import { get } from "@markwhen/parser/lib/Noder"
+import { get } from "@markwhen/parser/lib/Noder";
 import type { MaybeRef } from "@vueuse/core";
 import { computed, ref, watchEffect, unref } from "vue";
 
-export const eqPath = (ep: EventPath, eps: EventPaths): boolean => {
-  const path = eps[ep.type]?.path;
-  if (path?.length !== ep.path.length) {
-    return false;
-  }
-  for (let i = 0; i < path.length; i++) {
-    if (path[i] !== ep.path[i]) {
-      return false;
-    }
-  }
-  return true;
-};
-
 export type EventFinder = (
-  eventPath?: EventPath | EventPaths | null
+  eventPath?: EventPath | null
 ) => SomeNode | undefined;
 
-export const useEventFinder = (
-  path?: MaybeRef<EventPath | EventPaths | undefined>
-) => {
-  const timelineStore = useTimelineStore()
-  // const transformStore = useTransformStore();
-  // const pageStore = usePageStore();
-  const pageTimeline = computed(() => timelineStore.pageTimeline)
+export const useEventFinder = (path?: MaybeRef<EventPath | undefined>) => {
+  const timelineStore = useTimelineStore();
   const transformedEvents = computed(() => timelineStore.transformedEvents);
-
-  const isEventPath = (e: EventPath | EventPaths): e is EventPath => {
-    return (e as EventPath).path && Array.isArray((e as EventPath).path);
-  };
 
   const event = ref<SomeNode>();
 
@@ -47,39 +25,9 @@ export const useEventFinder = (
       event.value = undefined;
       return;
     }
-    if (isEventPath(eventPath)) {
-      const path = eventPath.path;
-      let node: SomeNode | undefined;
-      if (eventPath.type === "pageFiltered") {
-        node = transformedEvents.value;
-      } else if (eventPath.type === "page") {
-        node = pageTimeline.value.events;
-      } else {
-        event.value = undefined;
-        throw new Error("unimplemented");
-      }
-      event.value = node ? get(node, path) : undefined;
-      return;
-    } else {
-      const types: EventPath["type"][] = ["page", "pageFiltered", "whole"];
-      for (const type of types) {
-        if (!eventPath[type]) {
-          event.value = undefined;
-          continue;
-        }
-        let root: SomeNode | undefined;
-        if (type === "pageFiltered") {
-          root = transformedEvents.value;
-        } else if (type === "page") {
-          root = pageTimeline.value.events;
-        }
-        if (root) {
-          event.value = get(root, eventPath[type]!.path);
-          return;
-        }
-      }
-    }
-    event.value = undefined;
+    let node: SomeNode | undefined;
+    node = transformedEvents.value;
+    event.value = node ? get(node, eventPath) : undefined;
   });
 
   return event;
