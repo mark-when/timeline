@@ -92,7 +92,7 @@ export const useEventRefs = (
       return;
     }
     const eventColor = tags.value?.length
-      ? timelineStore.colors[tags.value[0]]
+      ? timelineStore.colors["default"]?.[tags.value[0]]
       : undefined;
     if (color.value !== eventColor) {
       color.value = eventColor;

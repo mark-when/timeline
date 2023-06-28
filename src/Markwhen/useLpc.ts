@@ -13,7 +13,7 @@ export interface AppState {
   hoveringPath?: EventPath;
   detailPath?: EventPath;
   path?: string;
-  colorMap: Record<string, string>;
+  colorMap: Record<string, Record<string, string>>;
 }
 export interface MarkwhenState {
   rawText?: string;

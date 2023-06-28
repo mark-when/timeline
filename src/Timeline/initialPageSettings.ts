@@ -21,19 +21,7 @@ export const calculateBaselineLeftmostDate = (
   earliestDateTime: DateTime,
   maxDurationDays: number
 ) => {
-  if (maxDurationDays < 0.1) {
-    return floorDateTime(earliestDateTime.minus({ hours: 1 }), "hour");
-  }
-  if (maxDurationDays < 1) {
-    return floorDateTime(earliestDateTime.minus({ days: 1 }), "day");
-  }
-  if (maxDurationDays < 30) {
-    return floorDateTime(earliestDateTime.minus({ months: 4 }), "year");
-  }
-  if (maxDurationDays < 180) {
-    return floorDateTime(earliestDateTime.minus({ months: 3 }), "year");
-  }
-  return floorDateTime(earliestDateTime.minus({ months: 6 }), "year");
+  return floorDateTime(earliestDateTime.minus({ years: 3 }), "year");
 };
 
 export function initialPageSettings(
