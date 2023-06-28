@@ -252,7 +252,7 @@ const svgHolder = ref<HTMLDivElement>();
 const svgView = ref<typeof SvgView>();
 
 const totalWidth = computed(() => {
-  const range = ranges(timelineStore.pageTimeline.events, recurrenceLimit) || {
+  const range = ranges(timelineStore.transformedEvents, recurrenceLimit) || {
     fromDateTime: DateTime.now(),
     toDateTime: DateTime.now(),
   };

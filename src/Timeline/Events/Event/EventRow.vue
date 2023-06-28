@@ -46,7 +46,6 @@ const emit = defineEmits<{
 }>();
 
 const timelineStore = useTimelineStore();
-const nodeStore = useNodeStore();
 
 const eventBar = ref();
 const showingMeta = ref(false);

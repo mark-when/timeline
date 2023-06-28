@@ -113,7 +113,7 @@ export const useTimelineStore = defineStore("timeline", () => {
 
   const pageRange = computed(
     () =>
-      ranges(pageTimeline.value.events, recurrenceLimit) || {
+      ranges(transformedEvents.value, recurrenceLimit) || {
         fromDateTime: DateTime.now().minus({ years: 5 }),
         toDateTime: DateTime.now().plus({ years: 5 }),
       }
@@ -190,9 +190,7 @@ export const useTimelineStore = defineStore("timeline", () => {
 
   const pageScale = computed(() => pageSettings.value.scale);
 
-  const earliest = computed(() =>
-    DateTime.fromISO(pageTimelineMetadata.value.earliestTime)
-  );
+  const earliest = computed(() => pageRange.value.fromDateTime);
 
   const maxDurationDays = computed(
     () => pageTimelineMetadata.value.maxDurationDays

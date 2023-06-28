@@ -75,7 +75,7 @@ export const useNodeStore = defineStore("nodes", () => {
   const nodes = computed(() => timelineStore.transformedEvents);
 
   const nodeArray = computed(
-    () => toArray(nodes.value) as { path: Path; node: SomeNode }[]
+    () => toArray(timelineStore.transformedEvents) as { path: Path; node: SomeNode }[]
   );
 
   const _numChildren = (
