@@ -235,12 +235,7 @@ onActivated(() => {
 });
 
 const setInitialScrollAndScale = () =>
-  scrollToDateRangeImmediate({
-    fromDateTime: DateTime.fromISO(
-      timelineStore.pageTimelineMetadata.earliestTime
-    ),
-    toDateTime: DateTime.fromISO(timelineStore.pageTimelineMetadata.latestTime),
-  });
+  scrollToDateRangeImmediate(timelineStore.pageRange);
 
 onMounted(() => {
   setInitialScrollAndScale();

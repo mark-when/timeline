@@ -372,6 +372,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     pageTimeline,
     tags,
     pageTimelineMetadata,
+    pageRange,
     transformedEvents,
     pageScale,
     pageScaleBy24: computed(() => pageScale.value / 24),
