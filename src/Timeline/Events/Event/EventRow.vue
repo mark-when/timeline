@@ -320,7 +320,7 @@ const ganttTitleStyle = computed(() => {
           :taskDenominator="taskDenominator"
           :drag-handle-listener-left="dragHandleListenerLeft"
           :drag-handle-listener-right="dragHandleListenerRight"
-          :editable="!isCollapsed"
+          :editable="!isCollapsed && source === 'default'"
           :expandedRecurrence="expandedRecurrence"
         />
         <Fade>
