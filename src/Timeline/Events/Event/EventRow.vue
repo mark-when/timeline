@@ -294,7 +294,7 @@ const ganttTitleStyle = computed(() => {
       @edit="edit"
     />
     <div
-      class="absolute top-0 bottom-0 flex items-center pr-4 text-sm source text-gray-400"
+      class="absolute top-0 bottom-0 flex items-center pr-4 text-xs text-gray-400 source"
       style="transform: translateX(-100%)"
       v-else-if="!isCollapsed && isHovering"
     >
