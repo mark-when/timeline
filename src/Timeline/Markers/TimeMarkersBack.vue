@@ -118,7 +118,7 @@ const eras = computed(() => {
     <div
       v-for="era in eras"
       class="absolute top-0 bottom-0 h-full border-l border-r transition"
-      :class="!era.backgroundColor ? `bg-gray-300/50 border-gray-500/50` : ''"
+      :class="!era.backgroundColor ? `bg-gray-300/50 dark:bg-gray-300/10 border-gray-500/50` : ''"
       :style="{
         left: `${era.left}px`,
         width: `${era.width}px`,
