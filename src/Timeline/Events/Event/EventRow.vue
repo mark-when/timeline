@@ -9,7 +9,6 @@ import {
   type Range,
 } from "@markwhen/parser/lib/Types";
 import { useTimelineStore } from "@/Timeline/timelineStore";
-import { useNodeStore } from "@/Timeline/useNodeStore";
 import EventBar from "@/Timeline/Events/Event/EventBar.vue";
 import { useResize } from "@/Timeline/Events/Event/Edit/composables/useResize";
 import EventTitle from "./EventTitle.vue";
@@ -38,6 +37,7 @@ const props = defineProps<{
   numAbove: number;
   completed?: boolean;
   recurrence?: Recurrence;
+  source: string;
 }>();
 
 const emit = defineEmits<{
@@ -284,16 +284,22 @@ const ganttTitleStyle = computed(() => {
     @mouseenter.passive="!isCollapsed && (elementHover = true)"
     @mouseleave.passive="elementHover = false"
   >
-    <template v-if="!isCollapsed">
-      <move-widgets
-        v-show="isHovering"
-        :move="moveHandleListener"
-        :left="left"
-        @mouseenter.passive="hoveringWidgets = true"
-        @mouseleave.passive="hoveringWidgets = false"
-        @edit="edit"
-      />
-    </template>
+    <move-widgets
+      v-if="!isCollapsed && source === 'default'"
+      v-show="isHovering"
+      :move="moveHandleListener"
+      :left="left"
+      @mouseenter.passive="hoveringWidgets = true"
+      @mouseleave.passive="hoveringWidgets = false"
+      @edit="edit"
+    />
+    <div
+      class="absolute top-0 bottom-0 flex items-center pr-4 text-sm source text-gray-400"
+      style="transform: translateX(-100%)"
+      v-else-if="!isCollapsed && isHovering"
+    >
+      {{ source }}
+    </div>
     <div
       class="flex flex-row eventContent items-center h-full"
       :style="isGantt ? `margin-left: ${left}px` : ''"
@@ -411,6 +417,10 @@ const ganttTitleStyle = computed(() => {
   font-size: 80%;
   margin: 0px 0px 0px 8px;
   white-space: nowrap;
+}
+
+.source {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .eventTitle {

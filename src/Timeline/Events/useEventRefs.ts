@@ -1,7 +1,7 @@
 import { COMPLETION_REGEX } from "@markwhen/parser/lib/regex";
 import type { Event } from "@markwhen/parser/lib/Types";
-import type { MaybeRef } from "@vueuse/core";
-import { ref, watchEffect, type Ref, watch, unref } from "vue";
+import type { Node } from "@markwhen/parser/lib/Node";
+import { ref, watchEffect, type Ref, watch, unref, computed } from "vue";
 import { useTimelineStore } from "../timelineStore";
 import {
   dateRangeIsoComparator,
@@ -36,7 +36,7 @@ const cachedComputed = <T>(
 };
 
 export const useEventRefs = (
-  event: MaybeRef<Event | undefined>,
+  eventNode: Ref<Node<Event> | undefined>,
   isEventRow: () => boolean = () => true
 ) => {
   const timelineStore = useTimelineStore();
@@ -53,6 +53,14 @@ export const useEventRefs = (
       defaultValue
     );
 
+  const event = computed(() => eventNode.value!.value);
+  const source = cachedComputed(
+    // @ts-ignore
+    () => eventNode.value!.source as string,
+    (a, b) => a === b,
+    isEventRow,
+    "default"
+  );
   const eventRange = cachedEventComputed(
     () => unref(event)!.dateRangeIso,
     dateRangeIsoComparator
@@ -134,5 +142,6 @@ export const useEventRefs = (
     titleHtml,
     completed,
     recurrence,
+    source,
   };
 };

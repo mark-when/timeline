@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Node, SomeNode } from "@markwhen/parser/lib/Node";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import EventRow from "./Event/EventRow.vue";
 import { equivalentPaths } from "@/Timeline/paths";
 import { useEventRefs } from "./useEventRefs";
@@ -29,8 +29,6 @@ const isEventRow = computed(() => isEventNode(props.node));
 
 const hoveringPath = computed(() => timelineStore.hoveringEventPaths);
 
-const event = computed(() => eventValue(props.node as Node<Event>));
-
 const {
   eventRange,
   eventLocations,
@@ -43,7 +41,11 @@ const {
   titleHtml,
   completed,
   recurrence,
-} = useEventRefs(event, () => isEventRow.value);
+  source,
+} = useEventRefs(
+  computed(() => props.node as Node<Event>),
+  () => isEventRow.value
+);
 
 const eventPath = computed(() => pathArray.value);
 const scale = computed(() => timelineStore.scaleOfViewportDateInterval);
@@ -79,6 +81,7 @@ const isDetailEvent = computed(() =>
 
 <template>
   <EventRow
+    :source="source || 'default'"
     :event-locations="eventLocations || []"
     :supplemental="supplemental || []"
     :matched-list-items="matchedListItems || []"
