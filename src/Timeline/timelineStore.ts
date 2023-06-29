@@ -192,6 +192,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     );
     if (+newValue !== +baselineLeftmostDate.value) {
       baselineLeftmostDate.value = newValue;
+      autoCenterSemaphore.value++;
     }
   });
 
