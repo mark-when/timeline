@@ -30,7 +30,9 @@ const props = defineProps<{
 
 const { scalelessDistanceBetweenDates: dist } = useTimelineStore();
 
-const { color, eventRange, dateText } = useEventRefs(props.node.value);
+const { color, eventRange, dateText } = useEventRefs(
+  computed(() => props.node)
+);
 
 const range = computed(() => toDateRange(eventRange.value!));
 
