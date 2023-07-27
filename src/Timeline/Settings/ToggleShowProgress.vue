@@ -14,7 +14,7 @@ const click = () => {
   <SettingsButton @click="click" hover-hint-title="Toggle progress indicator">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      class="w-5 h-5"
+      class="w-4 h-4"
       width="40"
       height="40"
       viewBox="0 0 24 24"

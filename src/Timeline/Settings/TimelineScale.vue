@@ -108,7 +108,7 @@ const mouseUpIn = (e: MouseEvent | TouchEvent) => {
       viewBox="0 0 20 20"
       fill="currentColor"
       class="w-4 h-4"
-      stroke-width="2"
+      stroke-width="1"
       stroke="currentColor"
     >
       <path
@@ -131,7 +131,7 @@ const mouseUpIn = (e: MouseEvent | TouchEvent) => {
       viewBox="0 0 20 20"
       fill="currentColor"
       class="w-4 h-4"
-      stroke-width="2"
+      stroke-width="1"
       stroke="currentColor"
     >
       <path
@@ -166,7 +166,7 @@ input[type="range"]:hover::-webkit-slider-runnable-track {
   background: currentColor;
   transition: 150ms all;
   border-radius: 5px;
-  height: 5px;
+  height: 4px;
 }
 input[type="range"]:focus {
   outline: none;
@@ -174,21 +174,21 @@ input[type="range"]:focus {
 input[type="range"]::-webkit-slider-runnable-track {
   background: currentColor;
   transition: 150ms all;
-  height: 5px;
+  height: 4px;
   border-radius: 5px;
 }
 input[type="range"]::-moz-range-track {
   background: currentColor;
   transition: 150ms all;
-  height: 5px;
+  height: 4px;
   border-radius: 5px;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 15px;
-  width: 15px;
+  height: 12px;
+  width: 12px;
   background: currentColor;
-  margin-top: -5px;
+  margin-top: -4px;
   border-radius: 50%;
   box-shadow: 0px 1px 6px 0px #00000063;
 }

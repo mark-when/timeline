@@ -10,7 +10,7 @@ const click = () => collapseStore.collapseAll();
 <template>
   <SettingsButton hover-hint-title="Collapse all" @click="click">
     <svg
-      class="h-5 w-5"
+      class="h-4 w-4"
       focusable="false"
       aria-hidden="true"
       viewBox="0 0 24 24"

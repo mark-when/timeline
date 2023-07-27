@@ -7,7 +7,7 @@ defineProps<{
   hoverHintTitle?: string;
   hoverHintShortcut?: string;
   selected?: boolean;
-  hoverHintLeft?: number
+  hoverHintLeft?: number;
 }>();
 const emit = defineEmits<{ (event: "click"): void }>();
 
@@ -34,12 +34,13 @@ const click = () => {
 <template>
   <button
     @click="click"
-    class="h-6 flex flex-row items-center hover:bg-zinc-200 transition dark:border-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-100 px-1 text-sm lg:text-base font-bold relative"
+    class="p-1 flex flex-row items-center hover:bg-slate-200 transition dark:border-gray-900 dark:hover:bg-slate-600 dark:hover:text-gray-100 text-sm lg:text-base font-bold relative"
     v-on="events"
     @mousedown.stop=""
     @touchstart.stop=""
     :class="{
-      'text-indigo-600 outline-2 outline outline-indigo-600 dark:text-indigo-400 dark:outline-indigo-400': selected,
+      'text-indigo-600 outline-2 outline outline-indigo-600 dark:text-indigo-400 dark:outline-indigo-400':
+        selected,
     }"
   >
     <slot></slot>

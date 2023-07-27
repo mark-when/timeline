@@ -124,6 +124,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   );
   const startedWidthChange = ref(false);
   const hideNowLine = ref(false);
+  const goToNowSemaphore = ref(0);
   const scrollToPath = ref<EventPath>();
   const shouldZoomWhenScrolling = ref<boolean>(true);
   const mode = ref<TimelineMode>(
@@ -295,6 +296,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const setScrollToPaths = (ep?: EventPath) => {
     scrollToPath.value = ep;
   };
+  const goToNow = () => goToNowSemaphore.value++;
   const setShouldZoomWhenScrolling = (should: boolean) => {
     shouldZoomWhenScrolling.value = should;
   };
@@ -402,5 +404,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     setGanttSidebarTempWidth,
     autoCenter,
     toggleMiniMap,
+    goToNow,
+    goToNowSemaphore
   };
 });

@@ -217,8 +217,8 @@ const scrollToDateRange = (dateRange?: DateRange) => {
 
 const scrollToNow = () => scrollToDate(DateTime.now(), true);
 watch(
-  () => timelineStore.hideNowLine,
-  (hide) => scrollToNow()
+  [() => timelineStore.hideNowLine, () => timelineStore.goToNowSemaphore],
+  () => scrollToNow()
 );
 
 const viewport = computed(() => timelineStore.pageSettings.viewport);

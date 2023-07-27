@@ -48,11 +48,13 @@ const copyTimelineLink = async () =>
 
 const copyEmbedLink = async () =>
   copyToClipboard(markwhenStore.embedLink, "embed code ");
+
+const goToNow = () => timelineStore.goToNow();
 </script>
 
 <template>
   <div
-    class="absolute dark:text-gray-300 text-gray-500"
+    class="absolute hover:text-slate-700 dark:text-slate-400 text-slate-500 dark:hover:text-slate-300"
     :style="`left: calc(${styleLeftInset}px); bottom: 0rem;`"
   >
     <div
@@ -64,23 +66,39 @@ const copyEmbedLink = async () =>
         <Minimap />
       </div>
     </div>
-    <div class="flex flex-row gap-2 dark:bg-slate-800 bg-white">
+    <div class="flex flex-row gap-2 dark:bg-slate-800 bg-white px-1">
       <div
         class="flex flex row overflow-visible p-[2px] pointer-events-auto"
         style="grid-area: gantt"
       >
         <ToggleMode></ToggleMode>
       </div>
-
+      <div class="flex flex-row pointer-events-auto">
+        <SettingsButton class="gap-1" @click="goToNow">
+          <svg
+            class="h-4 w-4"
+            focusable="false"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            data-testid="ModeStandbyIcon"
+            fill="currentColor"
+            stroke="currentColor"
+            stroke-width="0.4"
+          >
+            <path
+              d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3-8c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z"
+            ></path></svg
+          ><span class="text-xs mt-px">Now</span>
+        </SettingsButton>
+        <AutoCenter></AutoCenter>
+      </div>
       <div
         class="flex flex row overflow-visible p-[2px] pointer-events-auto"
         style="grid-area: view"
       >
         <ToggleMiniMap></ToggleMiniMap>
         <TimelineScale></TimelineScale>
-        <AutoCenter></AutoCenter>
       </div>
-      <!-- </div> -->
       <div
         class="overflow-visible p-[2px] pointer-events-auto flex flex-row"
         style="grid-area: collapse"
@@ -88,7 +106,6 @@ const copyEmbedLink = async () =>
         <ToggleDateTimeDisplay></ToggleDateTimeDisplay>
         <ToggleShowProgress></ToggleShowProgress>
       </div>
-
       <div
         class="overflow-visible p-[2px] pointer-events-auto flex flex-row"
         style="grid-area: collapse"
@@ -107,7 +124,7 @@ const copyEmbedLink = async () =>
           @click="copyTimelineLink"
         >
           <svg
-            class="w-4 h-4 mr-1"
+            class="w-3 h-3 mr-1"
             aria-hidden="true"
             viewBox="0 0 24 24"
             fill="currentColor"

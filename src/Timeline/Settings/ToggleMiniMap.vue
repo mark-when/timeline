@@ -14,7 +14,7 @@ const toggle = () => timelineStore.toggleMiniMap();
       focusable="false"
       aria-hidden="true"
       viewBox="1 -1 20 21"
-      class="w-5 h-5"
+      class="w-4 h-4"
       fill="currentColor"
     >
       <path
