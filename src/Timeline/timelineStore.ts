@@ -16,6 +16,7 @@ import {
 } from "./initialPageSettings";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import type { Node, NodeArray } from "@markwhen/parser/lib/Node";
+import type { DateRange } from "@markwhen/parser/lib/Types";
 
 export const recurrenceLimit = 100;
 
@@ -300,6 +301,10 @@ export const useTimelineStore = defineStore("timeline", () => {
   const setShouldZoomWhenScrolling = (should: boolean) => {
     shouldZoomWhenScrolling.value = should;
   };
+  const setRange = (dr: DateRange) => {
+    rangeToJumpTo.value = dr;
+  };
+  const rangeToJumpTo = ref<DateRange>();
 
   const weights = computed(() => {
     const arbitraryNumber = 2000;
@@ -405,6 +410,8 @@ export const useTimelineStore = defineStore("timeline", () => {
     autoCenter,
     toggleMiniMap,
     goToNow,
-    goToNowSemaphore
+    goToNowSemaphore,
+    setRange,
+    rangeToJumpTo,
   };
 });

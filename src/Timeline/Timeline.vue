@@ -30,7 +30,10 @@ const markwhenStore = useMarkwhenStore();
 markwhenStore.onJumpToRange = (range) => {
   scrollToDateRangeImmediate(toDateRange(range));
 };
-
+watch(
+  () => timelineStore.rangeToJumpTo,
+  (dr) => scrollToDateRangeImmediate(dr)
+);
 markwhenStore.onJumpToPath = (path) => {
   const node = useEventFinder(path).value;
   if (!node) {
