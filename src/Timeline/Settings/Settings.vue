@@ -70,8 +70,8 @@ const goToNow = () => timelineStore.goToNow();
           <Minimap />
         </div>
       </div>
-      <div class="flex flex-row gap-2  px-1 pt-8">
-        <div class="dark:bg-slate-800 bg-white flex flex-row gap-2">
+      <div class="flex flex-row gap-2 pt-8">
+        <div class="dark:bg-slate-800 bg-white flex flex-row gap-2 px-2">
           <div
             class="flex flex row overflow-visible p-[2px] pointer-events-auto"
             style="grid-area: gantt"

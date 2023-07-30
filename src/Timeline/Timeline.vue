@@ -32,7 +32,7 @@ markwhenStore.onJumpToRange = (range) => {
 };
 watch(
   () => timelineStore.rangeToJumpTo,
-  (dr) => scrollToDateRangeImmediate(dr)
+  (dr) => scrollToDateRangeImmediate(dr, false)
 );
 markwhenStore.onJumpToPath = (path) => {
   const node = useEventFinder(path).value;
@@ -186,13 +186,16 @@ const scrollToDate = (
   }
 };
 
-const scrollToDateRangeImmediate = (dateRange?: DateRange) => {
+const scrollToDateRangeImmediate = (
+  dateRange?: DateRange,
+  buffered: boolean = true
+) => {
   if (!dateRange) {
     return;
   }
   const { width } = getViewport();
   // We still want to be zoomed out a bit
-  const scale = scaleToGetDistance(width, dateRange) / 3;
+  const scale = scaleToGetDistance(width, dateRange) / (buffered ? 3 : 1);
   timelineStore.setPageScale(scale);
   nextTick(() => {
     scrollToDate(dateMidpoint(dateRange), true, true);
