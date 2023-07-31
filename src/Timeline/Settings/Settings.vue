@@ -61,7 +61,7 @@ const goToNow = () => timelineStore.goToNow();
     <div
       class="flex flex-row-items-center overflow-scroll noScrollBar relative"
     >
-      <div
+      <!-- <div
         class="flex"
         style="grid-area: minimap"
         v-if="timelineStore.miniMapShowing"
@@ -69,7 +69,7 @@ const goToNow = () => timelineStore.goToNow();
         <div class="p-2 pointer-events-auto">
           <Minimap />
         </div>
-      </div>
+      </div> -->
       <div class="flex flex-row gap-2 pt-8">
         <div class="dark:bg-slate-800 bg-white flex flex-row gap-2 px-2">
           <div
@@ -101,7 +101,7 @@ const goToNow = () => timelineStore.goToNow();
           <div
             class="flex flex row overflow-visible p-[2px] pointer-events-auto"
           >
-            <ToggleMiniMap></ToggleMiniMap>
+            <!-- <ToggleMiniMap></ToggleMiniMap> -->
             <TimelineScale></TimelineScale>
           </div>
           <div
