@@ -50,7 +50,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     return `#mw=${hash.value}`;
   });
 
-  const editorLink = computed(() => `https://markwhen.com${pathOrHash.value}`);
+  const editorLink = computed(() => `https://app.markwhen.com${pathOrHash.value}`);
   const timelineLink = computed(
     () => `https://timeline.markwhen.com${pathOrHash.value}`
   );
@@ -61,8 +61,8 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     if (user) {
       try {
         const url = timeline
-          ? `https://markwhen.com/${user}/${timeline}.mw`
-          : `https://markwhen.com/${user}.mw`;
+          ? `https://app.markwhen.com/${user}/${timeline}.mw`
+          : `https://app.markwhen.com/${user}.mw`;
         const resp = await fetch(url);
         if (resp.redirected) {
           window.location.href = resp.url;
