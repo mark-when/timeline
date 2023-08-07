@@ -19,6 +19,10 @@ html, body {
   display: none;
 }
 
+.dark {
+  color-scheme: dark
+}
+
 .noScrollBar {
   scrollbar-width: none;
 }
