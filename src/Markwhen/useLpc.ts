@@ -21,16 +21,12 @@ export interface MarkwhenState {
   transformed?: Node<NodeArray>;
 }
 
-export interface State {
-  app: AppState;
-  markwhen: MarkwhenState;
-}
-
 export interface TimelineSpecificMessages {
   getSvg: any;
 }
 interface MessageTypes {
-  state: State;
+  markwhenState: MarkwhenState;
+  appState: AppState;
   setHoveringPath: EventPath;
   setDetailPath: EventPath;
   setText: {
@@ -108,7 +104,8 @@ export const useLpc = (listeners?: MessageListeners) => {
     socket = new WebSocket(wssUrl);
     socket.onopen = () => {
       hasConnected = true;
-      postRequest("state");
+      postRequest("appState");
+      postRequest("markwhenState");
     };
   }
 
@@ -177,8 +174,8 @@ export const useLpc = (listeners?: MessageListeners) => {
     typeof window !== "undefined" &&
     // @ts-ignore
     (window.__markwhen_initial_state as State | undefined);
-  if (initialState && listeners && listeners.state) {
-    listeners.state(initialState);
+  if (initialState && listeners && listeners.markwhenState) {
+    listeners.markwhenState(initialState);
   }
 
   return { postRequest };

@@ -68,7 +68,6 @@ export const MAX_SCALE = 30000000;
 
 export const useTimelineStore = defineStore("timeline", () => {
   const markwhenStore = useMarkwhenStore();
-  const appState = computed(() => markwhenStore.app!);
   const markwhenState = computed(() => markwhenStore.markwhen!);
   const dateTimeDisplay = ref<"original" | "off">(
     (typeof localStorage !== "undefined" &&
@@ -97,7 +96,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const transformedEvents = computed<Node<NodeArray>>(
     () => markwhenState.value.transformed!
   );
-  const darkMode = computed(() => !!appState.value?.isDark);
+  const darkMode = computed(() => !!markwhenStore.app?.isDark);
 
   const pageRange = computed(
     () =>
@@ -106,7 +105,7 @@ export const useTimelineStore = defineStore("timeline", () => {
         toDateTime: DateTime.now().plus({ years: 5 }),
       }
   );
-  const hoveringEventPaths = computed(() => appState.value?.hoveringPath);
+  const hoveringEventPaths = computed(() => markwhenStore.app?.hoveringPath);
   const editEventDateRange = markwhenStore.editEventDateRange;
   const setHoveringEvent = markwhenStore.setHoveringPath;
   const clearHoveringEvent = () => markwhenStore.setHoveringPath();
@@ -359,7 +358,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     miniMapShowing,
     dateTimeDisplay,
     progressDisplay,
-    colors: computed(() => appState.value.colorMap),
+    colors: computed(() => markwhenStore.app?.colorMap),
     // editable,
 
     // getters

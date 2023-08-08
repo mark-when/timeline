@@ -1,8 +1,7 @@
 import { equivalentPaths, type EventPath } from "@/Timeline/paths";
 import { defineStore } from "pinia";
-import { computed, ref, watch, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useLpc, type AppState, type MarkwhenState } from "./useLpc";
-import produce from "immer";
 import type {
   DateFormat,
   DateRangeIso,
@@ -14,7 +13,7 @@ import { parse } from "@markwhen/parser";
 
 export const useMarkwhenStore = defineStore("markwhen", () => {
   const route = useRoute();
-  const app = ref<AppState>();
+  const app = ref<AppState>({ colorMap: { default: {} } });
   const markwhen = ref<MarkwhenState>();
   const showEditButton = ref(false);
   const showCopyLinkButton = ref(true);
@@ -50,7 +49,9 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     return `#mw=${hash.value}`;
   });
 
-  const editorLink = computed(() => `https://app.markwhen.com${pathOrHash.value}`);
+  const editorLink = computed(
+    () => `https://app.markwhen.com${pathOrHash.value}`
+  );
   const timelineLink = computed(
     () => `https://timeline.markwhen.com${pathOrHash.value}`
   );
@@ -101,13 +102,13 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   });
 
   const { postRequest } = useLpc({
-    state: (s) => {
+    appState(s) {
       showEditButton.value = false;
       showCopyLinkButton.value = true;
-      if (JSON.stringify(app.value) !== JSON.stringify(s.app)) {
-        app.value = s.app;
-      }
-      markwhen.value = s.markwhen;
+      app.value = s;
+    },
+    markwhenState: (s) => {
+      markwhen.value = s;
     },
     jumpToPath: ({ path }) => {
       onJumpToPath.value?.(path);
@@ -160,7 +161,10 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     postRequest("editEventDateRange", params);
   };
 
-  const requestStateUpdate = () => postRequest("state");
+  const requestStateUpdate = () => {
+    postRequest("markwhenState");
+    postRequest("appState");
+  };
   requestStateUpdate();
 
   return {
