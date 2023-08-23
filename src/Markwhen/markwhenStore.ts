@@ -64,24 +64,26 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
         const url = timeline
           ? `https://app.markwhen.com/${user}/${timeline}.mw`
           : `https://app.markwhen.com/${user}.mw`;
-        const resp = await fetch(url);
-        if (resp.redirected) {
-          window.location.href = resp.url;
-        }
-        if (resp.ok) {
-          const text = await resp.text();
-          const mw = parse(text);
-          app.value = {
-            isDark: false,
-            colorMap: {},
-          };
-          markwhen.value = {
-            rawText: text,
-            parsed: mw.timelines,
-            transformed: mw.timelines[0].events,
-          };
-          showEditButton.value = true;
-          showCopyLinkButton.value = false;
+        const resp = await fetch(url).catch(() => {});
+        if (resp) {
+          if (resp.redirected) {
+            window.location.href = resp.url;
+          }
+          if (resp.ok) {
+            const text = await resp.text();
+            const mw = parse(text);
+            app.value = {
+              isDark: false,
+              colorMap: {},
+            };
+            markwhen.value = {
+              rawText: text,
+              parsed: mw.timelines,
+              transformed: mw.timelines[0].events,
+            };
+            showEditButton.value = true;
+            showCopyLinkButton.value = false;
+          }
         }
       } catch {}
     } else if (route.hash && route.hash.startsWith("#mw=")) {
