@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2
+
+- Colors for shareable/hash links
+
 ## 1.2.1
 
 - Error catching on fetch
