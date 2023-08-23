@@ -10,6 +10,7 @@ import type {
 import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
 import { useRoute } from "vue-router";
 import { parse } from "@markwhen/parser";
+import { useColors } from "./useColors";
 
 export const useMarkwhenStore = defineStore("markwhen", () => {
   const route = useRoute();
@@ -74,7 +75,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
             const mw = parse(text);
             app.value = {
               isDark: false,
-              colorMap: {},
+              colorMap: useColors(mw.timelines[0]).value,
             };
             markwhen.value = {
               rawText: text,
@@ -91,7 +92,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
       const mw = parse(decoded);
       app.value = {
         isDark: false,
-        colorMap: {},
+        colorMap: useColors(mw.timelines[0]).value,
       };
       markwhen.value = {
         rawText: decoded,
