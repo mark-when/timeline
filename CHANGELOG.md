@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Error catching on fetch
+
 ## 1.2.0
 - Separate markwhen and app state (internal)
 
