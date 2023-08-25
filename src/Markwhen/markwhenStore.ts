@@ -41,7 +41,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
 
   const pathOrHash = computed(() => {
     const { user, timeline } = route.params;
-    if (user) {
+    if (!route.path.includes(".html") && user) {
       return `/${user}` + (timeline ? `/${timeline}` : "");
     }
     if (app.value?.path && app.value.path !== "/") {

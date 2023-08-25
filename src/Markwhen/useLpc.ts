@@ -109,9 +109,20 @@ export const useLpc = (listeners?: MessageListeners) => {
     };
   }
 
+  let vscApi: { postMessage: (message: any) => void } | undefined = undefined;
+  const vscode = () => {
+    if (vscApi) {
+      return vscApi;
+    }
+    vscApi = acquireVsCodeApi!();
+    return vscApi;
+  };
+
   const post = <T extends MessageType>(message: Message<T>) => {
     if (socket && hasConnected) {
       socket.send(JSON.stringify(message));
+    } else if (typeof acquireVsCodeApi !== "undefined") {
+      vscode()?.postMessage(message);
     } else if (
       typeof window !== "undefined" &&
       typeof window.parent !== "undefined" &&
@@ -119,7 +130,7 @@ export const useLpc = (listeners?: MessageListeners) => {
     ) {
       window.parent.postMessage(message, "*");
     } else {
-      console.error("Nothing to post to")
+      console.error("Nothing to post to");
     }
   };
 

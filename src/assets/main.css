@@ -13,6 +13,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   mix-blend-mode: multiply;
+  padding: 0 !important;
 }
 
 .noScrollBar::-webkit-scrollbar {
