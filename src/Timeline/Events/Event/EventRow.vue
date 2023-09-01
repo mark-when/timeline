@@ -325,7 +325,7 @@ const ganttTitleStyle = computed(() => {
         />
         <Fade>
           <p
-            class="eventDate py-1"
+            class="eventDate text-sm whitespace-nowrap py-1"
             v-show="
               !isCollapsed && timelineStore.dateTimeDisplay === 'original'
             "
@@ -414,9 +414,7 @@ const ganttTitleStyle = computed(() => {
 
 .eventDate {
   font-family: system-ui;
-  font-size: 80%;
   margin: 0px 0px 0px 8px;
-  white-space: nowrap;
 }
 
 .source {
@@ -425,9 +423,6 @@ const ganttTitleStyle = computed(() => {
 
 .eventTitle {
   font-family: system-ui;
-  font-size: 80%;
-  white-space: nowrap;
-  font-weight: 600;
 
   grid-row: 1;
   grid-column: 3;

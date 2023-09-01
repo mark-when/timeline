@@ -20,7 +20,7 @@ const timelineStore = useTimelineStore();
 </script>
 
 <template>
-  <div class="eventTitle py-1 flex flex-row">
+  <div class="eventTitle whitespace-nowrap font-semibold text-sm py-1 flex flex-row">
     <div
       class="supplementalIndicators flex flex-row dark:text-gray-300 text-gray-500 gap-1 items-center justify-center pl-2"
     >

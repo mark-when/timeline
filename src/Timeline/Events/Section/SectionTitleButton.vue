@@ -46,8 +46,8 @@ const click = (e: MouseEvent) => emit("click", e);
   >
     <DepthIndicator :depth="path.split(',').length" />
     <div class="flex flex-row flex-grow items-center justify-center">
-      <span class="eventTitle" v-if="titleHtml" v-html="titleHtml"> </span>
-      <span class="eventTitle ml-1" v-if="!expanded">({{ numChildren }})</span>
+      <span class="eventTitle text-sm font-semibold whitespace-nowrap" v-if="titleHtml" v-html="titleHtml"> </span>
+      <span class="eventTitle text-sm font-semibold whitespace-nowrap ml-1" v-if="!expanded">({{ numChildren }})</span>
     </div>
     <UpCaret v-if="expanded" />
   </button>
@@ -56,8 +56,5 @@ const click = (e: MouseEvent) => emit("click", e);
 <style scoped>
 .eventTitle {
   font-family: system-ui;
-  font-size: 80%;
-  white-space: nowrap;
-  font-weight: 600;
 }
 </style>
