@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.3
+
+- VS code support, more consistent text sizing
+
 ## 1.2.2
 
 - Colors for shareable/hash links
