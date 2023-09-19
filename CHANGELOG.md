@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.2.4
+
+- Bump deps
+
 ## 1.2.3
 
 - VS code support, more consistent text sizing
