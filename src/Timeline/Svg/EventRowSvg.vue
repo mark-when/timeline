@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Node } from "@markwhen/parser/lib/Node";
-import { toDateRange, type Event } from "@markwhen/parser/lib/Types";
+import type { Node } from "@markwhen/parser";
+import { toDateRange, type Event } from "@markwhen/parser";
 import type { DateTime } from "luxon";
 import { computed, ref } from "vue";
 import { useEventRefs } from "@/Timeline/Events/useEventRefs";
 import { useTimelineStore } from "@/Timeline/timelineStore";
-import { expand } from "@markwhen/parser/lib/utilities/recurrence";
+import { expand } from "@markwhen/parser";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 
 const props = defineProps<{

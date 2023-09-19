@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
-import type { Path, Event } from "@markwhen/parser/lib/Types";
-import { isEventNode } from "@markwhen/parser/lib/Noder";
-import type { Node, SomeNode } from "@markwhen/parser/lib/Node";
+import type { Path, Event } from "@markwhen/parser";
+import { isEventNode } from "@markwhen/parser";
+import type { Node, SomeNode } from "@markwhen/parser";
 import { useNodeStore } from "@/Timeline/useNodeStore";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import EventRowSvg from "./EventRowSvg.vue";

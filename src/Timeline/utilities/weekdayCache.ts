@@ -1,7 +1,7 @@
 import type { DateTime } from "luxon";
 import LRU from "lru-cache";
 // @ts-ignore
-import * as lxt from "luxon/src/impl/conversions.js";
+import * as lxt from "../../../node_modules/luxon/src/impl/conversions.js";
 
 export const useWeekdayCache = () => {
   const weekdayCache = new LRU<string, number>({ max: 300 });

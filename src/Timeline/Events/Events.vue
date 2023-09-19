@@ -5,8 +5,8 @@ import { computed, inject } from "vue";
 import NewEvent from "./NewEvent/NewEvent.vue";
 import { useNodeStore, nodeKey } from "../useNodeStore";
 import EventNodeRow from "./EventNodeRow.vue";
-import type { Path } from "@markwhen/parser/lib/Types";
-import type { SomeNode } from "@markwhen/parser/lib/Node";
+import type { Path } from "@markwhen/parser";
+import type { SomeNode } from "@markwhen/parser";
 import GanttSidebar from "../Gantt/GanttSidebar.vue";
 import Section from "./Section/Section.vue";
 

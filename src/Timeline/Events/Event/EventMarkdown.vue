@@ -4,7 +4,7 @@ import type {
   Image,
   MarkdownBlock,
   Range,
-} from "@markwhen/parser/lib/Types";
+} from "@markwhen/parser";
 import { useTimelineStore } from "../../timelineStore";
 import { toInnerHtml } from "../../utilities/innerHtml";
 

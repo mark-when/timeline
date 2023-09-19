@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useCollapseStore } from "@/Timeline/collapseStore";
-import type { Path, GroupStyle } from "@markwhen/parser/lib/Types";
 import { computed, ref, watch } from "vue";
 import { useTimelineStore } from "../../timelineStore";
 import SectionTitleButton from "./SectionTitleButton.vue";
@@ -14,7 +13,7 @@ const props = defineProps<{
   titleHtml: string;
   color?: string;
   numChildren: number;
-  groupStyle: GroupStyle;
+  groupStyle: "group" | "section";
   fullWidth: number;
   left: number;
   hovering: boolean;

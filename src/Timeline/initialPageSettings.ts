@@ -1,4 +1,4 @@
-import type { DateRange, Timeline } from "@markwhen/parser/lib/Types";
+import type { DateRange, Timeline } from "@markwhen/parser";
 import { DateTime } from "luxon";
 import type { Viewport } from "./timelineStore";
 import {

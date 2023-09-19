@@ -1,4 +1,4 @@
-import { LINK_REGEX, AT_REGEX } from "@markwhen/parser/lib/Types";
+import { LINK_REGEX, AT_REGEX } from "@markwhen/parser";
 
 
 export function toInnerHtml(s: string): string {

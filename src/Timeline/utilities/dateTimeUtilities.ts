@@ -8,9 +8,9 @@ import {
   toDateRange,
   type DateFormat,
   type DateRange,
-} from "@markwhen/parser/lib/Types";
-import type { SomeNode } from "@markwhen/parser/lib/Node";
-import { isEventNode, eventValue } from "@markwhen/parser/lib/Noder";
+} from "@markwhen/parser";
+import type { SomeNode } from "@markwhen/parser";
+import { isEventNode, eventValue } from "@markwhen/parser";
 
 export type DisplayScale =
   | "second"
@@ -338,12 +338,12 @@ function dateTimeToString(
       const adjustedForward = dateTime.plus({ hours: 2 });
       return dateFormat
         ? dayFormat(adjustedForward, dateFormat)
-        : adjustedForward.toISODate();
+        : adjustedForward.toISODate()!;
     } else {
       const adjustedBack = dateTime.minus({ hours: 2 });
       return dateFormat
         ? dayFormat(adjustedBack, dateFormat)
-        : adjustedBack.toISODate();
+        : adjustedBack.toISODate()!;
     }
   }
 }

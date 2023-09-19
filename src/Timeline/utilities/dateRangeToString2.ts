@@ -1,4 +1,4 @@
-import type { DateFormat, DateRange } from "@markwhen/parser/lib/Types";
+import type { DateFormat, DateRange } from "@markwhen/parser";
 import { DateTime } from "luxon";
 
 export function dateRangeToString(range: DateRange, dateFormat?: DateFormat) {

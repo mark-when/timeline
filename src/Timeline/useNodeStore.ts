@@ -1,8 +1,8 @@
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { ranges } from "@/utilities/ranges";
-import type { NodeArray, SomeNode, Node } from "@markwhen/parser/lib/Node";
-import { eventValue, isEventNode, iterate } from "@markwhen/parser/lib/Noder";
-import type { Path, Event, Block } from "@markwhen/parser/lib/Types";
+import type { NodeArray, SomeNode, Node } from "@markwhen/parser";
+import { eventValue, isEventNode, iterate } from "@markwhen/parser";
+import type { Path, Event, Block } from "@markwhen/parser";
 import { defineStore } from "pinia";
 import { computed, reactive, ref, watch, watchEffect } from "vue";
 import { useTimelineStore } from "./timelineStore";

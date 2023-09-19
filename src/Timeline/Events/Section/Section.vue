@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useTimelineStore } from "@/Timeline/timelineStore";
-import type { NodeArray, SomeNode } from "@markwhen/parser/lib/Node";
+import type { NodeArray, SomeNode } from "@markwhen/parser";
 import { useEventColor } from "../composables/useEventColor";
 import ExpandedSectionBackground from "./ExpandedSectionBackground.vue";
 import { toInnerHtml } from "@/Timeline/utilities/innerHtml";

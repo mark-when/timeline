@@ -1,4 +1,4 @@
-import { RangeType, type Timeline } from "@markwhen/parser/lib/Types";
+import { RangeType, type Timeline } from "@markwhen/parser";
 import { computed } from "vue";
 
 // RGB, so we can use rgba(... ) with a different alpha where we need it

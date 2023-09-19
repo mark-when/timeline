@@ -7,7 +7,7 @@ import {
   type DateTimeIso,
   type MarkdownBlock,
   type Range,
-} from "@markwhen/parser/lib/Types";
+} from "@markwhen/parser";
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import EventBar from "@/Timeline/Events/Event/EventBar.vue";
 import { useResize } from "@/Timeline/Events/Event/Edit/composables/useResize";
@@ -15,8 +15,8 @@ import EventTitle from "./EventTitle.vue";
 import MoveWidgets from "./Edit/MoveWidgets.vue";
 import type { EventPath } from "@/Timeline/paths";
 import Fade from "@/Transitions/Fade.vue";
-import type { Recurrence } from "@markwhen/parser/lib/dateRange/checkRecurrence";
-import { expand } from "@markwhen/parser/lib/utilities/recurrence";
+import type { Recurrence } from "@markwhen/parser";
+import { expand } from "@markwhen/parser";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { useNodePosition } from "../composables/useNodePosition";
 

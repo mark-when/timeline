@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { GroupStyle, Path } from "@markwhen/parser/lib/Types";
 import { computed, ref, watch } from "vue";
 import DepthIndicator from "./DepthIndicator.vue";
 import UpCaret from "./UpCaret.vue";
@@ -8,7 +7,7 @@ const props = defineProps<{
   titleHtml: string;
   expanded: boolean;
   numChildren: number;
-  groupStyle: GroupStyle;
+  groupStyle: "group" | "section";
   path: string;
 }>();
 
@@ -46,8 +45,17 @@ const click = (e: MouseEvent) => emit("click", e);
   >
     <DepthIndicator :depth="path.split(',').length" />
     <div class="flex flex-row flex-grow items-center justify-center">
-      <span class="eventTitle text-sm font-semibold whitespace-nowrap" v-if="titleHtml" v-html="titleHtml"> </span>
-      <span class="eventTitle text-sm font-semibold whitespace-nowrap ml-1" v-if="!expanded">({{ numChildren }})</span>
+      <span
+        class="eventTitle text-sm font-semibold whitespace-nowrap"
+        v-if="titleHtml"
+        v-html="titleHtml"
+      >
+      </span>
+      <span
+        class="eventTitle text-sm font-semibold whitespace-nowrap ml-1"
+        v-if="!expanded"
+        >({{ numChildren }})</span
+      >
     </div>
     <UpCaret v-if="expanded" />
   </button>

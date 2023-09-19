@@ -1,4 +1,4 @@
-import type { Recurrence } from "@markwhen/parser/lib/dateRange/checkRecurrence";
+import type { Recurrence } from "@markwhen/parser";
 import {
   Block,
   BlockType,
@@ -8,7 +8,7 @@ import {
   type EventDescription,
   type MarkdownBlock,
   type Range,
-} from "@markwhen/parser/lib/Types";
+} from "@markwhen/parser";
 
 export const bothDefined = <T>(a: T | undefined, b: T | undefined) => {
   if (typeof a === "undefined" && typeof b === "undefined") {

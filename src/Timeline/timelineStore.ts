@@ -15,8 +15,8 @@ import {
   scaleToGetDistance,
 } from "./initialPageSettings";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
-import type { Node, NodeArray } from "@markwhen/parser/lib/Node";
-import type { DateRange } from "@markwhen/parser/lib/Types";
+import type { Node, NodeArray } from "@markwhen/parser";
+import type { DateRange } from "@markwhen/parser";
 
 export const recurrenceLimit = 100;
 

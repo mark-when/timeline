@@ -2,9 +2,9 @@ import type {
   SomeNode,
   GroupRange,
   NodeArray,
-} from "@markwhen/parser/lib/Node";
-import { Event, toDateRange, type DateRange } from "@markwhen/parser/lib/Types";
-import { expand } from "@markwhen/parser/lib/utilities/recurrence";
+} from "@markwhen/parser";
+import { Event, toDateRange, type DateRange } from "@markwhen/parser";
+import { expand } from "@markwhen/parser";
 import LRUCache from "lru-cache";
 
 const cache = new LRUCache<string, DateRange>({ max: 1000 });

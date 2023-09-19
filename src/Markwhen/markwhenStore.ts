@@ -6,7 +6,7 @@ import type {
   DateFormat,
   DateRangeIso,
   DateTimeGranularity,
-} from "@markwhen/parser/lib/Types";
+} from "@markwhen/parser";
 import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
 import { useRoute } from "vue-router";
 import { parse } from "@markwhen/parser";

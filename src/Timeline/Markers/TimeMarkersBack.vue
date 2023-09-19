@@ -9,8 +9,8 @@ import {
 } from "@/Timeline/Markers/markersStore";
 import { useWeekdayCache } from "../utilities/weekdayCache";
 import { useTimelineStore } from "../timelineStore";
-import { isEventNode } from "@markwhen/parser/lib/Noder";
-import { toDateRange } from "@markwhen/parser/lib/Types";
+import { isEventNode } from "@markwhen/parser";
+import { toDateRange } from "@markwhen/parser";
 import { useEventColor } from "../Events/composables/useEventColor";
 import { equivalentPaths } from "../paths";
 import { walk } from "../useNodeStore";

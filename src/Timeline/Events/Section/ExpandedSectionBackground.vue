@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useIsHoveredInEditor } from "@/Timeline/composables/useIsHoveredInEditor";
-import type { SomeNode } from "@markwhen/parser/lib/Node";
+import type { SomeNode } from "@markwhen/parser";
 import { computed } from "@vue/reactivity";
 import { useTimelineStore } from "../../timelineStore";
 import { useEventColor } from "../composables/useEventColor";

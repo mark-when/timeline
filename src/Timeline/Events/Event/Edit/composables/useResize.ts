@@ -5,7 +5,7 @@ import {
   floorDateTime,
   roundDateTime,
 } from "../../../../utilities/dateTimeUtilities";
-import type { DateTimeIso } from "@markwhen/parser/lib/Types";
+import type { DateTimeIso } from "@markwhen/parser";
 import type { MaybeRef } from "@vueuse/core";
 import { DateTime } from "luxon";
 import { computed, ref, unref } from "vue";
@@ -98,7 +98,7 @@ export const useResize = (
       markersStore.nextMostGranularScaleOfViewportDateInterval
     );
 
-    tempFromIso.value = floored.toISO();
+    tempFromIso.value = floored.toISO()!;
   };
 
   const moveListenerRight = (e: MouseEvent | TouchEvent) => {
@@ -115,7 +115,7 @@ export const useResize = (
       markersStore.nextMostGranularScaleOfViewportDateInterval
     );
 
-    tempToIso.value = floored.toISO();
+    tempToIso.value = floored.toISO()!;
   };
 
   const dragHandleListenerLeft = (e: MouseEvent | TouchEvent) => {
@@ -151,8 +151,8 @@ export const useResize = (
       date,
       markersStore.nextMostGranularScaleOfViewportDateInterval
     );
-    tempFromIso.value = rounded.toISO();
-    tempToIso.value = rounded.plus({ [diffScale]: diff.value }).toISO();
+    tempFromIso.value = rounded.toISO()!;
+    tempToIso.value = rounded.plus({ [diffScale]: diff.value }).toISO()!;
   };
 
   const moveEnd = (e: MouseEvent | TouchEvent) => {

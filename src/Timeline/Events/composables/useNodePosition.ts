@@ -1,5 +1,5 @@
 import { useCollapseStore } from "@/Timeline/collapseStore";
-import type { Path } from "@markwhen/parser/lib/Types";
+import type { Path } from "@markwhen/parser";
 import type { MaybeRef } from "@vueuse/core";
 import { computed, unref } from "vue";
 import { useTimelineStore } from "../../timelineStore";

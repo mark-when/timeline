@@ -1,6 +1,6 @@
-import { COMPLETION_REGEX } from "@markwhen/parser/lib/regex";
-import type { Event } from "@markwhen/parser/lib/Types";
-import type { Node } from "@markwhen/parser/lib/Node";
+import { COMPLETION_REGEX } from "@markwhen/parser";
+import type { Event } from "@markwhen/parser";
+import type { Node } from "@markwhen/parser";
 import { ref, watchEffect, type Ref, watch, unref, computed } from "vue";
 import { useTimelineStore } from "../timelineStore";
 import {

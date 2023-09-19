@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Block, MarkdownBlock, Range } from "@markwhen/parser/lib/Types";
+import type { Block, MarkdownBlock, Range } from "@markwhen/parser";
 import { computed, watch } from "vue";
 import EventMarkdown from "./EventMarkdown.vue";
 

@@ -2,7 +2,7 @@ import { useCanPanStore } from "@/Timeline/composables/canPan";
 import { useMarkersStore } from "@/Timeline/Markers/markersStore";
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import type { OffsetRange } from "@/Timeline/utilities/dateTimeUtilities";
-import { toDateRangeIso, type DateFormat } from "@markwhen/parser/lib/Types";
+import { toDateRangeIso, type DateFormat } from "@markwhen/parser";
 import { computed, ref, watch } from "vue";
 
 export const useCreateEvent = () => {

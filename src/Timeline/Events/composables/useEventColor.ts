@@ -1,6 +1,6 @@
-import type { SomeNode } from "@markwhen/parser/lib/Node";
-import { isEventNode, eventValue } from "@markwhen/parser/lib/Noder";
-import { Event } from "@markwhen/parser/lib/Types";
+import type { SomeNode } from "@markwhen/parser";
+import { isEventNode, eventValue } from "@markwhen/parser";
+import { Event } from "@markwhen/parser";
 import type { MaybeRef } from "@vueuse/core";
 import { ref, unref, watchEffect } from "vue";
 import { useTimelineStore } from "../../timelineStore";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Node, SomeNode } from "@markwhen/parser/lib/Node";
+import type { Node, SomeNode } from "@markwhen/parser";
 import { computed, watch } from "vue";
 import EventRow from "./Event/EventRow.vue";
 import { equivalentPaths } from "@/Timeline/paths";
@@ -9,8 +9,8 @@ import {
   type DateFormat,
   type DateRange,
   type Event,
-} from "@markwhen/parser/lib/Types";
-import { eventValue, isEventNode } from "@markwhen/parser/lib/Noder";
+} from "@markwhen/parser";
+import { eventValue, isEventNode } from "@markwhen/parser";
 import { useTimelineStore } from "../timelineStore";
 
 const props = defineProps<{

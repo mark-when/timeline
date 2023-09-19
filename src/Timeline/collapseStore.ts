@@ -1,8 +1,8 @@
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import { defineStore } from "pinia";
 import { walk } from "@/Timeline/useNodeStore";
-import { isEventNode } from "@markwhen/parser/lib/Noder";
-import type { Path } from "@markwhen/parser/lib/Types";
+import { isEventNode } from "@markwhen/parser";
+import type { Path } from "@markwhen/parser";
 import { useTimelineStore } from "./timelineStore";
 import { ref } from "vue";
 

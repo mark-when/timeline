@@ -1,7 +1,7 @@
 import type { EventPath } from "@/Timeline/paths";
 import { useTimelineStore } from "@/Timeline/timelineStore";
-import type { SomeNode } from "@markwhen/parser/lib/Node";
-import { get } from "@markwhen/parser/lib/Noder";
+import type { SomeNode } from "@markwhen/parser";
+import { get } from "@markwhen/parser";
 import type { MaybeRef } from "@vueuse/core";
 import { computed, ref, watchEffect, unref } from "vue";
 

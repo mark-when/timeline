@@ -2,9 +2,9 @@
 import { computed } from "vue";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import SettingsButton from "./SettingsButton.vue";
-import { RECURRENCE_AMOUNT_REGEX } from "@markwhen/parser/lib/regex";
+import { RECURRENCE_AMOUNT_REGEX } from "@markwhen/parser";
 import { DateTime, type DurationUnit } from "luxon";
-import type { DateRange } from "@markwhen/parser/lib/Types";
+import type { DateRange } from "@markwhen/parser";
 import { useTimelineStore } from "../timelineStore";
 
 const markwhenStore = useMarkwhenStore();
