@@ -202,7 +202,7 @@ export const useNodeStore = defineStore("nodes", () => {
               const range = ranges(pAndN.node, recurrenceLimit)!;
               const left =
                 timelineStore.pageScaleBy24 *
-                timelineStore.scalelessDistanceFromBaselineLeftmostDate(
+                timelineStore.scalelessDistanceFromReferenceDate(
                   range.fromDateTime
                 );
               const width =

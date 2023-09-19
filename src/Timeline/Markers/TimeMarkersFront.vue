@@ -60,7 +60,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 
 <template>
   <div class="fixed inset-0 pointer-events-none">
-    <div class="flex relative" :style="`margin-left: -${leftMargin}px`">
+    <div class="flex relative" :style="`margin-left: -${leftMargin}px;`">
       <div
         class="timeMarkerShader w-full h-12 fixed top-0 transition"
         :style="{

@@ -12,7 +12,7 @@ const nodeStore = useNodeStore();
   >
     <span
       >{{ Math.round(timelineStore.pageScale * 100) / 100 }}
-      {{ timelineStore.baselineLeftmostDate }}</span
+      {{ timelineStore.referenceDate }}</span
     >
     <span>{{ timelineStore.scaleOfViewportDateInterval }}</span>
     <span>sections: {{ nodeStore.visibleNodes[1].length }}</span>

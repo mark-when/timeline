@@ -133,13 +133,13 @@ export const useMarkersStore = defineStore("markers", () => {
       {
         dateTime: floored,
         left:
-          timelineStore.distanceFromBaselineLeftmostDate(floored) +
+          timelineStore.distanceFromReferenceDate(floored) +
           timelineStore.leftInsetWidth,
       },
       {
         dateTime: ceiled,
         left:
-          timelineStore.distanceFromBaselineLeftmostDate(ceiled) +
+          timelineStore.distanceFromReferenceDate(ceiled) +
           timelineStore.leftInsetWidth,
       },
     ] as [DateTimeAndOffset, DateTimeAndOffset];

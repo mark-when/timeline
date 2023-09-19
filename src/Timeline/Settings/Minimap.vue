@@ -9,7 +9,7 @@ const dark = computed(() => !!timelineStore.darkMode);
 
 const vp = computed(() => timelineStore.pageSettings.viewport);
 const additionalOffsetLeft = computed(() =>
-  timelineStore.distanceFromBaselineLeftmostDate(
+  timelineStore.distanceFromReferenceDate(
     DateTime.fromISO(timelineStore.pageTimelineMetadata.earliestTime)
   )
 );

@@ -22,10 +22,8 @@ const props = defineProps<{
   groupStyle?: "group" | "section";
 }>();
 
-const {
-  scalelessDistanceBetweenDates,
-  scalelessDistanceFromBaselineLeftmostDate,
-} = timelineStore;
+const { scalelessDistanceBetweenDates, scalelessDistanceFromReferenceDate } =
+  timelineStore;
 
 const collapsed = computed({
   get: () => collapseStore.isCollapsed(props.path),
@@ -50,9 +48,7 @@ const left = computed(() => {
   if (!props.node || !sectionRange.value) {
     return 10;
   }
-  return scalelessDistanceFromBaselineLeftmostDate(
-    sectionRange.value.fromDateTime
-  );
+  return scalelessDistanceFromReferenceDate(sectionRange.value.fromDateTime);
 });
 
 const { color } = useEventColor(computed(() => props.node));

@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, inject, nextTick, ref, watch, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import {
   toDateRange,
+  expand,
   type Block,
   type DateRange,
   type DateTimeIso,
   type MarkdownBlock,
   type Range,
+  type Recurrence,
 } from "@markwhen/parser";
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import EventBar from "@/Timeline/Events/Event/EventBar.vue";
@@ -15,8 +17,6 @@ import EventTitle from "./EventTitle.vue";
 import MoveWidgets from "./Edit/MoveWidgets.vue";
 import type { EventPath } from "@/Timeline/paths";
 import Fade from "@/Transitions/Fade.vue";
-import type { Recurrence } from "@markwhen/parser";
-import { expand } from "@markwhen/parser";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { useNodePosition } from "../composables/useNodePosition";
 
@@ -157,13 +157,15 @@ const expandedRecurrence = computed(() =>
 
 const left = computed(() => {
   return (
-    timelineStore.pageScaleBy24 * realLeft.value + timelineStore.leftInsetWidth
+    timelineStore.pageScaleBy24 * realLeft.value +
+    timelineStore.leftInsetWidth +
+    timelineStore.pageSettings.viewport.width / 2
   );
 });
 
 const realLeft = ref();
 watchEffect(() => {
-  realLeft.value = timelineStore.scalelessDistanceFromBaselineLeftmostDate(
+  realLeft.value = timelineStore.scalelessDistanceFromReferenceDate(
     range.value.fromDateTime
   );
 });
@@ -418,7 +420,8 @@ const ganttTitleStyle = computed(() => {
 }
 
 .source {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .eventTitle {

@@ -23,6 +23,7 @@ import { useNodePosition } from "./Events/composables/useNodePosition";
 import { useEventFinder } from "@/utilities/useEventFinder";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import SvgView from "./Svg/SvgView.vue";
+import NowLine from "./Events/NowLine.vue";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -164,32 +165,15 @@ const scrollToDate = (
   force: boolean = false,
   immediate: boolean = false
 ) => {
-  const el = timelineElement.value;
-  if (el) {
-    const fromLeft = timelineStore.distanceFromBaselineLeftmostDate(dateTime);
-    const { left, width } = getViewport();
-
-    const immediateScroll = () => {
-      el.scrollLeft = fromLeft - width / 2;
-    };
-
-    // If it isn't already within view
-    if (force || fromLeft < left || fromLeft > left + width) {
-      immediate
-        ? immediateScroll()
-        : el.scrollTo({
-            top: el.scrollTop,
-            left: fromLeft - width / 2,
-            behavior: "smooth",
-          });
-    }
-  }
+  // timelineStore.referenceDate = dateTime;
 };
 
 const scrollToDateRangeImmediate = (
   dateRange?: DateRange,
   buffered: boolean = true
 ) => {
+  console.log(dateRange?.fromDateTime.toISODate());
+  console.log(dateRange?.toDateTime.toISODate());
   if (!dateRange) {
     return;
   }
@@ -300,9 +284,10 @@ markwhenStore.onGetSvg = (params) => {
       :style="{ cursor: isPanning ? 'grabbing' : 'grab' }"
     >
       <TimeMarkersBack />
+      <!-- <now-line /> -->
       <Events />
-      <TimeMarkersFront />
-      <DebugView v-if="false" />
+      <!-- <TimeMarkersFront /> -->
+      <DebugView v-if="true" />
       <div ref="svgHolder" style="width: 0; height: 0">
         <SvgView v-if="svgParams" v-bind="svgParams" ref="svgView"></SvgView>
       </div>
