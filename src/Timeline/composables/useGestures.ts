@@ -99,7 +99,7 @@ export const useGestures = (
       const newScrollTop =
         pinchStartScrollTop! + pinchStartCenterY! - wg.origin.y;
 
-      el.value!.scrollLeft = newScrollLeft;
+      // el.value!.scrollLeft = newScrollLeft;
       el.value!.scrollTop = newScrollTop;
       onSetScale();
     }
