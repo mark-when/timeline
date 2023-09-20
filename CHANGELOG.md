@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.2.5
+
+- Use colors for statically generated timelines
+
 # 1.2.4
 
 - Bump deps
