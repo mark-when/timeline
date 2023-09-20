@@ -8,8 +8,7 @@ const now = ref(DateTime.now());
 
 const setNow = () => {
   now.value = DateTime.now();
-  console.log(timelineStore.distanceFromReferenceDate(DateTime.now()));
-  setTimeout(() => setNow(), 100 * 60);
+  setTimeout(() => setNow(), 1000 * 60);
 };
 
 onMounted(() => {
