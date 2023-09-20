@@ -223,20 +223,36 @@ export const useTimelineStore = defineStore("timeline", () => {
   //     "year"
   //   );
   // });
+
+  //  0 1 2 3
+  // | | | |-| | | |
+  // total width === viewport.width * 7
+  const baseOffset = computed(() => {
+    return pageSettings.value.viewport.width * 3;
+  });
+
   const dateIntervalFromViewport = computed(() => {
     return (scrollLeft: number, width: number) => {
       // We're adding these so that when we are scrolling it looks like the left
       // time markers are going off the screen
-      scrollLeft = scrollLeft - viewportLeftMarginPixels;
-      width = width + viewportLeftMarginPixels * 2;
+      console.log(
+        width + scrollLeft + viewportLeftMarginPixels - baseOffset.value
+      );
+      const scrollWithOffset =
+        scrollLeft + viewportLeftMarginPixels - baseOffset.value;
+      // scrollLeft = scrollLeft - viewportLeftMarginPixels - baseOffset.value;
+      width = width + viewportLeftMarginPixels;
 
       const mid = referenceDate.value;
-      const amount = {
-        [diffScale]: (width / 2 / pageScale.value) * 24,
-      };
-      const leftDate = mid.minus(amount);
-      const rightDate = mid.plus(amount);
-      return { fromDateTime: leftDate, toDateTime: rightDate };
+      const fromDateTime = mid.minus({
+        [diffScale]: ((width - scrollWithOffset) / pageScale.value) * 24,
+      });
+      const diff = mid.diff(fromDateTime);
+      console.log(diff.as("months"));
+      const toDateTime = mid.plus({
+        [diffScale]: (scrollWithOffset / pageScale.value) * 24,
+      });
+      return { fromDateTime, toDateTime };
     };
   });
   const scalelessDistanceBetweenDates = (a: DateTime, b: DateTime) =>
@@ -252,7 +268,8 @@ export const useTimelineStore = defineStore("timeline", () => {
   const distanceFromReferenceDate = computed(
     () => (a: DateTime) =>
       (a.diff(referenceDate.value).as(diffScale) * pageScale.value) / 24 +
-      pageSettings.value.viewport.width / 2
+      pageSettings.value.viewport.width +
+      baseOffset.value
   );
   const distanceFromViewportLeftDate = (a: DateTime) =>
     (a
@@ -366,6 +383,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     dateTimeDisplay,
     progressDisplay,
     colors: computed(() => markwhenStore.app?.colorMap),
+    baseOffset,
     // editable,
 
     // getters

@@ -14,7 +14,12 @@ const nodeStore = useNodeStore();
       >{{ Math.round(timelineStore.pageScale * 100) / 100 }}
       {{ timelineStore.referenceDate }}</span
     >
-    <span>{{ timelineStore.scaleOfViewportDateInterval }}</span>
+    <span>{{
+      timelineStore.pageSettings.viewportDateInterval.fromDateTime.toISODate()
+    }}</span>
+    <span>{{
+      timelineStore.pageSettings.viewportDateInterval.toDateTime.toISODate()
+    }}</span>
     <span>sections: {{ nodeStore.visibleNodes[1].length }}</span>
     <span>events: {{ nodeStore.visibleNodes[0].length }}</span>
   </div>

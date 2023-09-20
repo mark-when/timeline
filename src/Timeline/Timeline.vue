@@ -23,7 +23,6 @@ import { useNodePosition } from "./Events/composables/useNodePosition";
 import { useEventFinder } from "@/utilities/useEventFinder";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import SvgView from "./Svg/SvgView.vue";
-import NowLine from "./Events/NowLine.vue";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -72,13 +71,14 @@ const getViewport = (): Viewport => {
   if (!timelineElement.value) {
     return { left: 0, width: 0, top: 0, height: 0, offsetLeft: 0 };
   }
-  return {
+  const vp = {
     left: timelineElement.value.scrollLeft,
     width: timelineElement.value.clientWidth,
     top: timelineElement.value.scrollTop,
     height: timelineElement.value.clientHeight,
     offsetLeft: timelineElement.value.offsetLeft,
   };
+  return vp;
 };
 
 const setViewport = (v: Viewport) => {
@@ -122,8 +122,8 @@ watch(
     const startCenter =
       widthChangeStartScrollLeft.value! + timelineElement.value.clientWidth / 2;
     const scale = settings.scale / (widthChangeStartYearWidth.value || 1);
-    timelineElement.value.scrollLeft =
-      scale * startCenter - timelineElement.value.clientWidth / 2;
+    // timelineElement.value.scrollLeft =
+    //   scale * startCenter - timelineElement.value.clientWidth / 2;
   },
   { deep: true }
 );
@@ -165,7 +165,7 @@ const scrollToDate = (
   force: boolean = false,
   immediate: boolean = false
 ) => {
-  // timelineStore.referenceDate = dateTime;
+  // timelineStore.setReferenceDate(dateTime);
 };
 
 const scrollToDateRangeImmediate = (
@@ -227,7 +227,7 @@ const setInitialScrollAndScale = () =>
   scrollToDateRangeImmediate(timelineStore.pageRange);
 
 onMounted(() => {
-  setInitialScrollAndScale();
+  scrollToNow();
   timelineStore.setViewportGetter(getViewport);
 });
 
@@ -278,15 +278,13 @@ markwhenStore.onGetSvg = (params) => {
   >
     <div
       id="timeline"
-      class="relative h-full overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-700"
+      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-700"
       ref="timelineElement"
       @scroll="scroll"
-      :style="{ cursor: isPanning ? 'grabbing' : 'grab' }"
     >
       <TimeMarkersBack />
-      <!-- <now-line /> -->
       <Events />
-      <!-- <TimeMarkersFront /> -->
+      <TimeMarkersFront />
       <DebugView v-if="true" />
       <div ref="svgHolder" style="width: 0; height: 0">
         <SvgView v-if="svgParams" v-bind="svgParams" ref="svgView"></SvgView>

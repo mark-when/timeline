@@ -36,26 +36,38 @@ const currentWidth = computed(() => {
   }
   return timelineStore.ganttSidebarWidth;
 });
+const width = computed(() => {
+  return timelineStore.pageSettings.viewport.width * 7;
+});
 </script>
 
 <template>
-  <!-- <now-line /> -->
   <div
-    v-if="timelineStore.mode === 'gantt'"
-    class="sticky left-0 relative flex flex-col bg-slate-50 dark:bg-slate-800 top-0 bottom-0 z-[2] h-full"
-    :style="`width: calc(${currentWidth}px);`"
-  ></div>
-  <template
-    v-for="{ path, node } in nodeStore.visibleNodes[1]"
-    :key="nodeStore.sectionKeys.get(path.join(','))"
+    id="events"
+    class="flex flex-col relative"
+    :style="`height: max(${height}, 100vh); width: ${width}px;`"
   >
-    <Section v-bind="props(path, node)"></Section>
-  </template>
-  <template v-for="{ path, node, key } in nodeStore.visibleNodes[0]" :key="key">
-    <EventNodeRow v-bind="props(path, node)"></EventNodeRow>
-  </template>
-  <new-event />
-  <GanttSidebar />
+    <now-line />
+    <div
+      v-if="timelineStore.mode === 'gantt'"
+      class="sticky left-0 relative flex flex-col bg-slate-50 dark:bg-slate-800 top-0 bottom-0 z-[2] h-full"
+      :style="`width: calc(${currentWidth}px);`"
+    ></div>
+    <template
+      v-for="{ path, node } in nodeStore.visibleNodes[1]"
+      :key="nodeStore.sectionKeys.get(path.join(','))"
+    >
+      <Section v-bind="props(path, node)"></Section>
+    </template>
+    <template
+      v-for="{ path, node, key } in nodeStore.visibleNodes[0]"
+      :key="key"
+    >
+      <EventNodeRow v-bind="props(path, node)"></EventNodeRow>
+    </template>
+    <new-event />
+    <GanttSidebar />
+  </div>
 </template>
 
 <style scoped></style>

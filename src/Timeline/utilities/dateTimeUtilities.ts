@@ -66,7 +66,7 @@ export function dateScale(dateTime: DateTime) {
   return Weight.SECOND;
 }
 
-export const viewportLeftMarginPixels = 1024;
+export const viewportLeftMarginPixels = 64;
 export const diffScale = "hours";
 
 export interface DateInterval {

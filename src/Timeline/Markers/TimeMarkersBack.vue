@@ -96,101 +96,49 @@ const eras = computed(() => {
   });
   return erasAndMilestoneEvents;
 });
-const currentDateResolution = computed(() => {
-  for (let i = 0; i < timelineStore.weights.length; i++) {
-    if (timelineStore.weights[i] > timeMarkerWeightMinimum) {
-      return i;
-    }
-  }
-  return Weight.DECADE;
-});
-const scaleForThisDate = computed(
-  () => (timeMarker: TimeMarker) => dateScale(timeMarker.dateTime)
-);
-const text = computed(
-  () => (timeMarker: TimeMarker) =>
-    granularities[currentDateResolution.value][
-      scaleForThisDate.value(timeMarker)
-    ](timeMarker.dateTime)
-);
-const opacity = computed(
-  () => (timeMarker: TimeMarker) => clamp((alpha.value(timeMarker) - 0.3) * 5)
-);
-const isHovering = computed(
-  () => (timeMarker: TimeMarker) =>
-    markersStore.hoveringMarker &&
-    +markersStore.hoveringMarker?.dateTime === +timeMarker.dateTime
-);
-const hoveringText = computed(() => (timeMarker: TimeMarker) => {
-  const dt = timeMarker.dateTime;
-  if (currentDateResolution.value > 5) {
-    return dt.year;
-  }
-  if (currentDateResolution.value > 3) {
-    return dt.toLocaleString(DateTime.DATE_HUGE);
-  }
-  return dt.toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS);
-});
 </script>
 
 <template>
-  <!-- <div class="fixed inset-0"> -->
-  <div
-    class="flex flex-row h-full relative"
-    :style="`margin-left: -${leftMargin}px`"
-  >
+  <div class="fixed inset-0">
     <div
-      v-for="timeMarker in markersStore.markers"
-      :key="timeMarker.ts"
-      class="h-full flex-shrink-0 absolute top-0 bottom-0"
-      :style="{
-        backgroundColor: backgroundColor(timeMarker),
-        width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
-        left: `${
-          timelineStore.pageScaleBy24 *
-            (timeMarker.accumulated - timeMarker.size) +
-          timelineStore.leftInsetWidth
-        }px`,
-        borderLeft: `1px ${
-          hovering(timeMarker) ? 'solid' : 'dashed'
-        } ${borderColor(timeMarker)}`,
-      }"
+      class="flex flex-row h-full relative"
+      :style="`margin-left: -${leftMargin}px`"
     >
-      <h6
-        :class="{ 'font-bold': isHovering(timeMarker) }"
-        class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black"
-        :style="{
-          opacity: isHovering(timeMarker) ? 1 : opacity(timeMarker),
-        }"
-      >
-        {{ text(timeMarker) }}
-      </h6>
       <div
-        v-if="isHovering(timeMarker) && currentDateResolution <= 6"
-        style="padding-left: 8px"
-      >
-        <h6 class="whitespace-nowrap text-xs font-bold">
-          {{ hoveringText(timeMarker) }}
-        </h6>
-      </div>
+        v-for="timeMarker in markersStore.markers"
+        :key="timeMarker.ts"
+        class="h-full flex-shrink-0 absolute top-0 bottom-0"
+        :style="{
+          backgroundColor: backgroundColor(timeMarker),
+          width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
+          left: `${
+            timelineStore.pageScaleBy24 *
+              (timeMarker.accumulated - timeMarker.size) +
+            timelineStore.leftInsetWidth +
+            viewportLeftMarginPixels
+          }px`,
+          borderLeft: `1px ${
+            hovering(timeMarker) ? 'solid' : 'dashed'
+          } ${borderColor(timeMarker)}`,
+        }"
+      ></div>
     </div>
+    <div
+      v-for="era in eras"
+      class="absolute top-0 bottom-0 h-full border-l border-r transition"
+      :class="
+        !era.backgroundColor
+          ? `bg-gray-300/50 dark:bg-gray-300/10 border-gray-500/50`
+          : ''
+      "
+      :style="{
+        left: `${era.left}px`,
+        width: `${era.width}px`,
+        backgroundColor: era.backgroundColor,
+        borderColor: era.borderColor,
+      }"
+    ></div>
   </div>
-  <div
-    v-for="era in eras"
-    class="absolute top-0 bottom-0 h-full border-l border-r transition"
-    :class="
-      !era.backgroundColor
-        ? `bg-gray-300/50 dark:bg-gray-300/10 border-gray-500/50`
-        : ''
-    "
-    :style="{
-      left: `${era.left}px`,
-      width: `${era.width}px`,
-      backgroundColor: era.backgroundColor,
-      borderColor: era.borderColor,
-    }"
-  ></div>
-  <!-- </div> -->
 </template>
 
 <style>

@@ -159,7 +159,8 @@ const left = computed(() => {
   return (
     timelineStore.pageScaleBy24 * realLeft.value +
     timelineStore.leftInsetWidth +
-    timelineStore.pageSettings.viewport.width / 2
+    timelineStore.baseOffset +
+    timelineStore.pageSettings.viewport.width
   );
 });
 

@@ -60,23 +60,19 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 
 <template>
   <div class="fixed inset-0 pointer-events-none">
-    <div class="flex relative" :style="`margin-left: -${leftMargin}px;`">
-      <div
-        class="timeMarkerShader w-full h-12 fixed top-0 transition"
-        :style="{
-          marginLeft: `${leftMargin}px`,
-        }"
-      ></div>
+    <div class="flex relative" >
+      <div class="timeMarkerShader w-full h-12 fixed top-0 transition"></div>
       <!-- <SquashBars /> -->
       <div
         v-for="timeMarker in markerStore.markers"
         :key="timeMarker.ts"
-        class="flex-shrink-0 absolute top-0 bottom-0"
+        class="flex-shrink-0 h-full"
         :style="{
           left: `${
             timelineStore.pageScaleBy24 *
               (timeMarker.accumulated - timeMarker.size) +
-            timelineStore.leftInsetWidth
+            timelineStore.leftInsetWidth -
+            viewportLeftMarginPixels
           }px`,
           width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
         }"
@@ -100,7 +96,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
         </div>
       </div>
     </div>
-    <Settings />
+    <!-- <Settings /> -->
   </div>
 </template>
 
