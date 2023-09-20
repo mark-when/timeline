@@ -227,8 +227,9 @@ const setInitialScrollAndScale = () =>
   scrollToDateRangeImmediate(timelineStore.pageRange);
 
 onMounted(() => {
-  scrollToNow();
+  // scrollToNow();
   timelineStore.setViewportGetter(getViewport);
+  timelineElement.value!.scrollLeft = getViewport().width * 3.5
 });
 
 const svgParams = ref();
