@@ -7,6 +7,7 @@ import type {
   DateTimeGranularity,
   Timeline,
 } from "@markwhen/parser";
+import { useColors } from "./useColors";
 
 export interface AppState {
   isDark?: boolean;
@@ -192,7 +193,12 @@ export const useLpc = (listeners?: MessageListeners) => {
     // @ts-ignore
     (window.__markwhen_initial_state as State | undefined);
   if (initialState && listeners && listeners.markwhenState) {
+    const state = initialState as MarkwhenState;
+    const colorMap = useColors(state.parsed[0]).value;
     listeners.markwhenState(initialState);
+    listeners.appState?.({
+      colorMap,
+    });
   }
 
   return { postRequest };
