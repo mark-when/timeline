@@ -184,26 +184,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     () => pageTimelineMetadata.value.maxDurationDays
   );
 
-  // The middle of the screen. Should change when we scroll far enough.
-  const reference = ref({
-    date: DateTime.now(),
-    scale: pageSettings.value.scale,
-    left:
-      pageSettings.value.viewport.width / 2 -
-      pageSettings.value.viewport.offsetLeft,
-  });
-
-  const referenceDate = computed(() => reference.value.date);
-  const setReferenceDate = (dt: DateTime) => {};
-  watch(
-    referenceDate,
-    (d) => {
-      console.log(d.toISODate());
-    },
-    {
-      immediate: true,
-    }
-  );
+  const referenceDate = ref(DateTime.now());
   // watchEffect(() => {
   //   const newValue = calculateBaselineLeftmostDate(
   //     earliest.value,
