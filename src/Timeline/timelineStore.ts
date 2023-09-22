@@ -184,6 +184,8 @@ export const useTimelineStore = defineStore("timeline", () => {
     () => pageTimelineMetadata.value.maxDurationDays
   );
 
+  const hoveringDate = ref(DateTime.now());
+
   const referenceDate = ref(DateTime.now());
   // watchEffect(() => {
   //   const newValue = calculateBaselineLeftmostDate(
@@ -214,11 +216,6 @@ export const useTimelineStore = defineStore("timeline", () => {
 
   const dateIntervalFromViewport = computed(() => {
     return (scrollLeft: number, width: number) => {
-      // We're adding these so that when we are scrolling it looks like the left
-      // time markers are going off the screen
-      console.log(
-        width + scrollLeft + viewportLeftMarginPixels - baseOffset.value
-      );
       const scrollWithOffset =
         scrollLeft + viewportLeftMarginPixels - baseOffset.value;
       // scrollLeft = scrollLeft - viewportLeftMarginPixels - baseOffset.value;
@@ -229,7 +226,6 @@ export const useTimelineStore = defineStore("timeline", () => {
         [diffScale]: ((width - scrollWithOffset) / pageScale.value) * 24,
       });
       const diff = mid.diff(fromDateTime);
-      console.log(diff.as("months"));
       const toDateTime = mid.plus({
         [diffScale]: (scrollWithOffset / pageScale.value) * 24,
       });
@@ -260,18 +256,15 @@ export const useTimelineStore = defineStore("timeline", () => {
     24;
 
   const dateFromClientLeft = computed(() => (offset: number) => {
-    const amount =
-      (offset +
-        pageSettings.value.viewport.left -
-        leftInsetWidth.value -
-        pageSettings.value.viewport.offsetLeft) /
-      pageScale.value;
-    return pageSettings.value.viewportDateInterval.fromDateTime.plus(
-      (offset / pageScale.value) * 24
-    );
-    // return baselineLeftmostDate.value.plus({
-    //   [diffScale]: amount * 24,
-    // });
+    const d = pageSettings.value.viewportDateInterval.fromDateTime.plus({
+      [diffScale]:
+        ((offset +
+          leftInsetWidth.value -
+          pageSettings.value.viewport.offsetLeft) /
+          pageScale.value) *
+        24,
+    });
+    return d;
   });
 
   const setViewport = (viewport: Viewport) => {
@@ -365,6 +358,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     progressDisplay,
     colors: computed(() => markwhenStore.app?.colorMap),
     baseOffset,
+    hoveringDate,
     // editable,
 
     // getters

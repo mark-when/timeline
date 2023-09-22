@@ -151,9 +151,4 @@ const eras = computed(() => {
   background: linear-gradient(to bottom, rgb(51, 65, 85), 85%, #38404700);
 }
 
-.timeMarkerTitle {
-  margin: 0px 0px 0px -1px;
-  padding: 9px 8px 2px 8px;
-  z-index: 5;
-}
 </style>

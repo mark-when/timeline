@@ -90,6 +90,8 @@ export const useGestures = (
     }
     isZooming.value = true;
 
+    timelineStore.referenceDate = timelineStore.hoveringDate
+
     if (timelineStore.setPageScale(scale)) {
       const offsetLeft =
         (el.value! as HTMLElement).offsetLeft + timelineStore.leftInsetWidth;

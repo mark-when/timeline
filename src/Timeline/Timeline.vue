@@ -12,7 +12,7 @@ import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
-import { useResizeObserver } from "@vueuse/core";
+import { useResizeObserver, useThrottleFn } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
@@ -152,10 +152,22 @@ const setViewportDateInterval = () => {
 
 const { trigger } = useHoveringMarker(timelineElement);
 
-const scroll = () => {
-  setViewportDateInterval();
-  trigger();
-};
+const scroll = useThrottleFn(() => {
+  console.log("scrolled");
+  requestAnimationFrame(() => {
+    const left = timelineElement.value!.scrollLeft;
+    const width = timelineElement.value!.clientWidth;
+    // if (left < width) {
+    //   timelineStore.referenceDate = timelineStore.dateFromClientLeft(width);
+    // } else if (left > width * 6) {
+    //   timelineStore.referenceDate = timelineStore.dateFromClientLeft(width * 6);
+    // } else {
+      setViewportDateInterval();
+      trigger();
+    // }
+  });
+}, 10);
+
 const { isPanning } = useGestures(timelineElement, () => {
   setViewportDateInterval();
 });
@@ -165,8 +177,15 @@ const scrollToDate = (
   force: boolean = false,
   immediate: boolean = false
 ) => {
-  // timelineStore.setReferenceDate(dateTime);
+  timelineStore.referenceDate = dateTime;
 };
+
+watch(
+  () => timelineStore.referenceDate,
+  (rd) => {
+    // timelineElement.value!.scrollLeft = getViewport().width * 3.5;
+  }
+);
 
 const scrollToDateRangeImmediate = (
   dateRange?: DateRange,
@@ -229,7 +248,14 @@ const setInitialScrollAndScale = () =>
 onMounted(() => {
   // scrollToNow();
   timelineStore.setViewportGetter(getViewport);
-  timelineElement.value!.scrollLeft = getViewport().width * 3.5
+  // setTimeout(() => {
+  nextTick(() => {
+    const left = getViewport().width * 3.5;
+    console.log("setting scroll left to", left);
+    timelineElement.value!.scrollLeft = left;
+  });
+
+  // }, 0)
 });
 
 const svgParams = ref();
@@ -279,7 +305,7 @@ markwhenStore.onGetSvg = (params) => {
   >
     <div
       id="timeline"
-      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-700"
+      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-800"
       ref="timelineElement"
       @scroll="scroll"
     >

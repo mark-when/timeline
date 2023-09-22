@@ -60,13 +60,17 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 
 <template>
   <div class="fixed inset-0 pointer-events-none">
-    <div class="flex relative" >
-      <div class="timeMarkerShader w-full h-12 fixed top-0 transition"></div>
+    <div
+      class="flex relative bg-white/95 dark:bg-slate-800 dark:border-slate-600 border-b"
+    >
       <!-- <SquashBars /> -->
       <div
         v-for="timeMarker in markerStore.markers"
         :key="timeMarker.ts"
-        class="flex-shrink-0 h-full"
+        class="flex-shrink-0 h-full flex flex-col"
+        :class="{
+          'border-l border-slate-200 dark:border-slate-500': opacity(timeMarker) >= 1,
+        }"
         :style="{
           left: `${
             timelineStore.pageScaleBy24 *
@@ -79,7 +83,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
       >
         <h6
           :class="{ 'font-bold': isHovering(timeMarker) }"
-          class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black"
+          class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black pl-1"
           :style="{
             opacity: isHovering(timeMarker) ? 1 : opacity(timeMarker),
           }"
@@ -87,12 +91,16 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
           {{ text(timeMarker) }}
         </h6>
         <div
-          v-if="isHovering(timeMarker) && currentDateResolution <= 6"
-          style="padding-left: 8px"
+          v-if="currentDateResolution <= 6"
+          class="flex flex-row pl-1"
         >
-          <h6 class="whitespace-nowrap text-xs font-bold">
+          <h6
+            class="whitespace-nowrap text-xs font-bold"
+            v-if="isHovering(timeMarker)"
+          >
             {{ hoveringText(timeMarker) }}
           </h6>
+          <h6 class="whitespace-nowrap text-xs font-bold">&nbsp;</h6>
         </div>
       </div>
     </div>
@@ -108,11 +116,5 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 
 .dark .timeMarkerShader {
   background: linear-gradient(to bottom, rgb(51, 65, 85), 85%, #38404700);
-}
-
-.timeMarkerTitle {
-  margin: 0px 0px 0px -1px;
-  padding: 9px 8px 2px 8px;
-  z-index: 5;
 }
 </style>
