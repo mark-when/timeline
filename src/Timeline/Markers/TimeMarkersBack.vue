@@ -122,7 +122,7 @@ const text = computed(
     ](timeMarker.dateTime)
 );
 const opacity = computed(
-  () => (timeMarker: TimeMarker) => clamp((alpha.value(timeMarker) - 0.3) * 5)
+  () => (timeMarker: TimeMarker) => clamp((alpha.value(timeMarker) - 0.45) * 5)
 );
 const isHovering = computed(
   () => (timeMarker: TimeMarker) =>
@@ -139,15 +139,6 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
   }
   return dt.toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS);
 });
-
-const height = computed(() => {
-  const nodeArray = nodeStore.nodeArray;
-  if (nodeArray.length) {
-    return `${nodeArray.length * 30 + 500}px`;
-  } else {
-    return "100%";
-  }
-});
 </script>
 
 <template>
@@ -156,6 +147,9 @@ const height = computed(() => {
     class="flex flex-row relative"
     :style="`margin-left: -${leftMargin}px; height: max(${height}, 100%)`"
   > -->
+  <div
+    class="fixed top-0 left-0 right-0 h-6 bg-white/95 dark:bg-slate-800/95 z-30 border-b dark:border-slate-700"
+  ></div>
   <div
     v-for="timeMarker in markersStore.markers"
     :id="'' + timeMarker.ts"
@@ -172,22 +166,28 @@ const height = computed(() => {
       borderLeft: `1px ${
         hovering(timeMarker) ? 'solid' : 'dashed'
       } ${borderColor(timeMarker)}`,
-      height: `max(${height}, 100%)`,
+      height: `max(${nodeStore.viewHeight}, 100%)`,
     }"
   >
-    <div class="sticky top-0 z-50">
+    <div
+      class="sticky top-0 -m-px"
+      :class="{
+        'font-bold z-50 dark:border-slate-400 border-slate-500':
+          isHovering(timeMarker),
+        'z-40 dark:border-slate-600': !isHovering(timeMarker),
+      }"
+    >
       <h6
-        :class="{ 'font-bold': isHovering(timeMarker) }"
-        class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black pl-1"
+        class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black pl-1 border-l border-inherit"
         :style="{
           opacity: isHovering(timeMarker) ? 1 : opacity(timeMarker),
         }"
       >
         {{ text(timeMarker) }}
       </h6>
-      <div v-if="currentDateResolution <= 6" class="flex flex-row pl-1">
+      <div v-if="currentDateResolution <= 6" class="flex flex-row">
         <h6
-          class="whitespace-nowrap text-xs font-bold"
+          class="whitespace-nowrap text-xs font-bold dark:bg-slate-800 bg-white border-l p-1 dark:border-slate-400 border-slate-500"
           v-if="isHovering(timeMarker)"
         >
           {{ hoveringText(timeMarker) }}
