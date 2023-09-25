@@ -249,11 +249,11 @@ onMounted(() => {
   // scrollToNow();
   timelineStore.setViewportGetter(getViewport);
   // setTimeout(() => {
-  nextTick(() => {
-    const left = getViewport().width * 3.5;
-    console.log("setting scroll left to", left);
-    timelineElement.value!.scrollLeft = left;
-  });
+  // nextTick(() => {
+  //   const left = getViewport().width * 3.5;
+  //   console.log("setting scroll left to", left);
+  //   timelineElement.value!.scrollLeft = left;
+  // });
 
   // }, 0)
 });

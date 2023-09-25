@@ -211,7 +211,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   // | | | |-| | | |
   // total width === viewport.width * 7
   const baseOffset = computed(() => {
-    return pageSettings.value.viewport.width * 3;
+    return 0 //pageSettings.value.viewport.width * 3;
   });
 
   const dateIntervalFromViewport = computed(() => {
