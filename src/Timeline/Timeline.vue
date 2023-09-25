@@ -171,13 +171,6 @@ const scrollToDate = (
   timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
 };
 
-watch(
-  () => timelineStore.referenceDate,
-  (rd) => {
-    // timelineElement.value!.scrollLeft = getViewport().width * 3.5;
-  }
-);
-
 const scrollToDateRangeImmediate = (
   dateRange?: DateRange,
   buffered: boolean = true

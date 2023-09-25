@@ -235,11 +235,6 @@ export const useTimelineStore = defineStore("timeline", () => {
 
   const dateIntervalFromViewport = computed(() => {
     return (scrollLeft: number, width: number) => {
-      const scrollWithOffset = scrollLeft; //+ viewportLeftMarginPixels - baseOffset.value;
-      // scrollLeft = scrollLeft - viewportLeftMarginPixels - baseOffset.value;
-      width = width;
-
-      const mid = referenceDate.value;
       const fromDateTime = baselineLeftmostDate.value.plus({
         [diffScale]: (scrollLeft / pageScale.value) * 24,
       });

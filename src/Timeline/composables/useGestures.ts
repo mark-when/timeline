@@ -80,6 +80,12 @@ export const useGestures = (
       pinchStartCenterX =
         wg.origin.x - (el.value!.offsetLeft + timelineStore.leftInsetWidth);
       pinchStartCenterY = wg.origin.y;
+
+      // Set the reference date and adjust scrollLeft so we don't move
+      const newReferenceDate = timelineStore.dateFromClientLeft(wg.origin.x);
+      const d = timelineStore.distanceBetweenDates(newReferenceDate, timelineStore.referenceDate)
+      timelineStore.referenceDate = newReferenceDate;
+      el.value!.scrollLeft = el.value!.scrollLeft + d
     }
   };
 
@@ -89,8 +95,6 @@ export const useGestures = (
       return;
     }
     isZooming.value = true;
-
-    timelineStore.referenceDate = timelineStore.hoveringDate
 
     if (timelineStore.setPageScale(scale)) {
       const offsetLeft =
