@@ -23,6 +23,10 @@ import { useNodePosition } from "./Events/composables/useNodePosition";
 import { useEventFinder } from "@/utilities/useEventFinder";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import SvgView from "./Svg/SvgView.vue";
+import Settings from "./Settings/Settings.vue";
+import ReferenceDateVue from "./Events/ReferenceDate.vue";
+import HoverDateVue from "./Events/HoverDate.vue";
+import NowLine from "./Events/NowLine.vue";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -164,6 +168,7 @@ const scrollToDate = (
   immediate: boolean = false
 ) => {
   timelineStore.referenceDate = dateTime;
+  timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
 };
 
 watch(
@@ -238,7 +243,7 @@ onMounted(() => {
   te.scrollLeft = te.clientWidth * 2;
   scroll = () =>
     requestAnimationFrame(() => {
-      const scrollLeft = te.scrollLeft
+      const scrollLeft = te.scrollLeft;
       const amount = {
         [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
       };
@@ -316,8 +321,13 @@ markwhenStore.onGetSvg = (params) => {
       @scroll="scroll"
     >
       <TimeMarkersBack />
+
+      <now-line />
+      <ReferenceDateVue></ReferenceDateVue>
+      <!-- <HoverDateVue></HoverDateVue> -->
       <!-- <Events /> -->
       <!-- <TimeMarkersFront /> -->
+      <Settings></Settings>
       <DebugView v-if="true" />
       <div ref="svgHolder" style="width: 0; height: 0">
         <SvgView v-if="svgParams" v-bind="svgParams" ref="svgView"></SvgView>

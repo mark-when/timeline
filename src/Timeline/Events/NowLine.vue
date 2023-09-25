@@ -19,10 +19,9 @@ onMounted(() => {
 <template>
   <div
     v-if="!timelineStore.hideNowLine"
-    class="absolute dark:bg-slate-400 bg-blue-300"
+    class="absolute dark:bg-slate-400 bg-blue-300 top-0"
     :style="`width: 1px; left: ${
-      timelineStore.distanceFromReferenceDate(now) +
-      timelineStore.leftInsetWidth
+      timelineStore.distanceFromBaselineLeftmostDate(now)
     }px; height: max(100vh, 100%);`"
   ></div>
 </template>

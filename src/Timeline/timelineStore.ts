@@ -224,6 +224,15 @@ export const useTimelineStore = defineStore("timeline", () => {
     return 0; //pageSettings.value.viewport.width * 3;
   });
 
+  const distanceFromBaselineLeftmostDate = computed(() => {
+    return (dt: DateTime) => {
+      return (
+        (dt.diff(baselineLeftmostDate.value).as(diffScale) * pageScale.value) /
+        24
+      );
+    };
+  });
+
   const dateIntervalFromViewport = computed(() => {
     return (scrollLeft: number, width: number) => {
       const scrollWithOffset = scrollLeft; //+ viewportLeftMarginPixels - baseOffset.value;
@@ -394,6 +403,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     leftInsetWidth,
     hoveringEventPaths,
     isDetailEventPath,
+    distanceFromBaselineLeftmostDate,
 
     // actions
     setDetailEventPath,

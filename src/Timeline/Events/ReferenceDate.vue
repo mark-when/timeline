@@ -9,11 +9,10 @@ const reference = computed(() => timelineStore.referenceDate);
 
 <template>
   <div
-    class="absolute dark:bg-red-400 bg-red-300"
-    :style="`width: 1px; left: ${
-      timelineStore.distanceFromReferenceDate(reference) +
-      timelineStore.leftInsetWidth
-    }px; height: max(100vh, 100%);`"
+    class="absolute dark:bg-red-400 bg-red-300 top-0"
+    :style="`width: 1px; left: ${timelineStore.distanceFromBaselineLeftmostDate(
+      reference
+    )}px; height: max(100vh, 100%);`"
   ></div>
 </template>
 

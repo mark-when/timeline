@@ -87,7 +87,7 @@ export const useMarkersStore = defineStore("markers", () => {
     });
 
     // 256 is an arbitrary number
-    while (nextLeft < rightmost && markers.length < 256) {
+    while (nextLeft < rightmost && markers.length < 1024) {
       markers.push({
         dateTime: nextLeft,
         size: 0,

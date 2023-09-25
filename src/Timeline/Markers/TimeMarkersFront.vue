@@ -104,7 +104,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
         </div>
       </div>
     </div>
-    <!-- <Settings /> -->
+    <Settings />
   </div>
 </template>
 
