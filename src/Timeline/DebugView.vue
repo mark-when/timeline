@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMarkersStore } from "./Markers/markersStore";
-import { useTimelineStore } from "./timelineStore";
+import { Weight, useTimelineStore } from "./timelineStore";
 import { useNodeStore } from "./useNodeStore";
 
 const timelineStore = useTimelineStore();
@@ -61,6 +61,10 @@ const markersStore = useMarkersStore();
         <tr>
           <td>events</td>
           <td>{{ nodeStore.visibleNodes[0].length }}</td>
+        </tr>
+        <tr v-for="(weight, i) in timelineStore.weights">
+          <td>{{ Weight[i] }}</td>
+          <td>{{ weight }}</td>
         </tr>
       </tbody>
     </table>

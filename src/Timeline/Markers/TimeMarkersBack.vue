@@ -30,10 +30,17 @@ const dark = computed(() => timelineStore.darkMode);
 const leftMargin = viewportLeftMarginPixels;
 
 const backgroundColor = computed(() => (tm: TimeMarker) => {
-  if (timelineStore.weights[Weight.HOUR]) {
+  if (timelineStore.weights[Weight.DAY]) {
     const weekday = getWeekday(tm.dateTime);
-    const a = timelineStore.weights[Weight.DAY] * 0.2;
-    if (weekday === 6 || weekday === 7) {
+    const a = Math.min(timelineStore.weights[Weight.DAY] * 0.3, 0.5);
+    if (
+      (typeof weekday === "number" && weekday === 6) ||
+      weekday === 7 ||
+      // @ts-ignore
+      weekday.weekday === 6 ||
+      // @ts-ignore
+      weekday.weekday === 7
+    ) {
       return dark.value
         ? `rgba(10, 10, 10, ${a})`
         : `rgba(170, 170, 170, ${a})`;
