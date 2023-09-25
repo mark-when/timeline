@@ -222,8 +222,6 @@ export const useTimelineStore = defineStore("timeline", () => {
 
       // We don't want scroll to have anything to do with it
 
-      console.log(width, scrollWithOffset);
-
       const mid = referenceDate.value;
       const fromDateTime = mid.minus({
         [diffScale]: (width / pageScale.value) * 24,

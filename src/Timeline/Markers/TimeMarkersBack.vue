@@ -136,64 +136,64 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 
 <template>
   <!-- <div class="fixed inset-0 overflow-scroll"> -->
+  <div
+    class="flex flex-row h-full relative"
+    :style="`margin-left: -${leftMargin}px`"
+  >
     <div
-      class="flex flex-row h-full relative"
-      :style="`margin-left: -${leftMargin}px`"
-    >
-      <div
-        v-for="timeMarker in markersStore.markers"
-        :key="timeMarker.ts"
-        class="h-full flex-shrink-0 absolute top-0 bottom-0"
-        :style="{
-          backgroundColor: backgroundColor(timeMarker),
-          width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
-          left: `${
-            timelineStore.pageScaleBy24 *
-              (timeMarker.accumulated - timeMarker.size) +
-            timelineStore.leftInsetWidth +
-            viewportLeftMarginPixels
-          }px`,
-          borderLeft: `1px ${
-            hovering(timeMarker) ? 'solid' : 'dashed'
-          } ${borderColor(timeMarker)}`,
-        }"
-      ><h6
-          :class="{ 'font-bold': isHovering(timeMarker) }"
-          class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black pl-1"
-          :style="{
-            opacity: isHovering(timeMarker) ? 1 : opacity(timeMarker),
-          }"
-        >
-          {{ text(timeMarker) }}
-        </h6>
-        <div
-          v-if="currentDateResolution <= 6"
-          class="flex flex-row pl-1"
-        >
-          <h6
-            class="whitespace-nowrap text-xs font-bold"
-            v-if="isHovering(timeMarker)"
-          >
-            {{ hoveringText(timeMarker) }}
-          </h6>
-          <h6 class="whitespace-nowrap text-xs font-bold">&nbsp;</h6>
-        </div></div>
-    </div>
-    <div
-      v-for="era in eras"
-      class="absolute top-0 bottom-0 h-full border-l border-r transition"
-      :class="
-        !era.backgroundColor
-          ? `bg-gray-300/50 dark:bg-gray-300/10 border-gray-500/50`
-          : ''
-      "
+      v-for="timeMarker in markersStore.markers"
+      :id="'' + timeMarker.ts"
+      :key="timeMarker.ts"
+      class="h-full flex-shrink-0 absolute top-0 bottom-0"
       :style="{
-        left: `${era.left}px`,
-        width: `${era.width}px`,
-        backgroundColor: era.backgroundColor,
-        borderColor: era.borderColor,
+        backgroundColor: backgroundColor(timeMarker),
+        width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
+        left: `${
+          timelineStore.pageScaleBy24 *
+            (timeMarker.accumulated - timeMarker.size) +
+          timelineStore.leftInsetWidth +
+          viewportLeftMarginPixels
+        }px`,
+        borderLeft: `1px ${
+          hovering(timeMarker) ? 'solid' : 'dashed'
+        } ${borderColor(timeMarker)}`,
       }"
-    ></div>
+    >
+      <h6
+        :class="{ 'font-bold': isHovering(timeMarker) }"
+        class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black pl-1"
+        :style="{
+          opacity: isHovering(timeMarker) ? 1 : opacity(timeMarker),
+        }"
+      >
+        {{ text(timeMarker) }}
+      </h6>
+      <div v-if="currentDateResolution <= 6" class="flex flex-row pl-1">
+        <h6
+          class="whitespace-nowrap text-xs font-bold"
+          v-if="isHovering(timeMarker)"
+        >
+          {{ hoveringText(timeMarker) }}
+        </h6>
+        <h6 class="whitespace-nowrap text-xs font-bold">&nbsp;</h6>
+      </div>
+    </div>
+  </div>
+  <div
+    v-for="era in eras"
+    class="absolute top-0 bottom-0 h-full border-l border-r transition"
+    :class="
+      !era.backgroundColor
+        ? `bg-gray-300/50 dark:bg-gray-300/10 border-gray-500/50`
+        : ''
+    "
+    :style="{
+      left: `${era.left}px`,
+      width: `${era.width}px`,
+      backgroundColor: era.backgroundColor,
+      borderColor: era.borderColor,
+    }"
+  ></div>
   <!-- </div> -->
 </template>
 
@@ -206,5 +206,4 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 .dark .timeMarkerShader {
   background: linear-gradient(to bottom, rgb(51, 65, 85), 85%, #38404700);
 }
-
 </style>

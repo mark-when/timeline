@@ -74,11 +74,11 @@ export const useMarkersStore = defineStore("markers", () => {
     const rd = timelineStore.referenceDate;
     const amount = {
       [diffScale]:
-        ((timelineStore.pageSettings.viewport.width * 1.5) /
+        ((timelineStore.pageSettings.viewport.width * 2.5) /
           timelineStore.pageScale) *
         24,
     }
-    console.log(amount)
+    // console.log(amount)
     const markersFromDateTime = rd.minus(amount)
     const markersToDateTime = rd.plus(amount)
 
