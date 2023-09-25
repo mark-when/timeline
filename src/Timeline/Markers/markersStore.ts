@@ -68,21 +68,32 @@ export const useMarkersStore = defineStore("markers", () => {
   const markers = computed(() => {
     const markers = [] as TimeMarker[];
     const scale = timelineStore.scaleOfViewportDateInterval;
-    const { fromDateTime: leftViewportDate, toDateTime: rightViewportDate } =
-      timelineStore.pageSettings.viewportDateInterval;
+    // const { fromDateTime: leftViewportDate, toDateTime: rightViewportDate } =
+    //   timelineStore.pageSettings.viewportDateInterval;
 
-    let nextLeft = ceilDateTime(leftViewportDate, scale);
-    let rightmost = ceilDateTime(rightViewportDate, scale);
+    const rd = timelineStore.referenceDate;
+    const amount = {
+      [diffScale]:
+        ((timelineStore.pageSettings.viewport.width * 1.5) /
+          timelineStore.pageScale) *
+        24,
+    }
+    console.log(amount)
+    const markersFromDateTime = rd.minus(amount)
+    const markersToDateTime = rd.plus(amount)
+
+    let nextLeft = ceilDateTime(markersFromDateTime, scale);
+    let rightmost = ceilDateTime(markersToDateTime, scale);
 
     let acc = timelineStore.scalelessDistanceBetweenDates(
-      leftViewportDate,
+      markersFromDateTime,
       nextLeft
     );
 
     markers.push({
-      dateTime: leftViewportDate,
+      dateTime: markersFromDateTime,
       size: acc,
-      ts: leftViewportDate.toMillis(),
+      ts: markersFromDateTime.toMillis(),
       accumulated: acc,
     });
 

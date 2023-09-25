@@ -152,21 +152,7 @@ const setViewportDateInterval = () => {
 
 const { trigger } = useHoveringMarker(timelineElement);
 
-const scroll = useThrottleFn(() => {
-  console.log("scrolled");
-  requestAnimationFrame(() => {
-    const left = timelineElement.value!.scrollLeft;
-    const width = timelineElement.value!.clientWidth;
-    // if (left < width) {
-    //   timelineStore.referenceDate = timelineStore.dateFromClientLeft(width);
-    // } else if (left > width * 6) {
-    //   timelineStore.referenceDate = timelineStore.dateFromClientLeft(width * 6);
-    // } else {
-      setViewportDateInterval();
-      trigger();
-    // }
-  });
-}, 10);
+let scroll = () => {};
 
 const { isPanning } = useGestures(timelineElement, () => {
   setViewportDateInterval();
@@ -248,6 +234,13 @@ const setInitialScrollAndScale = () =>
 onMounted(() => {
   // scrollToNow();
   timelineStore.setViewportGetter(getViewport);
+  const te = timelineElement.value!;
+  te.scrollLeft = te.clientWidth;
+  scroll = () =>
+    requestAnimationFrame(() => {
+      setViewportDateInterval();
+      trigger();
+    });
   // setTimeout(() => {
   // nextTick(() => {
   //   const left = getViewport().width * 3.5;

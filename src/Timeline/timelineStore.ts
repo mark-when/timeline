@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 import {
   diffScale,
   floorDateTime,
@@ -211,29 +211,35 @@ export const useTimelineStore = defineStore("timeline", () => {
   // | | | |-| | | |
   // total width === viewport.width * 7
   const baseOffset = computed(() => {
-    return 0 //pageSettings.value.viewport.width * 3;
+    return 0; //pageSettings.value.viewport.width * 3;
   });
 
   const dateIntervalFromViewport = computed(() => {
     return (scrollLeft: number, width: number) => {
-      const scrollWithOffset =
-        scrollLeft + viewportLeftMarginPixels - baseOffset.value;
+      const scrollWithOffset = scrollLeft; //+ viewportLeftMarginPixels - baseOffset.value;
       // scrollLeft = scrollLeft - viewportLeftMarginPixels - baseOffset.value;
       width = width + viewportLeftMarginPixels;
 
+      // We don't want scroll to have anything to do with it
+
+      console.log(width, scrollWithOffset);
+
       const mid = referenceDate.value;
       const fromDateTime = mid.minus({
-        [diffScale]: ((width - scrollWithOffset) / pageScale.value) * 24,
+        [diffScale]: (width / pageScale.value) * 24,
       });
-      const diff = mid.diff(fromDateTime);
       const toDateTime = mid.plus({
         [diffScale]: (scrollWithOffset / pageScale.value) * 24,
       });
+      // const fromDateTime = toDateTime.minus({
+      //   [diffScale]: (width / pageScale.value) * 24,
+      // });
       return { fromDateTime, toDateTime };
     };
   });
   const scalelessDistanceBetweenDates = (a: DateTime, b: DateTime) =>
     b.diff(a).as(diffScale);
+  // Interval.fromDateTimes(a, b).toDuration(diffScale).as('hours');
 
   const distanceBetweenDates = computed(
     () => (a: DateTime, b: DateTime) =>
