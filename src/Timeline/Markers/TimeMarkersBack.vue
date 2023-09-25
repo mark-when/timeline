@@ -30,7 +30,7 @@ const dark = computed(() => timelineStore.darkMode);
 const leftMargin = viewportLeftMarginPixels;
 
 const backgroundColor = computed(() => (tm: TimeMarker) => {
-  if (timelineStore.weights[Weight.DAY]) {
+  if (timelineStore.weights[Weight.DAY] > 0.3) {
     const weekday = getWeekday(tm.dateTime);
     const a = Math.min(timelineStore.weights[Weight.DAY] * 0.3, 0.5);
     if (

@@ -156,17 +156,16 @@ const expandedRecurrence = computed(() =>
 );
 
 const left = computed(() => {
-  return (
-    timelineStore.pageScaleBy24 * realLeft.value +
-    timelineStore.leftInsetWidth +
-    timelineStore.baseOffset +
-    timelineStore.pageSettings.viewport.width
+  return (realLeft.value +
+    timelineStore.leftInsetWidth
+    // timelineStore.baseOffset +
+    // timelineStore.pageSettings.viewport.width
   );
 });
 
 const realLeft = ref();
 watchEffect(() => {
-  realLeft.value = timelineStore.scalelessDistanceFromReferenceDate(
+  realLeft.value = timelineStore.distanceFromBaselineLeftmostDate(
     range.value.fromDateTime
   );
 });

@@ -318,7 +318,7 @@ markwhenStore.onGetSvg = (params) => {
       <now-line />
       <ReferenceDateVue></ReferenceDateVue>
       <!-- <HoverDateVue></HoverDateVue> -->
-      <!-- <Events /> -->
+      <Events />
       <!-- <TimeMarkersFront /> -->
       <Settings></Settings>
       <DebugView v-if="true" />

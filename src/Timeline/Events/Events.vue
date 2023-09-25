@@ -49,15 +49,15 @@ const mousemove = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div
+  <!-- <div
     id="events"
     class="flex flex-col relative"
     :style="`height: max(${height}, 100vh); width: ${width}px;`"
     @mousemove="mousemove"
-  >
-    <now-line />
+  > -->
+    <!-- <now-line />
     <ReferenceDateVue></ReferenceDateVue>
-    <HoverDateVue></HoverDateVue>
+    <HoverDateVue></HoverDateVue> -->
     <div
       v-if="timelineStore.mode === 'gantt'"
       class="sticky left-0 relative flex flex-col bg-slate-50 dark:bg-slate-800 top-0 bottom-0 z-[2] h-full"
@@ -77,7 +77,7 @@ const mousemove = (e: MouseEvent) => {
     </template>
     <new-event />
     <GanttSidebar />
-  </div>
+  <!-- </div> -->
 </template>
 
 <style scoped></style>
