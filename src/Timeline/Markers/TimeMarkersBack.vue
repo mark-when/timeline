@@ -17,15 +17,15 @@ import { isEventNode } from "@markwhen/parser";
 import { toDateRange } from "@markwhen/parser";
 import { useEventColor } from "../Events/composables/useEventColor";
 import { equivalentPaths } from "../paths";
-import { walk } from "../useNodeStore";
+import { useNodeStore, walk } from "../useNodeStore";
 import { DateTime } from "luxon";
 import { granularities } from "../utilities/DateTimeDisplay";
-import { useGestures } from "../composables/useGestures";
 
 const markersStore = useMarkersStore();
 const timelineStore = useTimelineStore();
 const { getWeekday } = useWeekdayCache();
 const dark = computed(() => timelineStore.darkMode);
+const nodeStore = useNodeStore();
 
 const leftMargin = viewportLeftMarginPixels;
 
@@ -139,33 +139,43 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
   }
   return dt.toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS);
 });
+
+const height = computed(() => {
+  const nodeArray = nodeStore.nodeArray;
+  if (nodeArray.length) {
+    return `${nodeArray.length * 30 + 500}px`;
+  } else {
+    return "100%";
+  }
+});
 </script>
 
 <template>
   <!-- <div class="fixed inset-0 overflow-scroll"> -->
+  <!-- <div
+    class="flex flex-row relative"
+    :style="`margin-left: -${leftMargin}px; height: max(${height}, 100%)`"
+  > -->
   <div
-    class="flex flex-row h-full relative"
-    :style="`margin-left: -${leftMargin}px`"
+    v-for="timeMarker in markersStore.markers"
+    :id="'' + timeMarker.ts"
+    :key="timeMarker.ts"
+    class="h-full flex-shrink-0 absolute top-0 bottom-0"
+    :style="{
+      backgroundColor: backgroundColor(timeMarker),
+      width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
+      left: `${
+        timelineStore.pageScaleBy24 *
+          (timeMarker.accumulated - timeMarker.size) +
+        timelineStore.leftInsetWidth
+      }px`,
+      borderLeft: `1px ${
+        hovering(timeMarker) ? 'solid' : 'dashed'
+      } ${borderColor(timeMarker)}`,
+      height: `max(${height}, 100%)`,
+    }"
   >
-    <div
-      v-for="timeMarker in markersStore.markers"
-      :id="'' + timeMarker.ts"
-      :key="timeMarker.ts"
-      class="h-full flex-shrink-0 absolute top-0 bottom-0"
-      :style="{
-        backgroundColor: backgroundColor(timeMarker),
-        width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
-        left: `${
-          timelineStore.pageScaleBy24 *
-            (timeMarker.accumulated - timeMarker.size) +
-          timelineStore.leftInsetWidth +
-          viewportLeftMarginPixels
-        }px`,
-        borderLeft: `1px ${
-          hovering(timeMarker) ? 'solid' : 'dashed'
-        } ${borderColor(timeMarker)}`,
-      }"
-    >
+    <div class="sticky top-0 z-50">
       <h6
         :class="{ 'font-bold': isHovering(timeMarker) }"
         class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black pl-1"
@@ -186,6 +196,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
       </div>
     </div>
   </div>
+  <!-- </div> -->
   <div
     v-for="era in eras"
     class="absolute top-0 bottom-0 h-full border-l border-r transition"
