@@ -314,14 +314,13 @@ markwhenStore.onGetSvg = (params) => {
       @scroll="scroll"
     >
       <TimeMarkersBack />
-
       <now-line />
       <ReferenceDateVue v-if="false"></ReferenceDateVue>
       <!-- <HoverDateVue></HoverDateVue> -->
       <Events />
       <!-- <TimeMarkersFront /> -->
       <Settings></Settings>
-      <DebugView v-if="true" />
+      <!-- <DebugView v-if="true" /> -->
       <div ref="svgHolder" style="width: 0; height: 0">
         <SvgView v-if="svgParams" v-bind="svgParams" ref="svgView"></SvgView>
       </div>
