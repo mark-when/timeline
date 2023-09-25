@@ -96,10 +96,46 @@ const eras = computed(() => {
   });
   return erasAndMilestoneEvents;
 });
+const scaleForThisDate = computed(
+  () => (timeMarker: TimeMarker) => dateScale(timeMarker.dateTime)
+);
+
+const currentDateResolution = computed(() => {
+  for (let i = 0; i < timelineStore.weights.length; i++) {
+    if (timelineStore.weights[i] > timeMarkerWeightMinimum) {
+      return i;
+    }
+  }
+  return Weight.DECADE;
+});
+const text = computed(
+  () => (timeMarker: TimeMarker) =>
+    granularities[currentDateResolution.value][
+      scaleForThisDate.value(timeMarker)
+    ](timeMarker.dateTime)
+);
+const opacity = computed(
+  () => (timeMarker: TimeMarker) => clamp((alpha.value(timeMarker) - 0.3) * 5)
+);
+const isHovering = computed(
+  () => (timeMarker: TimeMarker) =>
+    markersStore.hoveringMarker &&
+    +markersStore.hoveringMarker?.dateTime === +timeMarker.dateTime
+);
+const hoveringText = computed(() => (timeMarker: TimeMarker) => {
+  const dt = timeMarker.dateTime;
+  if (currentDateResolution.value > 5) {
+    return dt.year;
+  }
+  if (currentDateResolution.value > 3) {
+    return dt.toLocaleString(DateTime.DATE_HUGE);
+  }
+  return dt.toLocaleString(DateTime.DATETIME_HUGE_WITH_SECONDS);
+});
 </script>
 
 <template>
-  <div class="fixed inset-0">
+  <!-- <div class="fixed inset-0 overflow-scroll"> -->
     <div
       class="flex flex-row h-full relative"
       :style="`margin-left: -${leftMargin}px`"
@@ -121,7 +157,27 @@ const eras = computed(() => {
             hovering(timeMarker) ? 'solid' : 'dashed'
           } ${borderColor(timeMarker)}`,
         }"
-      ></div>
+      ><h6
+          :class="{ 'font-bold': isHovering(timeMarker) }"
+          class="timeMarkerTitle text-sm whitespace-nowrap dark:text-white text-black pl-1"
+          :style="{
+            opacity: isHovering(timeMarker) ? 1 : opacity(timeMarker),
+          }"
+        >
+          {{ text(timeMarker) }}
+        </h6>
+        <div
+          v-if="currentDateResolution <= 6"
+          class="flex flex-row pl-1"
+        >
+          <h6
+            class="whitespace-nowrap text-xs font-bold"
+            v-if="isHovering(timeMarker)"
+          >
+            {{ hoveringText(timeMarker) }}
+          </h6>
+          <h6 class="whitespace-nowrap text-xs font-bold">&nbsp;</h6>
+        </div></div>
     </div>
     <div
       v-for="era in eras"
@@ -138,7 +194,7 @@ const eras = computed(() => {
         borderColor: era.borderColor,
       }"
     ></div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <style>
