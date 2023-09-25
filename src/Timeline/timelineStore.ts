@@ -228,20 +228,15 @@ export const useTimelineStore = defineStore("timeline", () => {
     return (scrollLeft: number, width: number) => {
       const scrollWithOffset = scrollLeft; //+ viewportLeftMarginPixels - baseOffset.value;
       // scrollLeft = scrollLeft - viewportLeftMarginPixels - baseOffset.value;
-      width = width + viewportLeftMarginPixels;
-
-      // We don't want scroll to have anything to do with it
+      width = width;
 
       const mid = referenceDate.value;
-      const fromDateTime = mid.minus({
-        [diffScale]: (width / pageScale.value) * 24,
+      const fromDateTime = baselineLeftmostDate.value.plus({
+        [diffScale]: (scrollLeft / pageScale.value) * 24,
       });
-      const toDateTime = mid.plus({
-        [diffScale]: (scrollWithOffset / pageScale.value) * 24,
+      const toDateTime = baselineLeftmostDate.value.plus({
+        [diffScale]: ((width + scrollLeft) / pageScale.value) * 24,
       });
-      // const fromDateTime = toDateTime.minus({
-      //   [diffScale]: (width / pageScale.value) * 24,
-      // });
       return { fromDateTime, toDateTime };
     };
   });
@@ -270,11 +265,9 @@ export const useTimelineStore = defineStore("timeline", () => {
     24;
 
   const dateFromClientLeft = computed(() => (offset: number) => {
-    const d = pageSettings.value.viewportDateInterval.fromDateTime.plus({
+    const d = baselineLeftmostDate.value.plus({
       [diffScale]:
-        ((offset +
-          leftInsetWidth.value -
-          pageSettings.value.viewport.offsetLeft) /
+        ((offset + leftInsetWidth.value + pageSettings.value.viewport.left) /
           pageScale.value) *
         24,
     });

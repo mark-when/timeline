@@ -125,7 +125,6 @@ export const useMarkersStore = defineStore("markers", () => {
 
   const rangeFromOffsetLeft = computed(() => (offset: number) => {
     const offsetDate = timelineStore.dateFromClientLeft(offset);
-
     const scale = timelineStore.scaleOfViewportDateInterval as DisplayScale;
     const floored = floorDateTime(offsetDate, scale);
     const ceiled = ceilDateTime(offsetDate, scale);
