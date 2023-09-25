@@ -187,6 +187,16 @@ export const useTimelineStore = defineStore("timeline", () => {
   const hoveringDate = ref(DateTime.now());
 
   const referenceDate = ref(DateTime.now());
+  const diffAmount = computed(() => ({
+    [diffScale]:
+      ((pageSettings.value.viewport.width * 2.5) / pageScale.value) * 24,
+  }));
+  const baselineLeftmostDate = computed(() =>
+    referenceDate.value.minus(diffAmount.value)
+  );
+  const baselineRightmostDate = computed(() =>
+    referenceDate.value.plus(diffAmount.value)
+  );
   // watchEffect(() => {
   //   const newValue = calculateBaselineLeftmostDate(
   //     earliest.value,
@@ -363,6 +373,9 @@ export const useTimelineStore = defineStore("timeline", () => {
     colors: computed(() => markwhenStore.app?.colorMap),
     baseOffset,
     hoveringDate,
+    baselineLeftmostDate,
+    baselineRightmostDate,
+    diffAmount,
     // editable,
 
     // getters

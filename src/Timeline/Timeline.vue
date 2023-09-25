@@ -238,14 +238,15 @@ onMounted(() => {
   te.scrollLeft = te.clientWidth * 2;
   scroll = () =>
     requestAnimationFrame(() => {
+      const scrollLeft = te.scrollLeft
       const amount = {
         [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
       };
-      if (te.scrollLeft < te.clientWidth / 2) {
+      if (scrollLeft < te.clientWidth / 2) {
         timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
         te.scrollLeft = te.clientWidth * 2;
         console.log("move left");
-      } else if (te.scrollLeft > te.clientWidth * 3.5) {
+      } else if (scrollLeft > te.clientWidth * 3.5) {
         timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
         te.scrollLeft = te.clientWidth * 2;
         console.log("move right");
