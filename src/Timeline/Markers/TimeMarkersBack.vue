@@ -142,11 +142,6 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 </script>
 
 <template>
-  <!-- <div class="fixed inset-0 overflow-scroll"> -->
-  <!-- <div
-    class="flex flex-row relative"
-    :style="`margin-left: -${leftMargin}px; height: max(${height}, 100%)`"
-  > -->
   <div
     class="fixed top-0 left-0 right-0 h-6 bg-white/95 dark:bg-slate-800/95 z-30 border-b dark:border-slate-700"
   ></div>
@@ -159,8 +154,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
       backgroundColor: backgroundColor(timeMarker),
       width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
       left: `${
-        timelineStore.pageScaleBy24 *
-          (timeMarker.accumulated - timeMarker.size)
+        timelineStore.pageScaleBy24 * (timeMarker.accumulated - timeMarker.size)
       }px`,
       borderLeft: `1px ${
         hovering(timeMarker) ? 'solid' : 'dashed'
@@ -195,7 +189,6 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
       </div>
     </div>
   </div>
-  <!-- </div> -->
   <div
     v-for="era in eras"
     class="absolute top-0 bottom-0 h-full border-l border-r transition"
@@ -211,7 +204,6 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
       borderColor: era.borderColor,
     }"
   ></div>
-  <!-- </div> -->
 </template>
 
 <style>
