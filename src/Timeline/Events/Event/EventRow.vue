@@ -226,7 +226,7 @@ const classObj = computed(() => {
           props.hovering && !props.isDetailEvent,
         "dark:border-indigo-600 border-indigo-500": props.isDetailEvent,
         "border-transparent": !props.hovering && !props.isDetailEvent,
-        "dark:bg-slate-400/10": props.hovering,
+        "dark:bg-slate-400/10  bg-slate-400/10": props.hovering,
       }
     : {
         "pointer-events-none": isCollapsed.value,
@@ -270,7 +270,7 @@ const ganttTitleStyle = computed(() => {
     timelineStore.ganttSidebarTempWidth
       ? timelineStore.ganttSidebarTempWidth
       : timelineStore.ganttSidebarWidth
-  }px - 0.5rem)`;
+  }px)`;
   return styleObj;
 });
 </script>
@@ -367,7 +367,7 @@ const ganttTitleStyle = computed(() => {
       <div
         class="sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 h-full"
         :class="{
-          'dark:bg-slate-400/10': isGantt && hovering,
+          'dark:bg-slate-400/10 bg-slate-400/10': isGantt && hovering,
         }"
       >
         <div
