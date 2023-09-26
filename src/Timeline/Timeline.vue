@@ -109,10 +109,6 @@ const widthChangeStartYearWidth = ref<number | null>(null);
 watch(
   () => timelineStore.startedWidthChange,
   (started) => {
-    // console.log(
-    //   timelineElement.value?.offsetLeft,
-    //   timelineElement.value?.scrollLeft
-    // );
     const scrollLeft = timelineElement.value?.scrollLeft || 0;
     widthChangeStartScrollLeft.value = started ? scrollLeft ?? null : null;
     widthChangeStartYearWidth.value = timelineStore.pageSettings.scale;
@@ -174,8 +170,6 @@ const scrollToDateRangeImmediate = (
   dateRange?: DateRange,
   buffered: boolean = true
 ) => {
-  console.log(dateRange?.fromDateTime.toISODate());
-  console.log(dateRange?.toDateTime.toISODate());
   if (!dateRange) {
     return;
   }
@@ -242,11 +236,9 @@ onMounted(() => {
       if (scrollLeft < te.clientWidth / 2) {
         timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
         te.scrollLeft = te.clientWidth * 2;
-        console.log("move left");
       } else if (scrollLeft > te.clientWidth * 3.5) {
         timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
         te.scrollLeft = te.clientWidth * 2;
-        console.log("move right");
       }
       setViewportDateInterval();
       trigger();
