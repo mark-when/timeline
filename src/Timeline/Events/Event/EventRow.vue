@@ -156,11 +156,7 @@ const expandedRecurrence = computed(() =>
 );
 
 const left = computed(() => {
-  return (realLeft.value +
-    timelineStore.leftInsetWidth
-    // timelineStore.baseOffset +
-    // timelineStore.pageSettings.viewport.width
-  );
+  return realLeft.value;
 });
 
 const realLeft = ref();
@@ -216,7 +212,7 @@ const styleObj = computed(() => {
   } as any;
   obj.left = isGantt.value ? "0px" : `${left.value}px`;
   if (isGantt.value) {
-    obj.right = "0px";
+    obj.right = "-350%";
   }
   return obj;
 });
@@ -224,12 +220,13 @@ const styleObj = computed(() => {
 const classObj = computed(() => {
   return isGantt.value
     ? {
-        border: true,
+        // border: true,
         "dark:bg-gray-900 bg-white": props.isDetailEvent,
         "dark:border-gray-400 border-black":
           props.hovering && !props.isDetailEvent,
         "dark:border-indigo-600 border-indigo-500": props.isDetailEvent,
         "border-transparent": !props.hovering && !props.isDetailEvent,
+        "dark:bg-slate-400/10": props.hovering,
       }
     : {
         "pointer-events-none": isCollapsed.value,
@@ -360,18 +357,22 @@ const ganttTitleStyle = computed(() => {
     </div>
   </div>
   <div
-    class="absolute left-0 right-0 h-[30px]"
-    :style="{ top: `${top}px` }"
+    class="absolute left-0 h-[30px]"
+    :style="{ top: `${top}px`, right: `-350%` }"
     v-if="timelineStore.mode === 'gantt' && !isCollapsed"
     @mouseenter.passive="elementHover = true"
     @mouseleave.passive="elementHover = false"
   >
     <div class="flex h-full">
-      <div class="sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 h-full">
+      <div
+        class="sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 h-full"
+        :class="{
+          'dark:bg-slate-400/10': isGantt && hovering,
+        }"
+      >
         <div
-          class="h-full border"
+          class="h-full"
           :class="{
-            'dark:border-gray-400 border-black': hovering,
             'border-transparent': !hovering && !isDetailEvent,
             'dark:border-indigo-600 border-indigo-600': isDetailEvent,
           }"

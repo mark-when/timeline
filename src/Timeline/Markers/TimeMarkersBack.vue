@@ -160,8 +160,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
       width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
       left: `${
         timelineStore.pageScaleBy24 *
-          (timeMarker.accumulated - timeMarker.size) +
-        timelineStore.leftInsetWidth
+          (timeMarker.accumulated - timeMarker.size)
       }px`,
       borderLeft: `1px ${
         hovering(timeMarker) ? 'solid' : 'dashed'
