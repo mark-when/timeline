@@ -7,12 +7,15 @@ import {
 } from "./timelineStore";
 import { scaleToGetDistance } from "./initialPageSettings";
 import TimeMarkersBack from "@/Timeline/Markers/TimeMarkersBack.vue";
-import TimeMarkersFront from "@/Timeline/Markers/TimeMarkersFront.vue";
 import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
-import { useResizeObserver, useThrottleFn } from "@vueuse/core";
+import {
+  useIntersectionObserver,
+  useResizeObserver,
+  useThrottleFn,
+} from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
@@ -25,7 +28,6 @@ import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import SvgView from "./Svg/SvgView.vue";
 import Settings from "./Settings/Settings.vue";
 import ReferenceDateVue from "./Events/ReferenceDate.vue";
-import HoverDateVue from "./Events/HoverDate.vue";
 import NowLine from "./Events/NowLine.vue";
 
 const timelineStore = useTimelineStore();
@@ -140,19 +142,16 @@ watch(
     nextTick(setViewportDateInterval);
   }
 );
+
 useResizeObserver(timelineElement, (entries) => {
+  timelineStore.referenceDate = timelineStore.dateFromClientLeft(
+    entries[0].target.clientLeft + entries[0].target.clientWidth / 2
+  );
+  timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
   nextTick(setViewportDateInterval);
 });
 
-const setViewportDateInterval = () => {
-  // if (!ticking) {
-  //   requestAnimationFrame(() => {
-  timelineStore.setViewport(getViewport());
-  //     ticking = false;
-  //   });
-  //   ticking = true;
-  // }
-};
+const setViewportDateInterval = () => timelineStore.setViewport(getViewport());
 
 const { trigger } = useHoveringMarker(timelineElement);
 
