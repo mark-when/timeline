@@ -155,32 +155,20 @@ const expandedRecurrence = computed(() =>
   )
 );
 
+const dimensions = computed(() => {
+
+  const width = timelineStore.distanceBetweenDates(range.value.fromDateTime, range.value.toDateTime)
+  const scaledWidth = Math.max(10, width)
+
+  return {
+    left: timelineStore.distanceFromBaselineLeftmostDate(range.value.fromDateTime),
+    width: scaledWidth
+  }
+})
+
 const left = computed(() => {
-  return realLeft.value;
+  return dimensions.value.left
 });
-
-const realLeft = ref();
-watchEffect(() => {
-  realLeft.value = timelineStore.distanceFromBaselineLeftmostDate(
-    range.value.fromDateTime
-  );
-});
-
-const barWidth = computed(() => {
-  const distance = timelineStore.scalelessDistanceBetweenDates(
-    range.value.fromDateTime,
-    range.value.toDateTime
-  );
-  return distance;
-});
-
-const barScaledWidth = computed(() =>
-  Math.max(10, timelineStore.pageScaleBy24 * barWidth.value)
-);
-
-const close = () => {
-  showingMeta.value = false;
-};
 
 const clickStart = ref<{ x: number; y: number }>();
 const eventDetail = () => {
@@ -314,7 +302,7 @@ const ganttTitleStyle = computed(() => {
           :tagColor="color"
           :percent="percent"
           :hovering="isHovering || hovering"
-          :width="barScaledWidth"
+          :width="dimensions.width"
           :taskNumerator="taskNumerator"
           :taskDenominator="taskDenominator"
           :drag-handle-listener-left="dragHandleListenerLeft"
