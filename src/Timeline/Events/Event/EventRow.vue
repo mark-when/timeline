@@ -156,18 +156,24 @@ const expandedRecurrence = computed(() =>
 );
 
 const dimensions = computed(() => {
+  const left = timelineStore.distanceFromBaselineLeftmostDate(
+    range.value.fromDateTime
+  );
 
-  const width = timelineStore.distanceBetweenDates(range.value.fromDateTime, range.value.toDateTime)
-  const scaledWidth = Math.max(10, width)
+  const width = timelineStore.distanceBetweenDates(
+    range.value.fromDateTime,
+    range.value.toDateTime
+  );
+  const scaledWidth = Math.max(10, width);
 
   return {
-    left: timelineStore.distanceFromBaselineLeftmostDate(range.value.fromDateTime),
-    width: scaledWidth
-  }
-})
+    left,
+    width: scaledWidth,
+  };
+});
 
 const left = computed(() => {
-  return dimensions.value.left
+  return dimensions.value.left;
 });
 
 const clickStart = ref<{ x: number; y: number }>();
