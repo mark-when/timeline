@@ -1,3 +1,4 @@
+import { useDebounceFn } from "@vueuse/core";
 import { useTimelineStore } from "../timelineStore";
 
 function getDistance(p1: [number, number], p2: [number, number]) {
@@ -25,16 +26,15 @@ export const useDoubleTap = (setViewport: () => void) => {
   let initialY = 0;
 
   const addMoveListeners = (element: HTMLDivElement) => {
-    function pointerMove(moveEvent: PointerEvent) {
+    const pointerMove = useDebounceFn((moveEvent: PointerEvent) => {
       const yDiff = initialY - moveEvent.clientY;
       const newScale = yDiff < 0 ? (yDiff - 10) / -10 : 10 / (yDiff + 10);
-      console.log(yDiff, newScale, initialScale * newScale);
       timelineStore.setPageScale(Math.max(initialScale * newScale, 0.01));
       setViewport();
       moveEvent.stopPropagation();
       moveEvent.stopImmediatePropagation();
       moveEvent.preventDefault();
-    }
+    }, 20);
 
     function pointerUp() {
       console.log("pointer up");
@@ -73,6 +73,13 @@ export const useDoubleTap = (setViewport: () => void) => {
         initialScale = timelineStore.pageScale;
 
         const element = e.target as HTMLDivElement;
+        const newReferenceDate = timelineStore.dateFromClientLeft(initialX);
+        const d = timelineStore.distanceBetweenDates(
+          newReferenceDate,
+          timelineStore.referenceDate
+        );
+        timelineStore.referenceDate = newReferenceDate;
+        element.scrollLeft = element.scrollLeft + d;
         addMoveListeners(element);
       } else {
         timeout = setTimeout(() => {
