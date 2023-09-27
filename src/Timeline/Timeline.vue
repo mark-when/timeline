@@ -11,9 +11,7 @@ import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
-import {
-  useResizeObserver,
-} from "@vueuse/core";
+import { useResizeObserver } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
@@ -27,6 +25,7 @@ import SvgView from "./Svg/SvgView.vue";
 import Settings from "./Settings/Settings.vue";
 import ReferenceDateVue from "./Events/ReferenceDate.vue";
 import NowLine from "./Events/NowLine.vue";
+import { useDoubleTap } from "./composables/useDoubleTap";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -281,7 +280,7 @@ markwhenStore.onGetSvg = (params) => {
   });
 };
 
-const webkitOverflowScrolling = ref("auto");
+const pointerdown = useDoubleTap(setViewportDateInterval);
 </script>
 
 <template>
@@ -295,6 +294,7 @@ const webkitOverflowScrolling = ref("auto");
       ref="timelineElement"
       @scroll="scroll"
       @gestureChange="scroll"
+      @pointerdown="pointerdown"
     >
       <TimeMarkersBack />
       <now-line />
@@ -310,5 +310,4 @@ const webkitOverflowScrolling = ref("auto");
   </div>
 </template>
 
-<style>
-</style>
+<style></style>

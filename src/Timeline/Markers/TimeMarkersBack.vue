@@ -149,7 +149,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
     v-for="timeMarker in markersStore.markers"
     :id="'' + timeMarker.ts"
     :key="timeMarker.ts"
-    class="h-full flex-shrink-0 absolute top-0 bottom-0"
+    class="h-full flex-shrink-0 absolute top-0 bottom-0 pointer-events-none"
     :style="{
       backgroundColor: backgroundColor(timeMarker),
       width: `${timelineStore.pageScaleBy24 * timeMarker.size}px`,
