@@ -33,30 +33,41 @@ export const useGestures = (
   const pinch = (e: any) => {
     e.preventDefault();
     const offsetLeft = el.value!.offsetLeft;
+    const sl = el.value!.scrollLeft;
 
     if (!startingZoom) {
       isZooming.value = true;
       startingZoom = timelineStore.pageScale;
       pinchStartScrollTop = el.value!.scrollTop;
-      pinchStartScrollLeft = el.value!.scrollLeft - offsetLeft;
+      pinchStartScrollLeft = el.value!.scrollLeft; // - offsetLeft;
       pinchStartCenterX = e.center.x;
       pinchStartCenterY = e.center.y;
-    }
 
-    const newScrollTop = pinchStartScrollTop! + pinchStartCenterY! - e.center.y;
-    let scale = e.scale;
-    if (startingZoom! * scale > MAX_SCALE) {
-      scale = 1;
-    }
+      const newReferenceDate = timelineStore.dateFromClientLeft(
+        pinchStartCenterX!
+      );
+      const d = timelineStore.distanceBetweenDates(
+        newReferenceDate,
+        timelineStore.referenceDate
+      );
+      timelineStore.referenceDate = newReferenceDate;
+      pinchStartScrollLeft = el.value!.scrollLeft + d;
+      el.value!.scrollLeft = pinchStartScrollLeft;
+    } else {
+      const newScrollTop =
+        pinchStartScrollTop! + pinchStartCenterY! - e.center.y;
+      let scale = e.scale;
+      if (startingZoom! * scale > MAX_SCALE) {
+        scale = 1;
+      }
 
-    if (scale !== 1 && timelineStore.setPageScale(startingZoom! * e.scale)) {
-      const newScrollLeft =
-        scale * (pinchStartScrollLeft! + pinchStartCenterX!) -
-        (e.center.x! - offsetLeft);
-
-      el.value!.scrollLeft = newScrollLeft;
-      el.value!.scrollTop = newScrollTop;
-      onSetScale();
+      if (scale !== 1 && timelineStore.setPageScale(startingZoom! * e.scale)) {
+        const newScrollLeft =
+          pinchStartScrollLeft! + pinchStartCenterX! - e.center.x!;
+        el.value!.scrollLeft = newScrollLeft;
+        el.value!.scrollTop = newScrollTop;
+        onSetScale();
+      }
     }
   };
 
@@ -83,9 +94,12 @@ export const useGestures = (
 
       // Set the reference date and adjust scrollLeft so we don't move
       const newReferenceDate = timelineStore.dateFromClientLeft(wg.origin.x);
-      const d = timelineStore.distanceBetweenDates(newReferenceDate, timelineStore.referenceDate)
+      const d = timelineStore.distanceBetweenDates(
+        newReferenceDate,
+        timelineStore.referenceDate
+      );
       timelineStore.referenceDate = newReferenceDate;
-      el.value!.scrollLeft = el.value!.scrollLeft + d
+      el.value!.scrollLeft = el.value!.scrollLeft + d;
     }
   };
 
@@ -97,11 +111,11 @@ export const useGestures = (
     isZooming.value = true;
 
     if (timelineStore.setPageScale(scale)) {
-      const offsetLeft =
-        (el.value! as HTMLElement).offsetLeft + timelineStore.leftInsetWidth;
-      const newScrollLeft =
-        wg.scale * (pinchStartScrollLeft! + pinchStartCenterX!) -
-        (wg.origin.x! - offsetLeft);
+      // const offsetLeft =
+      //   (el.value! as HTMLElement).offsetLeft + timelineStore.leftInsetWidth;
+      // const newScrollLeft =
+      //   wg.scale * (pinchStartScrollLeft! + pinchStartCenterX!) -
+      //   (wg.origin.x! - offsetLeft);
       const newScrollTop =
         pinchStartScrollTop! + pinchStartCenterY! - wg.origin.y;
 

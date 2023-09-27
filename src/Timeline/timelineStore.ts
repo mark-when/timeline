@@ -228,7 +228,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     return (dt: DateTime) => {
       return (
         (dt.diff(baselineLeftmostDate.value).as(diffScale) * pageScale.value) /
-          24
+        24
       );
     };
   });
@@ -273,9 +273,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const dateFromClientLeft = computed(() => (offset: number) => {
     const d = baselineLeftmostDate.value.plus({
       [diffScale]:
-        ((offset + pageSettings.value.viewport.left) /
-          pageScale.value) *
-        24,
+        ((offset + pageSettings.value.viewport.left) / pageScale.value) * 24,
     });
     return d;
   });
@@ -287,6 +285,7 @@ export const useTimelineStore = defineStore("timeline", () => {
       viewport.width + viewport.offsetLeft
     );
   };
+
   const setMode = (m: TimelineMode) => {
     mode.value = m;
   };

@@ -12,9 +12,7 @@ import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
 import {
-  useIntersectionObserver,
   useResizeObserver,
-  useThrottleFn,
 } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
@@ -227,30 +225,21 @@ onMounted(() => {
   timelineStore.setViewportGetter(getViewport);
   const te = timelineElement.value!;
   te.scrollLeft = te.clientWidth * 2;
-  scroll = () =>
-    requestAnimationFrame(() => {
-      const scrollLeft = te.scrollLeft;
-      const amount = {
-        [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
-      };
-      if (scrollLeft < te.clientWidth / 2) {
-        timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
-        te.scrollLeft = te.clientWidth * 2;
-      } else if (scrollLeft > te.clientWidth * 3.5) {
-        timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
-        te.scrollLeft = te.clientWidth * 2;
-      }
-      setViewportDateInterval();
-      trigger();
-    });
-  // setTimeout(() => {
-  // nextTick(() => {
-  //   const left = getViewport().width * 3.5;
-  //   console.log("setting scroll left to", left);
-  //   timelineElement.value!.scrollLeft = left;
-  // });
-
-  // }, 0)
+  scroll = () => {
+    const scrollLeft = te.scrollLeft;
+    const amount = {
+      [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
+    };
+    if (scrollLeft < te.clientWidth / 2) {
+      timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
+      te.scrollLeft = te.clientWidth * 2;
+    } else if (scrollLeft > te.clientWidth * 3.5) {
+      timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
+      te.scrollLeft = te.clientWidth * 2;
+    }
+    setViewportDateInterval();
+    trigger();
+  };
 });
 
 const svgParams = ref();
@@ -291,6 +280,8 @@ markwhenStore.onGetSvg = (params) => {
     }, 500);
   });
 };
+
+const webkitOverflowScrolling = ref("auto");
 </script>
 
 <template>
@@ -303,11 +294,11 @@ markwhenStore.onGetSvg = (params) => {
       class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-800"
       ref="timelineElement"
       @scroll="scroll"
+      @gestureChange="scroll"
     >
       <TimeMarkersBack />
       <now-line />
       <ReferenceDateVue v-if="false"></ReferenceDateVue>
-      <!-- <HoverDateVue></HoverDateVue> -->
       <Events />
       <!-- <TimeMarkersFront /> -->
       <Settings></Settings>
@@ -319,4 +310,5 @@ markwhenStore.onGetSvg = (params) => {
   </div>
 </template>
 
-<style></style>
+<style>
+</style>

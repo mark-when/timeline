@@ -23,6 +23,12 @@ const markersStore = useMarkersStore();
           <td>{{ timelineStore.referenceDate.toISODate() }}</td>
         </tr>
         <tr>
+          <td>scrollLeft</td>
+          <td>
+            {{ timelineStore.pageSettings.viewport.left }}
+          </td>
+        </tr>
+        <tr>
           <td>viewportFrom</td>
           <td>
             {{
