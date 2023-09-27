@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.3.0
+
+- Flattened view hierarchy and a dynamic visible time range
+
 # 1.2.5
 
 - Use colors for statically generated timelines
