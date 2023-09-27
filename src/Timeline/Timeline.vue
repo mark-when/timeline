@@ -7,14 +7,15 @@ import {
 } from "./timelineStore";
 import { scaleToGetDistance } from "./initialPageSettings";
 import TimeMarkersBack from "@/Timeline/Markers/TimeMarkersBack.vue";
-import TimeMarkersFront from "@/Timeline/Markers/TimeMarkersFront.vue";
 import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
-import { useResizeObserver } from "@vueuse/core";
+import {
+  useResizeObserver,
+} from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
-import { dateMidpoint } from "./utilities/dateTimeUtilities";
+import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
 import { eventValue, isEventNode } from "@markwhen/parser";
 import DebugView from "./DebugView.vue";
@@ -23,6 +24,9 @@ import { useNodePosition } from "./Events/composables/useNodePosition";
 import { useEventFinder } from "@/utilities/useEventFinder";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import SvgView from "./Svg/SvgView.vue";
+import Settings from "./Settings/Settings.vue";
+import ReferenceDateVue from "./Events/ReferenceDate.vue";
+import NowLine from "./Events/NowLine.vue";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -71,13 +75,14 @@ const getViewport = (): Viewport => {
   if (!timelineElement.value) {
     return { left: 0, width: 0, top: 0, height: 0, offsetLeft: 0 };
   }
-  return {
+  const vp = {
     left: timelineElement.value.scrollLeft,
     width: timelineElement.value.clientWidth,
     top: timelineElement.value.scrollTop,
     height: timelineElement.value.clientHeight,
     offsetLeft: timelineElement.value.offsetLeft,
   };
+  return vp;
 };
 
 const setViewport = (v: Viewport) => {
@@ -102,10 +107,6 @@ const widthChangeStartYearWidth = ref<number | null>(null);
 watch(
   () => timelineStore.startedWidthChange,
   (started) => {
-    // console.log(
-    //   timelineElement.value?.offsetLeft,
-    //   timelineElement.value?.scrollLeft
-    // );
     const scrollLeft = timelineElement.value?.scrollLeft || 0;
     widthChangeStartScrollLeft.value = started ? scrollLeft ?? null : null;
     widthChangeStartYearWidth.value = timelineStore.pageSettings.scale;
@@ -121,8 +122,8 @@ watch(
     const startCenter =
       widthChangeStartScrollLeft.value! + timelineElement.value.clientWidth / 2;
     const scale = settings.scale / (widthChangeStartYearWidth.value || 1);
-    timelineElement.value.scrollLeft =
-      scale * startCenter - timelineElement.value.clientWidth / 2;
+    // timelineElement.value.scrollLeft =
+    //   scale * startCenter - timelineElement.value.clientWidth / 2;
   },
   { deep: true }
 );
@@ -135,26 +136,21 @@ watch(
     nextTick(setViewportDateInterval);
   }
 );
+
 useResizeObserver(timelineElement, (entries) => {
+  timelineStore.referenceDate = timelineStore.dateFromClientLeft(
+    entries[0].target.clientLeft + entries[0].target.clientWidth / 2
+  );
+  timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
   nextTick(setViewportDateInterval);
 });
 
-const setViewportDateInterval = () => {
-  // if (!ticking) {
-  //   requestAnimationFrame(() => {
-  timelineStore.setViewport(getViewport());
-  //     ticking = false;
-  //   });
-  //   ticking = true;
-  // }
-};
+const setViewportDateInterval = () => timelineStore.setViewport(getViewport());
 
 const { trigger } = useHoveringMarker(timelineElement);
 
-const scroll = () => {
-  setViewportDateInterval();
-  trigger();
-};
+let scroll = () => {};
+
 const { isPanning } = useGestures(timelineElement, () => {
   setViewportDateInterval();
 });
@@ -164,26 +160,8 @@ const scrollToDate = (
   force: boolean = false,
   immediate: boolean = false
 ) => {
-  const el = timelineElement.value;
-  if (el) {
-    const fromLeft = timelineStore.distanceFromBaselineLeftmostDate(dateTime);
-    const { left, width } = getViewport();
-
-    const immediateScroll = () => {
-      el.scrollLeft = fromLeft - width / 2;
-    };
-
-    // If it isn't already within view
-    if (force || fromLeft < left || fromLeft > left + width) {
-      immediate
-        ? immediateScroll()
-        : el.scrollTo({
-            top: el.scrollTop,
-            left: fromLeft - width / 2,
-            behavior: "smooth",
-          });
-    }
-  }
+  timelineStore.referenceDate = dateTime;
+  timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
 };
 
 const scrollToDateRangeImmediate = (
@@ -243,8 +221,25 @@ const setInitialScrollAndScale = () =>
   scrollToDateRangeImmediate(timelineStore.pageRange);
 
 onMounted(() => {
-  setInitialScrollAndScale();
+  // scrollToNow();
   timelineStore.setViewportGetter(getViewport);
+  const te = timelineElement.value!;
+  te.scrollLeft = te.clientWidth * 2;
+  scroll = () => {
+    const scrollLeft = te.scrollLeft;
+    const amount = {
+      [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
+    };
+    if (scrollLeft < te.clientWidth / 2) {
+      timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
+      te.scrollLeft = te.clientWidth * 2;
+    } else if (scrollLeft > te.clientWidth * 3.5) {
+      timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
+      te.scrollLeft = te.clientWidth * 2;
+    }
+    setViewportDateInterval();
+    trigger();
+  };
 });
 
 const svgParams = ref();
@@ -285,6 +280,8 @@ markwhenStore.onGetSvg = (params) => {
     }, 500);
   });
 };
+
+const webkitOverflowScrolling = ref("auto");
 </script>
 
 <template>
@@ -294,15 +291,18 @@ markwhenStore.onGetSvg = (params) => {
   >
     <div
       id="timeline"
-      class="relative h-full overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-700"
+      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-800"
       ref="timelineElement"
       @scroll="scroll"
-      :style="{ cursor: isPanning ? 'grabbing' : 'grab' }"
+      @gestureChange="scroll"
     >
       <TimeMarkersBack />
+      <now-line />
+      <ReferenceDateVue v-if="false"></ReferenceDateVue>
       <Events />
-      <TimeMarkersFront />
-      <DebugView v-if="false" />
+      <!-- <TimeMarkersFront /> -->
+      <Settings></Settings>
+      <!-- <DebugView v-if="true" /> -->
       <div ref="svgHolder" style="width: 0; height: 0">
         <SvgView v-if="svgParams" v-bind="svgParams" ref="svgView"></SvgView>
       </div>
@@ -310,4 +310,5 @@ markwhenStore.onGetSvg = (params) => {
   </div>
 </template>
 
-<style></style>
+<style>
+</style>

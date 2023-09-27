@@ -202,7 +202,7 @@ export const useNodeStore = defineStore("nodes", () => {
               const range = ranges(pAndN.node, recurrenceLimit)!;
               const left =
                 timelineStore.pageScaleBy24 *
-                timelineStore.scalelessDistanceFromBaselineLeftmostDate(
+                timelineStore.scalelessDistanceFromReferenceDate(
                   range.fromDateTime
                 );
               const width =
@@ -316,6 +316,14 @@ export const useNodeStore = defineStore("nodes", () => {
     return max;
   });
 
+  const viewHeight = computed(() => {
+    if (nodeArray.value.length) {
+      return `${nodeArray.value.length * 30 + 500}px`;
+    } else {
+      return "100%";
+    }
+  });
+
   return {
     nodes,
     nodeArray,
@@ -324,5 +332,6 @@ export const useNodeStore = defineStore("nodes", () => {
     predecessorMap,
     sectionKeys,
     height,
+    viewHeight,
   };
 });

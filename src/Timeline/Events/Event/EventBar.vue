@@ -17,33 +17,7 @@ const props = defineProps<{
   editable: boolean;
   expandedRecurrence: number[];
 }>();
-
-const barStyleObj = computed(() => {
-  const isGantt = timelineStore.mode === "gantt";
-  return {
-    marginLeft: 0,
-    width: `${props.width}px`,
-    backgroundColor: color.value ? `rgba(${color.value}, 0.3)` : "",
-    border: color.value ? `1px solid rgba(${color.value}, 0.3)` : "",
-    height: isGantt ? `15px` : `10px`,
-    borderRadius: isGantt ? `0.25rem` : `5px`,
-    flexShrink: 0,
-  };
-});
-
 const isGantt = computed(() => timelineStore.mode === "gantt");
-
-const percentBarStyleObj = computed(() => {
-  const obj = {
-    minWidth: `10px`,
-    maxWidth: `100%`,
-    ...(color.value ? { backgroundColor: `rgba(${color.value}, 0.8)` } : {}),
-  } as any;
-  obj.width = `${props.percent}%`;
-  obj.borderRadius = `5px`;
-  return obj;
-});
-
 const color = computed(() => {
   return props.tagColor || null;
 });
@@ -56,7 +30,7 @@ const recurrenceBarStyleObj = (left: number) => {
     backgroundColor: color.value ? `rgba(${color.value}, 0.3)` : "",
     border: color.value ? `1px solid rgba(${color.value}, 0.3)` : "",
     height: isGantt ? `15px` : `10px`,
-    borderRadius: isGantt ? `0.25rem` : `5px`,
+    borderRadius: isGantt ? `0.125rem` : `5px`,
     flexShrink: 0,
   };
 };
@@ -71,9 +45,8 @@ const recurrencePercentBarStyleObj = (left: number) => {
     ...(color.value ? { backgroundColor: `rgba(${color.value}, 0.8)` } : {}),
   } as any;
   obj.width = `${(props.percent * props.width) / 100}px`;
-  obj.borderRadius = `5px`;
+  obj.borderRadius = isGantt ? "0.125rem" : `5px`;
   obj.left = `${left}px`;
-  // obj.height = `${barHeight.value}px`;
   return obj;
 };
 

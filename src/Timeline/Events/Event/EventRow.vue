@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, inject, nextTick, ref, watch, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import {
   toDateRange,
+  expand,
   type Block,
   type DateRange,
   type DateTimeIso,
   type MarkdownBlock,
   type Range,
+  type Recurrence,
 } from "@markwhen/parser";
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import EventBar from "@/Timeline/Events/Event/EventBar.vue";
@@ -15,8 +17,6 @@ import EventTitle from "./EventTitle.vue";
 import MoveWidgets from "./Edit/MoveWidgets.vue";
 import type { EventPath } from "@/Timeline/paths";
 import Fade from "@/Transitions/Fade.vue";
-import type { Recurrence } from "@markwhen/parser";
-import { expand } from "@markwhen/parser";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { useNodePosition } from "../composables/useNodePosition";
 
@@ -155,34 +155,26 @@ const expandedRecurrence = computed(() =>
   )
 );
 
-const left = computed(() => {
-  return (
-    timelineStore.pageScaleBy24 * realLeft.value + timelineStore.leftInsetWidth
-  );
-});
-
-const realLeft = ref();
-watchEffect(() => {
-  realLeft.value = timelineStore.scalelessDistanceFromBaselineLeftmostDate(
+const dimensions = computed(() => {
+  const left = timelineStore.distanceFromBaselineLeftmostDate(
     range.value.fromDateTime
   );
-});
 
-const barWidth = computed(() => {
-  const distance = timelineStore.scalelessDistanceBetweenDates(
+  const width = timelineStore.distanceBetweenDates(
     range.value.fromDateTime,
     range.value.toDateTime
   );
-  return distance;
+  const scaledWidth = Math.max(10, width);
+
+  return {
+    left,
+    width: scaledWidth,
+  };
 });
 
-const barScaledWidth = computed(() =>
-  Math.max(10, timelineStore.pageScaleBy24 * barWidth.value)
-);
-
-const close = () => {
-  showingMeta.value = false;
-};
+const left = computed(() => {
+  return dimensions.value.left;
+});
 
 const clickStart = ref<{ x: number; y: number }>();
 const eventDetail = () => {
@@ -214,7 +206,7 @@ const styleObj = computed(() => {
   } as any;
   obj.left = isGantt.value ? "0px" : `${left.value}px`;
   if (isGantt.value) {
-    obj.right = "0px";
+    obj.right = "-350%";
   }
   return obj;
 });
@@ -222,12 +214,13 @@ const styleObj = computed(() => {
 const classObj = computed(() => {
   return isGantt.value
     ? {
-        border: true,
+        // border: true,
         "dark:bg-gray-900 bg-white": props.isDetailEvent,
         "dark:border-gray-400 border-black":
           props.hovering && !props.isDetailEvent,
         "dark:border-indigo-600 border-indigo-500": props.isDetailEvent,
         "border-transparent": !props.hovering && !props.isDetailEvent,
+        "dark:bg-slate-400/10  bg-slate-400/10": props.hovering,
       }
     : {
         "pointer-events-none": isCollapsed.value,
@@ -271,7 +264,7 @@ const ganttTitleStyle = computed(() => {
     timelineStore.ganttSidebarTempWidth
       ? timelineStore.ganttSidebarTempWidth
       : timelineStore.ganttSidebarWidth
-  }px - 0.5rem)`;
+  }px)`;
   return styleObj;
 });
 </script>
@@ -315,7 +308,7 @@ const ganttTitleStyle = computed(() => {
           :tagColor="color"
           :percent="percent"
           :hovering="isHovering || hovering"
-          :width="barScaledWidth"
+          :width="dimensions.width"
           :taskNumerator="taskNumerator"
           :taskDenominator="taskDenominator"
           :drag-handle-listener-left="dragHandleListenerLeft"
@@ -358,18 +351,23 @@ const ganttTitleStyle = computed(() => {
     </div>
   </div>
   <div
-    class="absolute left-0 right-0 h-[30px]"
-    :style="{ top: `${top}px` }"
+    class="absolute left-0 h-[30px]"
+    :style="{ top: `${top}px`, right: `-350%` }"
     v-if="timelineStore.mode === 'gantt' && !isCollapsed"
     @mouseenter.passive="elementHover = true"
     @mouseleave.passive="elementHover = false"
   >
     <div class="flex h-full">
-      <div class="sticky left-0 bg-slate-50 dark:bg-slate-800 z-10 h-full">
+      <div
+        class="sticky left-0 z-10 h-full"
+        :class="{
+          'dark:bg-slate-400/10 bg-slate-400/25': hovering,
+          'bg-white dark:bg-slate-800': !hovering,
+        }"
+      >
         <div
-          class="h-full border"
+          class="h-full"
           :class="{
-            'dark:border-gray-400 border-black': hovering,
             'border-transparent': !hovering && !isDetailEvent,
             'dark:border-indigo-600 border-indigo-600': isDetailEvent,
           }"
@@ -418,7 +416,8 @@ const ganttTitleStyle = computed(() => {
 }
 
 .source {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .eventTitle {

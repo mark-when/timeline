@@ -55,7 +55,7 @@ const goToNow = () => timelineStore.goToNow();
 
 <template>
   <div
-    class="absolute hover:text-slate-700 dark:text-slate-400 text-slate-500 dark:hover:text-slate-300 mt-16"
+    class="fixed hover:text-slate-700 dark:text-slate-400 text-slate-500 dark:hover:text-slate-300 mt-16"
     :style="`left: calc(${styleLeftInset}px); bottom: 0rem; right: 0;`"
   >
     <div

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 import {
   diffScale,
   floorDateTime,
@@ -184,60 +184,84 @@ export const useTimelineStore = defineStore("timeline", () => {
     () => pageTimelineMetadata.value.maxDurationDays
   );
 
-  const baselineLeftmostDate = ref<DateTime>(DateTime.now());
+  const hoveringDate = ref(DateTime.now());
 
-  watchEffect(() => {
-    const newValue = calculateBaselineLeftmostDate(
-      earliest.value,
-      maxDurationDays.value
-    );
-    if (+newValue !== +baselineLeftmostDate.value) {
-      baselineLeftmostDate.value = newValue;
-      autoCenterSemaphore.value++;
-    }
+  const referenceDate = ref(DateTime.now());
+  const diffAmount = computed(() => ({
+    [diffScale]:
+      ((pageSettings.value.viewport.width * 2.5) / pageScale.value) * 24,
+  }));
+  const baselineLeftmostDate = computed(() =>
+    referenceDate.value.minus(diffAmount.value)
+  );
+  const baselineRightmostDate = computed(() =>
+    referenceDate.value.plus(diffAmount.value)
+  );
+  // watchEffect(() => {
+  //   const newValue = calculateBaselineLeftmostDate(
+  //     earliest.value,
+  //     maxDurationDays.value
+  //   );
+  //   if (+newValue !== +baselineLeftmostDate.value) {
+  //     baselineLeftmostDate.value = newValue;
+  //     autoCenterSemaphore.value++;
+  //   }
+  // });
+
+  // const baselineRightmostDate = computed(() => {
+  //   return floorDateTime(
+  //     pageRange.value.toDateTime.plus({
+  //       years: 30,
+  //     }),
+  //     "year"
+  //   );
+  // });
+
+  //  0 1 2 3
+  // | | | |-| | | |
+  // total width === viewport.width * 7
+  const baseOffset = computed(() => {
+    return 0; //pageSettings.value.viewport.width * 3;
   });
 
-  const baselineRightmostDate = computed(() => {
-    return floorDateTime(
-      pageRange.value.toDateTime.plus({
-        years: 30,
-      }),
-      "year"
-    );
+  const distanceFromBaselineLeftmostDate = computed(() => {
+    return (dt: DateTime) => {
+      return (
+        (dt.diff(baselineLeftmostDate.value).as(diffScale) * pageScale.value) /
+        24
+      );
+    };
   });
+
   const dateIntervalFromViewport = computed(() => {
     return (scrollLeft: number, width: number) => {
-      // We're adding these so that when we are scrolling it looks like the left
-      // time markers are going off the screen
-      scrollLeft = scrollLeft - viewportLeftMarginPixels;
-      width = width + viewportLeftMarginPixels;
-
-      const earliest = baselineLeftmostDate.value;
-      const leftDate = earliest.plus({
-        [diffScale]: (scrollLeft / pageScale.value) * 24,
+      const fromDateTime = baselineLeftmostDate.value.plus({
+        [diffScale]:
+          ((scrollLeft + leftInsetWidth.value) / pageScale.value) * 24,
       });
-      const rightDate = earliest.plus({
-        [diffScale]: ((scrollLeft + width) / pageScale.value) * 24,
+      const toDateTime = baselineLeftmostDate.value.plus({
+        [diffScale]:
+          ((width + scrollLeft + leftInsetWidth.value) / pageScale.value) * 24,
       });
-      return { fromDateTime: leftDate, toDateTime: rightDate };
+      return { fromDateTime, toDateTime };
     };
   });
   const scalelessDistanceBetweenDates = (a: DateTime, b: DateTime) =>
     b.diff(a).as(diffScale);
+  // Interval.fromDateTimes(a, b).toDuration(diffScale).as('hours');
 
   const distanceBetweenDates = computed(
     () => (a: DateTime, b: DateTime) =>
       (b.diff(a).as(diffScale) * pageScale.value) / 24
   );
-  const scalelessDistanceFromBaselineLeftmostDate = computed(
-    () => (a: DateTime) => a.diff(baselineLeftmostDate.value).as(diffScale)
+  const scalelessDistanceFromReferenceDate = computed(
+    () => (a: DateTime) => a.diff(referenceDate.value).as(diffScale)
   );
-  const distanceFromBaselineLeftmostDate = computed(
+  const distanceFromReferenceDate = computed(
     () => (a: DateTime) =>
-      (a.diff(baselineLeftmostDate.value).as(diffScale) * pageScale.value) / 24
-  );
-  const distanceBetweenBaselineDates = computed(() =>
-    distanceFromBaselineLeftmostDate.value(baselineRightmostDate.value)
+      (a.diff(referenceDate.value).as(diffScale) * pageScale.value) / 24 +
+      pageSettings.value.viewport.width +
+      baseOffset.value
   );
   const distanceFromViewportLeftDate = (a: DateTime) =>
     (a
@@ -246,18 +270,13 @@ export const useTimelineStore = defineStore("timeline", () => {
       pageScale.value) /
     24;
 
-  const dateFromClientLeft = computed(
-    () => (offset: number) =>
-      baselineLeftmostDate.value.plus({
-        [diffScale]:
-          ((offset +
-            pageSettings.value.viewport.left -
-            leftInsetWidth.value -
-            pageSettings.value.viewport.offsetLeft) /
-            pageScale.value) *
-          24,
-      })
-  );
+  const dateFromClientLeft = computed(() => (offset: number) => {
+    const d = baselineLeftmostDate.value.plus({
+      [diffScale]:
+        ((offset + pageSettings.value.viewport.left) / pageScale.value) * 24,
+    });
+    return d;
+  });
 
   const setViewport = (viewport: Viewport) => {
     pageSettings.value.viewport = viewport;
@@ -266,6 +285,7 @@ export const useTimelineStore = defineStore("timeline", () => {
       viewport.width + viewport.offsetLeft
     );
   };
+
   const setMode = (m: TimelineMode) => {
     mode.value = m;
   };
@@ -273,19 +293,8 @@ export const useTimelineStore = defineStore("timeline", () => {
     viewportGetter.value = getter;
   };
   const setPageScale = (s: number) => {
-    // TODO: also limit zooming in based on our position, if it would put us
-    // past the browser's limit of a div's width
-    const scale = Math.min(
-      scaleToGetDistance(17_895_697, {
-        fromDateTime: baselineLeftmostDate.value,
-        toDateTime: baselineRightmostDate.value,
-      }),
-      Math.max(MIN_SCALE, Math.min(MAX_SCALE, s))
-    );
-    if (s === scale) {
-      pageSettings.value.scale = scale;
-    }
-    return s === scale;
+    pageSettings.value.scale = s;
+    return true;
   };
   const setStartedWidthChange = (started: boolean) => {
     startedWidthChange.value = started;
@@ -346,6 +355,7 @@ export const useTimelineStore = defineStore("timeline", () => {
 
   return {
     // state
+    referenceDate,
     pageSettings,
     startedWidthChange,
     hideNowLine,
@@ -359,6 +369,11 @@ export const useTimelineStore = defineStore("timeline", () => {
     dateTimeDisplay,
     progressDisplay,
     colors: computed(() => markwhenStore.app?.colorMap),
+    baseOffset,
+    hoveringDate,
+    baselineLeftmostDate,
+    baselineRightmostDate,
+    diffAmount,
     // editable,
 
     // getters
@@ -370,23 +385,21 @@ export const useTimelineStore = defineStore("timeline", () => {
     transformedEvents,
     pageScale,
     pageScaleBy24: computed(() => pageScale.value / 24),
-    baselineLeftmostDate,
-    baselineRightmostDate,
     scalelessDistanceBetweenDates,
     distanceBetweenDates: distanceBetweenDates as unknown as (
       a: DateTime,
       b: DateTime
     ) => number,
     distanceFromViewportLeftDate,
-    distanceFromBaselineLeftmostDate,
-    distanceBetweenBaselineDates,
+    distanceFromReferenceDate,
     dateFromClientLeft,
-    scalelessDistanceFromBaselineLeftmostDate,
+    scalelessDistanceFromReferenceDate,
     scaleOfViewportDateInterval,
     weights,
     leftInsetWidth,
     hoveringEventPaths,
     isDetailEventPath,
+    distanceFromBaselineLeftmostDate,
 
     // actions
     setDetailEventPath,

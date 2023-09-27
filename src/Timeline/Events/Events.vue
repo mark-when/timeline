@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { useTimelineStore } from "@/Timeline/timelineStore";
 import NowLine from "../Events/NowLine.vue";
-import { computed, inject } from "vue";
+import { computed } from "vue";
 import NewEvent from "./NewEvent/NewEvent.vue";
-import { useNodeStore, nodeKey } from "../useNodeStore";
+import { useNodeStore } from "../useNodeStore";
 import EventNodeRow from "./EventNodeRow.vue";
 import type { Path } from "@markwhen/parser";
 import type { SomeNode } from "@markwhen/parser";
 import GanttSidebar from "../Gantt/GanttSidebar.vue";
 import Section from "./Section/Section.vue";
+import ReferenceDateVue from "./ReferenceDate.vue";
+import HoverDateVue from "./HoverDate.vue";
 
 const timelineStore = useTimelineStore();
 
@@ -36,18 +38,29 @@ const currentWidth = computed(() => {
   }
   return timelineStore.ganttSidebarWidth;
 });
+const width = computed(() => {
+  return timelineStore.pageSettings.viewport.width * 7;
+});
+const mousemove = (e: MouseEvent) => {
+  console.log(e.clientX + timelineStore.baseOffset)
+  const hovering = timelineStore.dateFromClientLeft(e.clientX);
+  timelineStore.hoveringDate = hovering;
+};
 </script>
 
 <template>
-  <div
+  <!-- <div
     id="events"
     class="flex flex-col relative"
-    :style="`min-width: ${timelineStore.distanceBetweenBaselineDates}px; height: max(${height}, 100vh)`"
-  >
-    <now-line />
+    :style="`height: max(${height}, 100vh); width: ${width}px;`"
+    @mousemove="mousemove"
+  > -->
+    <!-- <now-line />
+    <ReferenceDateVue></ReferenceDateVue>
+    <HoverDateVue></HoverDateVue> -->
     <div
       v-if="timelineStore.mode === 'gantt'"
-      class="sticky left-0 relative flex flex-col bg-slate-50 dark:bg-slate-800 top-0 bottom-0 z-[2] h-full"
+      class="sticky left-0 relative flex flex-col bg-white dark:bg-slate-800 top-0 bottom-0 z-[2] h-full"
       :style="`width: calc(${currentWidth}px);`"
     ></div>
     <template
@@ -64,7 +77,7 @@ const currentWidth = computed(() => {
     </template>
     <new-event />
     <GanttSidebar />
-  </div>
+  <!-- </div> -->
 </template>
 
 <style scoped></style>

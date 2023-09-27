@@ -68,26 +68,26 @@ export const useMarkersStore = defineStore("markers", () => {
   const markers = computed(() => {
     const markers = [] as TimeMarker[];
     const scale = timelineStore.scaleOfViewportDateInterval;
-    const { fromDateTime: leftViewportDate, toDateTime: rightViewportDate } =
-      timelineStore.pageSettings.viewportDateInterval;
+    const baselineLeftmostDate = timelineStore.baselineLeftmostDate;
+    const baselineRightmostDate = timelineStore.baselineRightmostDate;
 
-    let nextLeft = ceilDateTime(leftViewportDate, scale);
-    let rightmost = ceilDateTime(rightViewportDate, scale);
+    let nextLeft = ceilDateTime(baselineLeftmostDate, scale);
+    let rightmost = ceilDateTime(baselineRightmostDate, scale);
 
     let acc = timelineStore.scalelessDistanceBetweenDates(
-      leftViewportDate,
+      baselineLeftmostDate,
       nextLeft
     );
 
     markers.push({
-      dateTime: leftViewportDate,
+      dateTime: baselineLeftmostDate,
       size: acc,
-      ts: leftViewportDate.toMillis(),
+      ts: baselineLeftmostDate.toMillis(),
       accumulated: acc,
     });
 
     // 256 is an arbitrary number
-    while (nextLeft < rightmost && markers.length < 256) {
+    while (nextLeft < rightmost && markers.length < 1024) {
       markers.push({
         dateTime: nextLeft,
         size: 0,
@@ -125,7 +125,6 @@ export const useMarkersStore = defineStore("markers", () => {
 
   const rangeFromOffsetLeft = computed(() => (offset: number) => {
     const offsetDate = timelineStore.dateFromClientLeft(offset);
-
     const scale = timelineStore.scaleOfViewportDateInterval as DisplayScale;
     const floored = floorDateTime(offsetDate, scale);
     const ceiled = ceilDateTime(offsetDate, scale);
@@ -133,14 +132,12 @@ export const useMarkersStore = defineStore("markers", () => {
       {
         dateTime: floored,
         left:
-          timelineStore.distanceFromBaselineLeftmostDate(floored) +
-          timelineStore.leftInsetWidth,
+          timelineStore.distanceFromBaselineLeftmostDate(floored),
       },
       {
         dateTime: ceiled,
         left:
-          timelineStore.distanceFromBaselineLeftmostDate(ceiled) +
-          timelineStore.leftInsetWidth,
+          timelineStore.distanceFromBaselineLeftmostDate(ceiled),
       },
     ] as [DateTimeAndOffset, DateTimeAndOffset];
   });
