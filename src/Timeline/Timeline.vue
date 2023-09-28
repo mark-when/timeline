@@ -25,6 +25,7 @@ import SvgView from "./Svg/SvgView.vue";
 import Settings from "./Settings/Settings.vue";
 import ReferenceDateVue from "./Events/ReferenceDate.vue";
 import NowLine from "./Events/NowLine.vue";
+import { useDoubleTap } from "./composables/useDoubleTap";
 
 const timelineStore = useTimelineStore();
 const markwhenStore = useMarkwhenStore();
@@ -283,7 +284,6 @@ markwhenStore.onGetSvg = (params) => {
   });
 };
 
-const webkitOverflowScrolling = ref("auto");
 </script>
 
 <template>
@@ -296,6 +296,8 @@ const webkitOverflowScrolling = ref("auto");
       class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-800"
       ref="timelineElement"
       @scroll="scroll"
+      @gestureChange="scroll"
+      @pointerdown="pointerdown"
     >
       <TimeMarkersBack />
       <now-line />
@@ -311,5 +313,4 @@ const webkitOverflowScrolling = ref("auto");
   </div>
 </template>
 
-<style>
-</style>
+<style></style>

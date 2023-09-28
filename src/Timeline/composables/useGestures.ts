@@ -163,6 +163,9 @@ export const useGestures = (
   };
 
   const pan = (e: any) => {
+    if (e.maxPointers >= 2) {
+      return;
+    }
     if (!canPan.canPan || !panStartX.value || e.isFinal) {
       return;
     }
@@ -187,7 +190,7 @@ export const useGestures = (
     });
     mc.on(
       "pinch",
-      useThrottleFn((e) => pinch(e), 40, false, true)
+      useThrottleFn((e) => pinch(e), 20, false, true)
     );
     mc.on("pinchend", pinchEnd);
     mc.on("panstart", panStart);
