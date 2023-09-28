@@ -11,9 +11,7 @@ import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
-import {
-  useResizeObserver,
-} from "@vueuse/core";
+import { useResizeObserver } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
@@ -220,26 +218,30 @@ onActivated(() => {
 const setInitialScrollAndScale = () =>
   scrollToDateRangeImmediate(timelineStore.pageRange);
 
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent)
 onMounted(() => {
   // scrollToNow();
   timelineStore.setViewportGetter(getViewport);
   const te = timelineElement.value!;
   te.scrollLeft = te.clientWidth * 2;
-  scroll = () => {
-    const scrollLeft = te.scrollLeft;
-    const amount = {
-      [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
+  if (!isIOS()) {
+    scroll = () => {
+      const scrollLeft = te.scrollLeft;
+      const amount = {
+        [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
+      };
+      if (scrollLeft < te.clientWidth / 2) {
+        timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
+        te.scrollLeft = te.clientWidth * 2;
+      } else if (scrollLeft > te.clientWidth * 3.5) {
+        timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
+        te.scrollLeft = te.clientWidth * 2;
+      }
+      setViewportDateInterval();
+      trigger();
     };
-    if (scrollLeft < te.clientWidth / 2) {
-      timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
-      te.scrollLeft = te.clientWidth * 2;
-    } else if (scrollLeft > te.clientWidth * 3.5) {
-      timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
-      te.scrollLeft = te.clientWidth * 2;
-    }
-    setViewportDateInterval();
-    trigger();
-  };
+  } else {
+  }
 });
 
 const svgParams = ref();
@@ -294,7 +296,6 @@ const webkitOverflowScrolling = ref("auto");
       class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-800"
       ref="timelineElement"
       @scroll="scroll"
-      @gestureChange="scroll"
     >
       <TimeMarkersBack />
       <now-line />
