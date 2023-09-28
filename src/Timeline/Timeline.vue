@@ -284,6 +284,7 @@ markwhenStore.onGetSvg = (params) => {
   });
 };
 
+const pointerdown = useDoubleTap(setViewportDateInterval);
 </script>
 
 <template>
