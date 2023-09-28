@@ -351,7 +351,7 @@ const ganttTitleStyle = computed(() => {
     </div>
   </div>
   <div
-    class="absolute left-0 h-[30px]"
+    class="absolute left-0 h-[30px] pointer-events-none"
     :style="{ top: `${top}px`, right: `-350%` }"
     v-if="timelineStore.mode === 'gantt' && !isCollapsed"
     @mouseenter.passive="elementHover = true"
@@ -366,7 +366,7 @@ const ganttTitleStyle = computed(() => {
         }"
       >
         <div
-          class="h-full"
+          class="h-full pointer-events-auto"
           :class="{
             'border-transparent': !hovering && !isDetailEvent,
             'dark:border-indigo-600 border-indigo-600': isDetailEvent,
