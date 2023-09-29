@@ -225,7 +225,7 @@ onMounted(() => {
   timelineStore.setViewportGetter(getViewport);
   const te = timelineElement.value!;
   te.scrollLeft = te.clientWidth * 2;
-  if (!isIOS()) {
+  // if (!isIOS()) {
     scroll = () => {
       const scrollLeft = te.scrollLeft;
       const amount = {
@@ -241,8 +241,8 @@ onMounted(() => {
       setViewportDateInterval();
       trigger();
     };
-  } else {
-  }
+  // } else {
+  // }
 });
 
 const svgParams = ref();
