@@ -44,15 +44,6 @@ export const useDoubleTap = (setViewport: () => void) => {
 
     element.addEventListener("pointermove", pointerMove);
     element.addEventListener("pointerup", pointerUp);
-    element.addEventListener("pointercancel", () => {
-      console.log("canceled");
-    });
-    element.addEventListener("pointerout", () => {
-      console.log("out");
-    });
-    element.addEventListener("pointerleave", () => {
-      console.log("leave");
-    });
   };
 
   const pointerListener = (e: PointerEvent) => {
