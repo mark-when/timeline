@@ -26,7 +26,7 @@ export const useDoubleTap = (setViewport: () => void) => {
   let initialY = 0;
 
   const addMoveListeners = (element: HTMLDivElement) => {
-    const pointerMove = useDebounceFn((moveEvent: PointerEvent) => {
+    const pointerMove = (moveEvent: PointerEvent) => {
       const yDiff = initialY - moveEvent.clientY;
       const newScale = yDiff < 0 ? (yDiff - 10) / -10 : 10 / (yDiff + 10);
       timelineStore.setPageScale(Math.max(initialScale * newScale, 0.01));
@@ -34,7 +34,7 @@ export const useDoubleTap = (setViewport: () => void) => {
       moveEvent.stopPropagation();
       moveEvent.stopImmediatePropagation();
       moveEvent.preventDefault();
-    }, 20);
+    }
 
     function pointerUp() {
       console.log("pointer up");
