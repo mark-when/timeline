@@ -85,10 +85,7 @@ const eras = computed(() => {
         path
       );
       const styleObj = {
-        left:
-          timelineStore.distanceFromViewportLeftDate(fromDateTime) +
-          timelineStore.leftInsetWidth -
-          viewportLeftMarginPixels,
+        left: timelineStore.distanceFromBaselineLeftmostDate(fromDateTime),
         width: Math.max(
           2,
           timelineStore.distanceBetweenDates(fromDateTime, toDateTime)
