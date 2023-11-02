@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.3.1
+
+- The first specified range in the header's ranges field will be the default zoom
+
 # 1.3.0
 
 - Flattened view hierarchy and a dynamic visible time range
