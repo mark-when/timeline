@@ -1,21 +1,16 @@
 import { defineStore } from "pinia";
-import { DateTime, Interval } from "luxon";
-import {
-  diffScale,
-  floorDateTime,
-  scales,
-  viewportLeftMarginPixels,
-} from "@/Timeline/utilities/dateTimeUtilities";
-import { ref, computed, watchEffect, watch } from "vue";
+import { DateTime, type DurationUnit } from "luxon";
+import { diffScale, scales } from "@/Timeline/utilities/dateTimeUtilities";
+import { ref, computed, watch } from "vue";
 import type { EventPath } from "@/Timeline/paths";
 import { ranges } from "@/utilities/ranges";
-import {
-  initialPageSettings,
-  calculateBaselineLeftmostDate,
-  scaleToGetDistance,
-} from "./initialPageSettings";
+import { initialPageSettings } from "./initialPageSettings";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
-import type { Node, NodeArray } from "@markwhen/parser";
+import {
+  RECURRENCE_AMOUNT_REGEX,
+  type Node,
+  type NodeArray,
+} from "@markwhen/parser";
 import type { DateRange } from "@markwhen/parser";
 
 export const recurrenceLimit = 100;
@@ -278,6 +273,47 @@ export const useTimelineStore = defineStore("timeline", () => {
     return d;
   });
 
+  const userRanges = computed(() => {
+    const ranges = markwhenStore.markwhen?.parsed[0].header.ranges;
+    const parsedRanges: (DateRange & { title: string })[] = [];
+    if (ranges && Array.isArray(ranges)) {
+      const now = DateTime.now();
+      for (let i = 0; i < ranges.length; i++) {
+        let r = ranges[i];
+        let regex = new RegExp(`^${RECURRENCE_AMOUNT_REGEX.source}$`);
+        const match = regex.exec(r);
+        if (match) {
+          const amount = parseInt(match[1]);
+          if (isNaN(amount)) {
+            continue;
+          }
+          const unit: DurationUnit = !!match[3]
+            ? "milliseconds"
+            : !!match[4]
+            ? "seconds"
+            : !!match[5]
+            ? "minutes"
+            : !!match[6]
+            ? "hours"
+            : !!match[8]
+            ? "days"
+            : !!match[9]
+            ? "weeks"
+            : match[10]
+            ? "months"
+            : "years";
+          const duration = { [unit]: amount / 2 };
+          parsedRanges.push({
+            title: r,
+            fromDateTime: now.minus(duration),
+            toDateTime: now.plus(duration),
+          });
+        }
+      }
+    }
+    return parsedRanges;
+  });
+
   const setViewport = (viewport: Viewport) => {
     pageSettings.value.viewport = viewport;
     pageSettings.value.viewportDateInterval = dateIntervalFromViewport.value(
@@ -374,6 +410,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     baselineLeftmostDate,
     baselineRightmostDate,
     diffAmount,
+    userRanges,
     // editable,
 
     // getters
