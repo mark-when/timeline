@@ -137,9 +137,10 @@ watch(
 );
 
 useResizeObserver(timelineElement, (entries) => {
-  timelineStore.referenceDate = timelineStore.dateFromClientLeft(
-    entries[0].target.clientLeft + entries[0].target.clientWidth / 2
-  );
+  const middle =
+    (entries[0].target.clientLeft || 0) +
+    (entries[0].target.clientWidth / 2 || 0);
+  timelineStore.referenceDate = timelineStore.dateFromClientLeft(middle);
   timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
   nextTick(setViewportDateInterval);
 });
@@ -219,28 +220,28 @@ onActivated(() => {
 const setInitialScrollAndScale = () =>
   scrollToDateRangeImmediate(timelineStore.pageRange);
 
-const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent)
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent);
 onMounted(() => {
   // scrollToNow();
   timelineStore.setViewportGetter(getViewport);
   const te = timelineElement.value!;
   te.scrollLeft = te.clientWidth * 2;
   // if (!isIOS()) {
-    scroll = () => {
-      const scrollLeft = te.scrollLeft;
-      const amount = {
-        [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
-      };
-      if (scrollLeft < te.clientWidth / 2) {
-        timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
-        te.scrollLeft = te.clientWidth * 2;
-      } else if (scrollLeft > te.clientWidth * 3.5) {
-        timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
-        te.scrollLeft = te.clientWidth * 2;
-      }
-      setViewportDateInterval();
-      trigger();
+  scroll = () => {
+    const scrollLeft = te.scrollLeft;
+    const amount = {
+      [diffScale]: ((te.clientWidth * 1.5) / timelineStore.pageScale) * 24,
     };
+    if (scrollLeft < te.clientWidth / 2) {
+      timelineStore.referenceDate = timelineStore.referenceDate.minus(amount);
+      te.scrollLeft = te.clientWidth * 2;
+    } else if (scrollLeft > te.clientWidth * 3.5) {
+      timelineStore.referenceDate = timelineStore.referenceDate.plus(amount);
+      te.scrollLeft = te.clientWidth * 2;
+    }
+    setViewportDateInterval();
+    trigger();
+  };
   // } else {
   // }
 });
