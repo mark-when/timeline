@@ -171,7 +171,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     ganttSidebarWidth.value = width;
   };
 
-  const pageScale = computed(() => pageSettings.value.scale);
+  const pageScale = computed(() => pageSettings.value.scale || 1);
 
   const earliest = computed(() => pageRange.value.fromDateTime);
 
@@ -266,11 +266,15 @@ export const useTimelineStore = defineStore("timeline", () => {
     24;
 
   const dateFromClientLeft = computed(() => (offset: number) => {
-    const d = baselineLeftmostDate.value.plus({
-      [diffScale]:
-        ((offset + pageSettings.value.viewport.left) / pageScale.value) * 24,
-    });
-    return d;
+    try {
+      const d = baselineLeftmostDate.value.plus({
+        [diffScale]:
+          ((offset + pageSettings.value.viewport.left) / pageScale.value) * 24,
+      });
+      return d;
+    } catch {
+      return DateTime.now();
+    }
   });
 
   const userRanges = computed(() => {

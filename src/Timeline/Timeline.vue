@@ -11,7 +11,7 @@ import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
-import { useResizeObserver } from "@vueuse/core";
+import { useDebounceFn, useResizeObserver, useThrottleFn } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
@@ -136,14 +136,17 @@ watch(
   }
 );
 
-useResizeObserver(timelineElement, (entries) => {
-  const middle =
-    (entries[0].target.clientLeft || 0) +
-    (entries[0].target.clientWidth / 2 || 0);
-  timelineStore.referenceDate = timelineStore.dateFromClientLeft(middle);
-  timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
-  nextTick(setViewportDateInterval);
-});
+useResizeObserver(
+  timelineElement,
+  useDebounceFn((entries) => {
+    const middle =
+      (entries[0].target.clientLeft || 0) +
+      (entries[0].target.clientWidth / 2 || 0);
+    timelineStore.referenceDate = timelineStore.dateFromClientLeft(middle);
+    timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
+    nextTick(setViewportDateInterval);
+  }, 250, {})
+);
 
 const setViewportDateInterval = () => timelineStore.setViewport(getViewport());
 
