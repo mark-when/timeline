@@ -91,10 +91,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
         >
           {{ text(timeMarker) }}
         </h6>
-        <div
-          v-if="currentDateResolution <= 6"
-          class="flex flex-row pl-1"
-        >
+        <div v-if="currentDateResolution <= 6" class="flex flex-row pl-1">
           <h6
             class="whitespace-nowrap text-xs font-bold"
             v-if="isHovering(timeMarker)"

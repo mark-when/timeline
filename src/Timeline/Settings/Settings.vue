@@ -117,6 +117,12 @@ const goToNow = () => timelineStore.goToNow();
             <CollapseAll></CollapseAll>
             <ToggleNowLine></ToggleNowLine>
           </div>
+          <input
+            type="number"
+            placeholder="Year offset"
+            class="placeholder:text-sm px-1"
+            v-model="timelineStore.yearOffset"
+          />
           <div
             class="flex flex row overflow-visible p-[2px] pointer-events-auto link"
           >

@@ -117,7 +117,11 @@ const text = computed(
   () => (timeMarker: TimeMarker) =>
     granularities[currentDateResolution.value][
       scaleForThisDate.value(timeMarker)
-    ](timeMarker.dateTime)
+    ](
+      typeof timelineStore.yearOffset !== "undefined"
+        ? timeMarker.dateTime.plus({ years: timelineStore.yearOffset })
+        : timeMarker.dateTime
+    )
 );
 const opacity = computed(
   () => (timeMarker: TimeMarker) => clamp((alpha.value(timeMarker) - 0.45) * 5)
