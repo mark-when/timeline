@@ -69,7 +69,8 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
         :key="timeMarker.ts"
         class="flex-shrink-0 h-full flex flex-col"
         :class="{
-          'border-l border-slate-200 dark:border-slate-500': opacity(timeMarker) >= 1,
+          'border-l border-slate-200 dark:border-slate-500':
+            opacity(timeMarker) >= 1,
         }"
         :style="{
           left: `${
@@ -90,10 +91,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
         >
           {{ text(timeMarker) }}
         </h6>
-        <div
-          v-if="currentDateResolution <= 6"
-          class="flex flex-row pl-1"
-        >
+        <div v-if="currentDateResolution <= 6" class="flex flex-row pl-1">
           <h6
             class="whitespace-nowrap text-xs font-bold"
             v-if="isHovering(timeMarker)"

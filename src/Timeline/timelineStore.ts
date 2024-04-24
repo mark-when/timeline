@@ -123,6 +123,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const ganttSidebarTempWidth = ref(0);
   const autoCenterSemaphore = ref(0);
   const miniMapShowing = ref(false);
+  const yearOffset = ref<number>();
 
   const autoCenter = () => {
     autoCenterSemaphore.value++;
@@ -389,6 +390,7 @@ export const useTimelineStore = defineStore("timeline", () => {
     baselineRightmostDate,
     diffAmount,
     userRanges,
+    yearOffset,
     // editable,
 
     // getters
