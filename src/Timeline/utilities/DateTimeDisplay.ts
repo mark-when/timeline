@@ -4,7 +4,7 @@ export type DateTimeToDisplay = (dt: DateTime) => string | number
 
 const hourMinuteSecond: DateTimeToDisplay = (dt) => dt.toLocaleString(DateTime.TIME_24_WITH_SECONDS)
 const paddedHourMinute: DateTimeToDisplay = (dt) => dt.toLocaleString(DateTime.TIME_24_SIMPLE)
-const year: DateTimeToDisplay = (dt) => dt.year
+const year: DateTimeToDisplay = (dt) => dt.year < 0 ? `${-dt.year} BCE` : dt.year
 const isoDate: DateTimeToDisplay = (dt) => dt.toISODate()!
 const monthDayShort: DateTimeToDisplay = (dt) => `${dt.day} ${dt.monthShort}`
 const full: DateTimeToDisplay = (dt) => dt.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)
@@ -23,5 +23,5 @@ export const granularities: DateTimeToDisplay[][] = [
 /* month  */  [empty,               empty,                    empty,                  paddedHourMinute,   empty,                 (dt) => dt.day,           (dt) => dt.monthShort!,      year,            year         , year],
 /* year   */  [empty,               empty,                    empty,                  paddedHourMinute,   empty,                 empty,                    (dt) => dt.month,            year,            year         , year],
 /* decade */  [empty,               empty,                    empty,                  paddedHourMinute,   empty,                 empty,                    empty,                       year,            year         , year],
-/* cent   */  [empty,               empty,                    empty,                  empty,              empty,                 empty,                    empty,                       year,            year         , year]
+/* cent   */  [empty,               empty,                    empty,                  empty,              empty,                 empty,                    empty,                       year,            year,          year]
 ]
