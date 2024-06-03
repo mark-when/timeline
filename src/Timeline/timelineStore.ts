@@ -12,6 +12,7 @@ import {
   type NodeArray,
 } from "@markwhen/parser";
 import type { DateRange } from "@markwhen/parser";
+import { lsRef } from "./utilities/localStorageRef";
 
 export const recurrenceLimit = 100;
 
@@ -64,16 +65,11 @@ export const MAX_SCALE = 30000000;
 export const useTimelineStore = defineStore("timeline", () => {
   const markwhenStore = useMarkwhenStore();
   const markwhenState = computed(() => markwhenStore.markwhen!);
-  const dateTimeDisplay = ref<"original" | "off">(
-    (typeof localStorage !== "undefined" &&
-      (localStorage.getItem("dateTimeDisplay") as "original" | "off")) ||
-      "original"
+  const dateTimeDisplay = lsRef<"original" | "off">(
+    "dateTimeDisplay2",
+    "original"
   );
-  const progressDisplay = ref<"on" | "off">(
-    (typeof localStorage !== "undefined" &&
-      (localStorage.getItem("progressDisplay") as "on" | "off")) ||
-      "on"
-  );
+  const progressDisplay = lsRef<"on" | "off">("progressDisplay2", "on");
 
   const pageTimeline = computed(() => markwhenState.value.parsed[0]);
   const pageTimelineMetadata = computed(() => pageTimeline.value.metadata);
@@ -122,33 +118,11 @@ export const useTimelineStore = defineStore("timeline", () => {
   const goToNowSemaphore = ref(0);
   const scrollToPath = ref<EventPath>();
   const shouldZoomWhenScrolling = ref<boolean>(true);
-  const mode = ref<TimelineMode>(
-    (typeof localStorage !== "undefined" &&
-      (localStorage.getItem("preferredMode") as TimelineMode)) ||
-      "timeline"
-  );
+  const mode = lsRef<TimelineMode>("preferredMode2", "timeline");
   const ganttSidebarWidth = ref(200);
   const ganttSidebarTempWidth = ref(0);
   const autoCenterSemaphore = ref(0);
   const miniMapShowing = ref(false);
-
-  watch(mode, (m) => {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("preferredMode", m);
-    }
-  });
-
-  watch(dateTimeDisplay, (dtd) => {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("dateTimeDisplay", dtd);
-    }
-  });
-
-  watch(progressDisplay, (pd) => {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("progressDisplay", pd);
-    }
-  });
 
   const autoCenter = () => {
     autoCenterSemaphore.value++;

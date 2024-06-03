@@ -138,14 +138,19 @@ watch(
 
 useResizeObserver(
   timelineElement,
-  useDebounceFn((entries) => {
-    const middle =
-      (entries[0].target.clientLeft || 0) +
-      (entries[0].target.clientWidth / 2 || 0);
-    timelineStore.referenceDate = timelineStore.dateFromClientLeft(middle);
-    timelineElement.value!.scrollLeft = timelineElement.value!.clientWidth * 2;
-    nextTick(setViewportDateInterval);
-  }, 250, {})
+  useDebounceFn(
+    (entries) => {
+      const middle =
+        (entries[0].target.clientLeft || 0) +
+        (entries[0].target.clientWidth / 2 || 0);
+      timelineStore.referenceDate = timelineStore.dateFromClientLeft(middle);
+      timelineElement.value!.scrollLeft =
+        timelineElement.value!.clientWidth * 2;
+      nextTick(setViewportDateInterval);
+    },
+    250,
+    {}
+  )
 );
 
 const setViewportDateInterval = () => timelineStore.setViewport(getViewport());
@@ -308,7 +313,6 @@ const pointerdown = useDoubleTap(setViewportDateInterval);
       <now-line />
       <ReferenceDateVue v-if="false"></ReferenceDateVue>
       <Events />
-      <!-- <TimeMarkersFront /> -->
       <Settings></Settings>
       <!-- <DebugView v-if="true" /> -->
       <div ref="svgHolder" style="width: 0; height: 0">
