@@ -5,7 +5,7 @@ export function hasLocalStorage() {
 export const lsRef = <T extends string | number>(
   key: string,
   defaultValue: T
-) => {
+): Ref<T> => {
   let initialValue: T;
   if (hasLocalStorage()) {
     const item = localStorage.getItem(key);
@@ -17,11 +17,13 @@ export const lsRef = <T extends string | number>(
   } else {
     initialValue = defaultValue;
   }
-  const r = ref(initialValue);
+  // @ts-ignore
+  const r: Ref<T> = ref(initialValue);
   watch(r, (v) => {
     if (hasLocalStorage()) {
       localStorage.setItem(key, JSON.stringify({ value: v }));
     }
   });
+  // @ts-ignore
   return ref;
 };

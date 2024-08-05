@@ -1,4 +1,4 @@
-import type { DateRange } from "@markwhen/parser/lib/Types"
+import type { DateRange } from "@markwhen/parser"
 
 export type Era = {
   dateRange: DateRange

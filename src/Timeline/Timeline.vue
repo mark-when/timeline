@@ -164,7 +164,7 @@ const { isPanning } = useGestures(timelineElement, () => {
 });
 
 const scrollToDate = (
-  dateTime: DateTime,
+  dateTime: DateTime<true>,
   force: boolean = false,
   immediate: boolean = false
 ) => {
