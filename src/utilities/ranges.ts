@@ -1,11 +1,7 @@
-import type {
-  SomeNode,
-  GroupRange,
-  NodeArray,
-} from "@markwhen/parser";
+import type { SomeNode, GroupRange, NodeArray } from "@markwhen/parser";
 import { Event, toDateRange, type DateRange } from "@markwhen/parser";
 import { expand } from "@markwhen/parser";
-import LRUCache from "lru-cache";
+import { LRUCache } from "lru-cache";
 
 const cache = new LRUCache<string, DateRange>({ max: 1000 });
 const cacheAndReturn = (cacheKey: string, dateRange: DateRange) => {

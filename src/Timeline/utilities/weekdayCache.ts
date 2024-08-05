@@ -1,5 +1,5 @@
 import type { DateTime } from "luxon";
-import LRU from "lru-cache";
+import { LRUCache as LRU } from "lru-cache";
 // @ts-ignore
 import * as lxt from "../../../node_modules/luxon/src/impl/conversions.js";
 
