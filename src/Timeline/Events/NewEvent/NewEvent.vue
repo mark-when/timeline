@@ -14,10 +14,10 @@ const isGantt = computed(() => timelineStore.mode === "gantt");
   <button
     v-if="newEventPosition"
     title="Click and drag to create new event"
-    class="h-[10px] border flex items-center justify-center flex-shrink-0 absolute border-transparent hover:border-slate-100 text-slate-600 hover:bg-slate-50 hover:shadow dark:text-slate-100 dark:hover:border-gray-600 dark:hover:bg-slate-700 font-bold"
+    class="h-[10px] border flex items-center justify-center flex-shrink-0 absolute border-transparent hover:border-zinc-100 text-zinc-600 hover:bg-zinc-50 hover:shadow dark:text-zinc-100 dark:hover:border-gray-600 dark:hover:bg-zinc-700 font-bold"
     :class="
       creating
-        ? 'dark:border-gray-600 dark:bg-slate-600 bg-slate-50 border-slate-100 shadow'
+        ? 'dark:border-gray-600 dark:bg-zinc-600 bg-zinc-50 border-zinc-100 shadow'
         : 'bg-transparent'
     "
     :style="`left: ${newEventPosition[0].left}px; width: ${

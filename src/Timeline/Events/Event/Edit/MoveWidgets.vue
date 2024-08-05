@@ -23,7 +23,7 @@ const adjustedLeft = computed(() => {
     <div class="flex flex-row items-center justify-center">
       <button
         title="Edit event"
-        class="mr-1 transition dark:hover:text-slate-100 hover:text-black rounded-sm p-px disabled:text-gray-300 disabled:dark:text-gray-600"
+        class="mr-1 transition dark:hover:text-zinc-100 hover:text-black rounded-sm p-px disabled:text-gray-300 disabled:dark:text-gray-600"
         @click="emit('edit')"
       >
         <svg
@@ -40,7 +40,7 @@ const adjustedLeft = computed(() => {
     </div>
     <div
       title="Drag to move"
-      class="handle flex items-center justify-center cursor-crosshair touch-none hover:text-black dark:hover:text-slate-100 transition"
+      class="handle flex items-center justify-center cursor-crosshair touch-none hover:text-black dark:hover:text-zinc-100 transition"
       @touchstart="move"
       @mousedown.prevent.stop="move"
     >

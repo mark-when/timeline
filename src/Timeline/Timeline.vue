@@ -303,7 +303,7 @@ const pointerdown = useDoubleTap(setViewportDateInterval);
   >
     <div
       id="timeline"
-      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-slate-800"
+      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-zinc-800"
       ref="timelineElement"
       @scroll="scroll"
       @gestureChange="scroll"

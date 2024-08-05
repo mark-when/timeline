@@ -55,7 +55,7 @@ const goToNow = () => timelineStore.goToNow();
 
 <template>
   <div
-    class="fixed hover:text-slate-700 dark:text-slate-400 text-slate-500 dark:hover:text-slate-300 mt-16"
+    class="fixed hover:text-zinc-700 dark:text-zinc-400 text-zinc-500 dark:hover:text-zinc-300 mt-16"
     :style="`left: calc(${styleLeftInset}px); bottom: 0rem; right: 0;`"
   >
     <div
@@ -71,7 +71,7 @@ const goToNow = () => timelineStore.goToNow();
         </div>
       </div> -->
       <div class="flex flex-row gap-2 pt-8">
-        <div class="dark:bg-slate-800 bg-white flex flex-row gap-2 px-2">
+        <div class="dark:bg-zinc-800 bg-white flex flex-row gap-2 px-2">
           <div
             class="flex flex row overflow-visible p-[2px] pointer-events-auto"
             style="grid-area: gantt"

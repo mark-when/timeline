@@ -8,7 +8,7 @@ const reference = computed(() => timelineStore.hoveringDate);
 
 <template>
   <div
-    class="absolute dark:bg-slate-400 bg-slate-700"
+    class="absolute dark:bg-zinc-400 bg-zinc-700"
     :style="`width: 1px; left: ${timelineStore.distanceFromBaselineLeftmostDate(
       reference
     )}px; height: max(100vh, 100%);`"

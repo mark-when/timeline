@@ -140,7 +140,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 
 <template>
   <div
-    class="fixed top-0 left-0 right-0 h-6 bg-white/95 dark:bg-slate-800/95 z-30 border-b dark:border-slate-700"
+    class="fixed top-0 left-0 right-0 h-6 bg-white/95 dark:bg-zinc-800/95 z-30 border-b dark:border-zinc-700"
   ></div>
   <div
     v-for="timeMarker in markersStore.markers"
@@ -162,9 +162,9 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
     <div
       class="sticky top-0 -m-px"
       :class="{
-        'font-bold z-50 dark:border-slate-400 border-slate-500':
+        'font-bold z-50 dark:border-zinc-400 border-zinc-500':
           isHovering(timeMarker),
-        'z-40 dark:border-slate-600': !isHovering(timeMarker),
+        'z-40 dark:border-zinc-600': !isHovering(timeMarker),
       }"
     >
       <h6
@@ -177,7 +177,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
       </h6>
       <div v-if="currentDateResolution <= 6" class="flex flex-row">
         <h6
-          class="whitespace-nowrap text-xs font-bold dark:bg-slate-800 bg-white border-l p-1 dark:border-slate-400 border-slate-500"
+          class="whitespace-nowrap text-xs font-bold dark:bg-zinc-800 bg-white border-l p-1 dark:border-zinc-400 border-zinc-500"
           v-if="isHovering(timeMarker)"
         >
           {{ hoveringText(timeMarker) }}

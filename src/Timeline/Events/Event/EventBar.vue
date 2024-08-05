@@ -66,14 +66,14 @@ const recurrenceTotalWidth = computed(
         <div
           :class="{
             'eventBar transition shadow top-0 absolute': true,
-            'dark:bg-slate-400 bg-slate-700 opacity-30': !color,
+            'dark:bg-zinc-400 bg-zinc-700 opacity-30': !color,
           }"
           :style="recurrenceBarStyleObj(instance)"
         ></div>
         <div
           class="absolute top-0 bottom-0 percentBar transition"
           :class="{
-            'dark:bg-gray-400 bg-slate-700 border border-gray-800 dark:border-gray-300':
+            'dark:bg-gray-400 bg-zinc-700 border border-gray-800 dark:border-gray-300':
               !color,
             'opacity-100 shadow-lg': hovering,
             'opacity-60': !hovering,

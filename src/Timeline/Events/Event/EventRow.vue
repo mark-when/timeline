@@ -220,7 +220,7 @@ const classObj = computed(() => {
           props.hovering && !props.isDetailEvent,
         "dark:border-indigo-600 border-indigo-500": props.isDetailEvent,
         "border-transparent": !props.hovering && !props.isDetailEvent,
-        "dark:bg-slate-400/10  bg-slate-400/10": props.hovering,
+        "dark:bg-zinc-400/10  bg-zinc-400/10": props.hovering,
       }
     : {
         "pointer-events-none": isCollapsed.value,
@@ -361,8 +361,8 @@ const ganttTitleStyle = computed(() => {
       <div
         class="sticky left-0 z-10 h-full"
         :class="{
-          'dark:bg-slate-400/10 bg-slate-400/25': hovering,
-          'bg-white dark:bg-slate-800': !hovering,
+          'dark:bg-zinc-400/10 bg-zinc-400/25': hovering,
+          'bg-white dark:bg-zinc-800': !hovering,
         }"
       >
         <div

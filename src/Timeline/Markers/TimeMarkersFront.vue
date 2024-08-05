@@ -61,7 +61,7 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
 <template>
   <div class="fixed inset-0 pointer-events-none">
     <div
-      class="flex relative bg-white/95 dark:bg-slate-800 dark:border-slate-600 border-b"
+      class="flex relative bg-white/95 dark:bg-zinc-800 dark:border-zinc-600 border-b"
     >
       <!-- <SquashBars /> -->
       <div
@@ -69,7 +69,8 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
         :key="timeMarker.ts"
         class="flex-shrink-0 h-full flex flex-col"
         :class="{
-          'border-l border-slate-200 dark:border-slate-500': opacity(timeMarker) >= 1,
+          'border-l border-zinc-200 dark:border-zinc-500':
+            opacity(timeMarker) >= 1,
         }"
         :style="{
           left: `${
