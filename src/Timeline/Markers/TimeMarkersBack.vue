@@ -42,8 +42,8 @@ const backgroundColor = computed(() => (tm: TimeMarker) => {
       weekday.weekday === 7
     ) {
       return dark.value
-        ? `rgba(10, 10, 10, ${a})`
-        : `rgba(170, 170, 170, ${a})`;
+        ? `rgba(113, 113, 122, ${a})`
+        : `rgba(161, 161, 170, ${a})`;
     }
   }
   return "unset";
