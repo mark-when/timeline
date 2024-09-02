@@ -51,7 +51,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   });
 
   const editorLink = computed(
-    () => `https://app.markwhen.com${pathOrHash.value}`
+    () => `https://meridiem.markwhen.com${pathOrHash.value}`
   );
   const timelineLink = computed(
     () => `https://timeline.markwhen.com${pathOrHash.value}`
@@ -63,8 +63,8 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     if (user) {
       try {
         const url = timeline
-          ? `https://app.markwhen.com/${user}/${timeline}.mw`
-          : `https://app.markwhen.com/${user}.mw`;
+          ? `https://meridiem.markwhen.com/${user}/${timeline}.mw`
+          : `https://meridiem.markwhen.com/${user}.mw`;
         const resp = await fetch(url).catch(() => {});
         if (resp) {
           if (resp.redirected) {
