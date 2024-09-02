@@ -25,5 +25,5 @@ export const lsRef = <T extends string | number>(
     }
   });
   // @ts-ignore
-  return ref;
+  return r;
 };
