@@ -175,7 +175,7 @@ const goToNow = () => timelineStore.goToNow();
               target="_blank"
               class="h-6 flex flex-row items-center rounded hover:bg-zinc-200 transition dark:border-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-100 px-1 text-sm lg:text-base font-bold relative"
               ><svg
-                class="h-4 w-4 mr-1"
+                class="h-4 w-4 md:mr-1"
                 focusable="false"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
