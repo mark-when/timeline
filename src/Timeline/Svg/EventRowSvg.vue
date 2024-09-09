@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Node } from "@markwhen/parser";
 import { toDateRange, type Event } from "@markwhen/parser";
 import type { DateTime } from "luxon";
 import { computed, ref } from "vue";
@@ -9,7 +8,7 @@ import { expand } from "@markwhen/parser";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 
 const props = defineProps<{
-  node: Node<Event>;
+  eventy: Event;
   path: string;
   numChildren: number;
   numAbove: number;
@@ -31,12 +30,12 @@ const props = defineProps<{
 const { scalelessDistanceBetweenDates: dist } = useTimelineStore();
 
 const { color, eventRange, dateText } = useEventRefs(
-  computed(() => props.node)
+  computed(() => props.eventy)
 );
 
 const range = computed(() => toDateRange(eventRange.value!));
 
-const recurrence = computed(() => props.node.value.recurrence);
+const recurrence = computed(() => props.eventy.recurrence);
 const expandedRecurrence = computed(() =>
   (recurrence.value
     ? expand(range.value, recurrence.value, recurrenceLimit)
@@ -106,7 +105,7 @@ defineExpose({
     ><tspan v-if="showDateText" class="svgDateText"
       >&nbsp;&nbsp;{{ dateText }}</tspan
     ><tspan v-if="showEventTitles" class="svgEventTitle"
-      >&nbsp;&nbsp;{{ node.value.eventDescription.eventDescription }}</tspan
+      >&nbsp;&nbsp;{{ eventy.firstLine?.restTrimmed }}</tspan
     ></text
   >
 </template>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useTimelineStore } from "@/Timeline/timelineStore";
-import type { NodeArray, SomeNode } from "@markwhen/parser";
 import { useEventColor } from "../composables/useEventColor";
 import ExpandedSectionBackground from "./ExpandedSectionBackground.vue";
 import { toInnerHtml } from "@/Timeline/utilities/innerHtml";
@@ -10,12 +9,15 @@ import { ranges } from "@/utilities/ranges";
 import { equivalentPaths, type EventPath } from "@/Timeline/paths";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { useCollapseStore } from "@/Timeline/collapseStore";
+import type { Eventy } from "@markwhen/parser";
+import type { Sourced } from "@/Markwhen/useLpc";
+import type { EventGroup } from ".yalc/@markwhen/parser/lib";
 
 const timelineStore = useTimelineStore();
 const collapseStore = useCollapseStore();
 const { setHoveringEvent, clearHoveringEvent } = timelineStore;
 const props = defineProps<{
-  node: SomeNode;
+  eventy: EventGroup;
   path: string;
   numChildren?: number | undefined;
   numAbove: number;
@@ -42,19 +44,24 @@ const toggle = (e: MouseEvent) => {
   collapsed.value = !collapsed.value;
 };
 
-const sectionRange = computed(() => ranges(props.node, recurrenceLimit));
+const sectionRange = computed(() => ranges(props.eventy, recurrenceLimit));
 
 const left = computed(() => {
-  if (!props.node || !sectionRange.value) {
+  if (!props.eventy || !sectionRange.value) {
     return 10;
   }
-  return scalelessDistanceBetweenDates(timelineStore.baselineLeftmostDate, sectionRange.value.fromDateTime);
+  return scalelessDistanceBetweenDates(
+    timelineStore.baselineLeftmostDate,
+    sectionRange.value.fromDateTime
+  );
 });
 
-const { color } = useEventColor(computed(() => props.node));
+const { color } = useEventColor(
+  computed(() => props.eventy as Sourced<Eventy>)
+);
 
 const fullWidth = computed(() => {
-  if (!props.node || !sectionRange.value) {
+  if (!props.eventy || !sectionRange.value) {
     return 100;
   }
   return scalelessDistanceBetweenDates(
@@ -62,7 +69,7 @@ const fullWidth = computed(() => {
     sectionRange.value.toDateTime
   );
 });
-const titleHtml = computed(() => toInnerHtml(props.node.title || ""));
+const titleHtml = computed(() => toInnerHtml(props.eventy.title || ""));
 
 const hover = (isHovering: boolean) => {
   hovering.value = isHovering;
@@ -81,7 +88,7 @@ const groupStyle = computed(() =>
     ? props.groupStyle
     : timelineStore.mode === "gantt"
     ? "section"
-    : props.node.style === "section"
+    : props.eventy.style === "section"
     ? "section"
     : "group"
 );
@@ -117,7 +124,7 @@ const hovered = computed(
       <ExpandedSectionBackground
         :hovering="hovered"
         :style="groupStyle"
-        :node="node"
+        :eventy="eventy"
         :left="left"
         :height="height"
         :full-width="fullWidth"
@@ -137,7 +144,7 @@ const hovered = computed(
         :expanded="!collapsed"
         :titleHtml="titleHtml"
         :color="color"
-        :num-children="(node.value as NodeArray).length"
+        :num-children="eventy.children.length"
         :group-style="groupStyle"
         :left="left"
         :full-width="fullWidth"

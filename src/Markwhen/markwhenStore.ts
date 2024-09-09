@@ -1,7 +1,12 @@
 import { equivalentPaths, type EventPath } from "@/Timeline/paths";
 import { defineStore } from "pinia";
 import { computed, ref, watchEffect } from "vue";
-import { useLpc, type AppState, type MarkwhenState } from "./useLpc";
+import {
+  useLpc,
+  type AppState,
+  type MarkwhenState,
+  type Sourced,
+} from "./useLpc";
 import type {
   DateFormat,
   DateRangeIso,
@@ -11,6 +16,7 @@ import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
 import { useRoute } from "vue-router";
 import { parse } from "@markwhen/parser";
 import { useColors } from "./useColors";
+import type { EventGroup } from "@markwhen/parser";
 
 export const useMarkwhenStore = defineStore("markwhen", () => {
   const route = useRoute();
@@ -18,12 +24,11 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
   const markwhen = ref<MarkwhenState>();
   const showEditButton = ref(false);
   const showCopyLinkButton = ref(true);
-
   const onJumpToPath = ref((path: EventPath) => {});
   const onJumpToRange = ref((range: DateRangeIso) => {});
   const onGetSvg = ref((params: any): any => {});
 
-  const hadInitialState = ref(
+  const hadInitialState = ref<boolean>(
     // @ts-ignore
     typeof window !== "undefined" && window.__markwhen_initial_state
   );
@@ -75,12 +80,12 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
             const mw = parse(text);
             app.value = {
               isDark: false,
-              colorMap: useColors(mw.timelines[0]).value,
+              colorMap: useColors(mw).value,
             };
             markwhen.value = {
               rawText: text,
-              parsed: mw.timelines,
-              transformed: mw.timelines[0].events,
+              parsed: mw,
+              transformed: mw.events as Sourced<EventGroup>,
             };
             showEditButton.value = true;
             showCopyLinkButton.value = false;
@@ -92,12 +97,12 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
       const mw = parse(decoded);
       app.value = {
         isDark: false,
-        colorMap: useColors(mw.timelines[0]).value,
+        colorMap: useColors(mw).value,
       };
       markwhen.value = {
         rawText: decoded,
-        parsed: mw.timelines,
-        transformed: mw.timelines[0].events,
+        parsed: mw,
+        transformed: mw.events as Sourced<EventGroup>,
       };
       showEditButton.value = true;
       showCopyLinkButton.value = false;

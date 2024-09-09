@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { DateTime } from "luxon";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
-import type { Path, Event } from "@markwhen/parser";
-import { isEventNode } from "@markwhen/parser";
-import type { Node, SomeNode } from "@markwhen/parser";
+import type { Path, Event, Eventy } from "@markwhen/parser";
+import { isEvent } from "@markwhen/parser";
 import { useNodeStore } from "@/Timeline/useNodeStore";
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import EventRowSvg from "./EventRowSvg.vue";
@@ -67,8 +66,8 @@ const heightUnit = computed(() => totalWidth.value / nodeStore.height);
 const earliestTime = computed(() => totalRange.value.fromDateTime);
 const latestTime = computed(() => totalRange.value.toDateTime);
 
-const props = (path: Path, node: SomeNode) => ({
-  node: node as Node<Event>,
+const props = <T extends Eventy>(path: Path, eventy: T) => ({
+  eventy,
   path: path.join(","),
   numChildren: nodeStore.childrenMap.get(path.join(",")) || 0,
   numAbove: nodeStore.predecessorMap.get(path.join(",")) || 0,
@@ -156,12 +155,12 @@ onMounted(() => setWidth());
       :startY="startY"
       :dark="dark"
     ></MarkersSvg>
-    <template v-for="({ path, node }, index) in nodeStore.nodeArray">
+    <template v-for="({ path, eventy }, index) in nodeStore.nodeArray">
       <EventRowSvg
         ref="rows"
-        :key="path.join(',') + node.value.dateText"
-        v-if="isEventNode(node) && !collapseStore.isCollapsedChild(path)"
-        v-bind="props(path, node)"
+        :key="path.join(',') + eventy.firstLine?.datePart"
+        v-if="isEvent(eventy) && !collapseStore.isCollapsedChild(path)"
+        v-bind="props(path, eventy)"
       ></EventRowSvg>
     </template>
     <rect

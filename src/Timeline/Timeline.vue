@@ -15,7 +15,7 @@ import { useDebounceFn, useResizeObserver, useThrottleFn } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
 // import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
-import { eventValue, isEventNode } from "@markwhen/parser";
+import { isEvent } from "@markwhen/parser";
 import DebugView from "./DebugView.vue";
 import { ranges } from "@/utilities/ranges";
 import { useNodePosition } from "./Events/composables/useNodePosition";
@@ -43,8 +43,8 @@ markwhenStore.onJumpToPath = (path) => {
     return;
   }
 
-  const range = isEventNode(node)
-    ? eventValue(node).dateRangeIso
+  const range = isEvent(node)
+    ? (node).dateRangeIso
     : ranges(node, recurrenceLimit);
 
   if (!range) {

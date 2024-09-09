@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { useTimelineStore } from "@/Timeline/timelineStore";
-import NowLine from "../Events/NowLine.vue";
 import { computed } from "vue";
 import NewEvent from "./NewEvent/NewEvent.vue";
 import { useNodeStore } from "../useNodeStore";
 import EventNodeRow from "./EventNodeRow.vue";
 import type { Path } from "@markwhen/parser";
-import type { SomeNode } from "@markwhen/parser";
 import GanttSidebar from "../Gantt/GanttSidebar.vue";
 import Section from "./Section/Section.vue";
-import ReferenceDateVue from "./ReferenceDate.vue";
-import HoverDateVue from "./HoverDate.vue";
+import type { Eventy } from "@markwhen/parser";
 
 const timelineStore = useTimelineStore();
 
@@ -25,8 +22,8 @@ const height = computed(() => {
   }
 });
 
-const props = (path: Path, node: SomeNode) => ({
-  node,
+const props = <T extends Eventy>(path: Path, eventy: T) => ({
+  eventy,
   path: path.join(","),
   numChildren: nodeStore.childrenMap.get(path.join(",")),
   numAbove: nodeStore.predecessorMap.get(path.join(",")) || 0,
@@ -42,7 +39,7 @@ const width = computed(() => {
   return timelineStore.pageSettings.viewport.width * 7;
 });
 const mousemove = (e: MouseEvent) => {
-  console.log(e.clientX + timelineStore.baseOffset)
+  console.log(e.clientX + timelineStore.baseOffset);
   const hovering = timelineStore.dateFromClientLeft(e.clientX);
   timelineStore.hoveringDate = hovering;
 };
@@ -55,28 +52,28 @@ const mousemove = (e: MouseEvent) => {
     :style="`height: max(${height}, 100vh); width: ${width}px;`"
     @mousemove="mousemove"
   > -->
-    <!-- <now-line />
+  <!-- <now-line />
     <ReferenceDateVue></ReferenceDateVue>
     <HoverDateVue></HoverDateVue> -->
-    <div
-      v-if="timelineStore.mode === 'gantt'"
-      class="sticky left-0 relative flex flex-col bg-white dark:bg-zinc-800 top-0 bottom-0 z-[2] h-full"
-      :style="`width: calc(${currentWidth}px);`"
-    ></div>
-    <template
-      v-for="{ path, node } in nodeStore.visibleNodes[1]"
-      :key="nodeStore.sectionKeys.get(path.join(','))"
-    >
-      <Section v-bind="props(path, node)"></Section>
-    </template>
-    <template
-      v-for="{ path, node, key } in nodeStore.visibleNodes[0]"
-      :key="key"
-    >
-      <EventNodeRow v-bind="props(path, node)"></EventNodeRow>
-    </template>
-    <new-event />
-    <GanttSidebar />
+  <div
+    v-if="timelineStore.mode === 'gantt'"
+    class="sticky left-0 relative flex flex-col bg-white dark:bg-zinc-800 top-0 bottom-0 z-[2] h-full"
+    :style="`width: calc(${currentWidth}px);`"
+  ></div>
+  <template
+    v-for="{ path, eventy } in nodeStore.visibleNodes[1]"
+    :key="nodeStore.sectionKeys.get(path.join(','))"
+  >
+    <Section v-bind="props(path, eventy)"></Section>
+  </template>
+  <template
+    v-for="{ path, eventy, key } in nodeStore.visibleNodes[0]"
+    :key="key"
+  >
+    <EventNodeRow v-bind="props(path, eventy)"></EventNodeRow>
+  </template>
+  <new-event />
+  <GanttSidebar />
   <!-- </div> -->
 </template>
 

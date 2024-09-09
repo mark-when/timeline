@@ -6,13 +6,11 @@ import type { EventPath } from "@/Timeline/paths";
 import { ranges } from "@/utilities/ranges";
 import { initialPageSettings } from "./initialPageSettings";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
-import {
-  RECURRENCE_AMOUNT_REGEX,
-  type Node,
-  type NodeArray,
-} from "@markwhen/parser";
+import { RECURRENCE_AMOUNT_REGEX } from "@markwhen/parser";
 import type { DateRange } from "@markwhen/parser";
 import { lsRef } from "./utilities/localStorageRef";
+import type { Sourced } from "@/Markwhen/useLpc";
+import type { EventGroup } from "@markwhen/parser";
 
 export const recurrenceLimit = 100;
 
@@ -71,8 +69,10 @@ export const useTimelineStore = defineStore("timeline", () => {
   );
   const progressDisplay = lsRef<"on" | "off">("progressDisplay2", "on");
 
-  const pageTimeline = computed(() => markwhenState.value.parsed[0]);
-  const pageTimelineMetadata = computed(() => pageTimeline.value.metadata);
+  const pageTimeline = computed(() => markwhenState.value.parsed);
+  const pageTimelineMetadata = computed(() => {
+    return pageTimeline.value.metadata;
+  });
   const tags = computed(() =>
     Object.keys(pageTimeline.value.header)
       .filter((entry) => entry.startsWith(")"))
@@ -84,7 +84,7 @@ export const useTimelineStore = defineStore("timeline", () => {
         {} as { [key: string]: any }
       )
   );
-  const transformedEvents = computed<Node<NodeArray>>(
+  const transformedEvents = computed<Sourced<EventGroup>>(
     () => markwhenState.value.transformed!
   );
   const darkMode = computed(() => !!markwhenStore.app?.isDark);
@@ -110,7 +110,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const pageSettings = ref(
     (() => {
       const viewport = viewportGetter.value?.();
-      return initialPageSettings(markwhenState.value?.parsed[0], viewport);
+      return initialPageSettings(markwhenState.value?.parsed, viewport);
     })()
   );
   const startedWidthChange = ref(false);
@@ -252,7 +252,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   });
 
   const userRanges = computed(() => {
-    const ranges = markwhenStore.markwhen?.parsed[0].header.ranges;
+    const ranges = markwhenStore.markwhen?.parsed.header.ranges;
     const parsedRanges: (DateRange & { title: string })[] = [];
     if (ranges && Array.isArray(ranges)) {
       const now = DateTime.now();

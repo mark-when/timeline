@@ -1,13 +1,14 @@
 import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { ranges } from "@/utilities/ranges";
-import type { NodeArray, SomeNode, Node } from "@markwhen/parser";
-import { eventValue, isEventNode, iterate } from "@markwhen/parser";
+import { isEvent, iter, toArray } from "@markwhen/parser";
 import type { Path, Event, Block } from "@markwhen/parser";
 import { defineStore } from "pinia";
 import { computed, reactive, ref, watch, watchEffect } from "vue";
 import { useTimelineStore } from "./timelineStore";
 import { useCollapseStore } from "./collapseStore";
 import { equivalentPaths } from "./paths";
+import type { Eventy } from "@markwhen/parser";
+import type { EventGroup } from "@markwhen/parser";
 
 const prevSiblingPath = (path: Path) => {
   if (path[path.length - 1] === 0) {
@@ -16,11 +17,11 @@ const prevSiblingPath = (path: Path) => {
   return [...path.slice(0, -1), path[path.length - 1] - 1];
 };
 
-export const nodeKey = (n: SomeNode) => {
-  if (isEventNode(n)) {
-    const event = eventValue(n).eventDescription;
+export const nodeKey = (n: Eventy) => {
+  if (isEvent(n)) {
+    const event = n;
     return (
-      event.eventDescription +
+      event.firstLine.restTrimmed +
       event.supplemental
         .filter((b) => b.type !== "image")
         .map((b) => (b as Block).raw)
@@ -31,59 +32,21 @@ export const nodeKey = (n: SomeNode) => {
   }
 };
 
-export const walk = (
-  node: SomeNode,
-  path: Path,
-  fn: (node: SomeNode, path: Path) => void
-) => {
-  fn(node, path);
-  if (!isEventNode(node)) {
-    const arr = node.value as NodeArray;
-    for (let i = 0; i < arr.length; i++) {
-      walk(arr[i], [...path, i], fn);
-    }
-  }
-};
-
-const toArray = (node: SomeNode | undefined) => {
-  if (!node) {
-    return [];
-  }
-  const array = [] as { path: Path; node: SomeNode }[];
-  walk(node, [], (n, path) => {
-    array.push({ path, node: n });
-  });
-  return array;
-};
-
 export type Style = {
   height?: string;
   top?: string;
 };
-export type PathAndNode = { path: Path; node: SomeNode };
-export interface PathAndEventNode extends PathAndNode {
-  node: Node<Event>;
-}
-export interface PathAndSectionNode extends PathAndNode {
-  node: Node<NodeArray>;
-}
+export type PathAndEventy<T extends Eventy = Event> = { path: Path; eventy: T };
 
 export const useNodeStore = defineStore("nodes", () => {
   const timelineStore = useTimelineStore();
   const collapseStore = useCollapseStore();
 
   const nodes = computed(() => timelineStore.transformedEvents);
-
-  const nodeArray = computed(
-    () =>
-      toArray(timelineStore.transformedEvents) as {
-        path: Path;
-        node: SomeNode;
-      }[]
-  );
+  const nodeArray = computed(() => toArray(timelineStore.transformedEvents));
 
   const _numChildren = (
-    node: SomeNode,
+    node: Eventy,
     path: number[],
     childrenMap: Map<string, number>
   ): number => {
@@ -98,11 +61,11 @@ export const useNodeStore = defineStore("nodes", () => {
       return childCount;
     };
 
-    if (collapseStore.isCollapsed(pathJoined) || isEventNode(node)) {
+    if (collapseStore.isCollapsed(pathJoined) || isEvent(node)) {
       return cache(0);
     }
 
-    const arr = node.value as NodeArray;
+    const arr = node.children;
     const children = arr.reduce((prev, curr, i) => {
       return prev + 1 + _numChildren(curr, [...path, i], childrenMap);
     }, 0);
@@ -112,8 +75,8 @@ export const useNodeStore = defineStore("nodes", () => {
   let eventNodeKey = 0;
   const eventNodeKeyMap = reactive(new Map<string, number>());
   const assignEventKeys = (
-    nodes: PathAndEventNode[]
-  ): (PathAndEventNode & { key: string })[] => {
+    nodes: PathAndEventy[]
+  ): (PathAndEventy & { key: string })[] => {
     const visible = nodes.map((p) => p.path.join(","));
     const newlyAvailableKeys = [] as number[];
 
@@ -148,13 +111,13 @@ export const useNodeStore = defineStore("nodes", () => {
   };
 
   const visibleNodes = computed<
-    [(PathAndEventNode & { key: string })[], PathAndSectionNode[]]
+    [(PathAndEventy & { key: string })[], PathAndEventy<EventGroup>[]]
   >(() => {
-    const visibleEvents: PathAndEventNode[] = [];
-    const visibleSections: PathAndSectionNode[] = [];
-    for (const { path, node } of nodeArray.value) {
+    const visibleEvents: PathAndEventy[] = [];
+    const visibleSections: PathAndEventy<EventGroup>[] = [];
+    for (const { path, eventy } of nodeArray.value) {
       const joinedPath = path.join(",");
-      if (!isEventNode(node)) {
+      if (!isEvent(eventy)) {
         if (collapseStore.isCollapsedChild(path)) {
           continue;
         }
@@ -177,14 +140,14 @@ export const useNodeStore = defineStore("nodes", () => {
           } else {
             visibleSections.push({
               path: path,
-              node: node as Node<NodeArray>,
+              eventy,
             });
           }
         }
       } else {
         const pAndN = {
-          node: node as Node<Event>,
-          path: path,
+          eventy,
+          path,
         };
         if (
           timelineStore.scrollToPath &&
@@ -199,7 +162,7 @@ export const useNodeStore = defineStore("nodes", () => {
             if (timelineStore.mode === "gantt") {
               visibleEvents.push(pAndN);
             } else {
-              const range = ranges(pAndN.node, recurrenceLimit)!;
+              const range = ranges(pAndN.eventy, recurrenceLimit)!;
               const left =
                 timelineStore.pageScaleBy24 *
                 timelineStore.scalelessDistanceFromReferenceDate(
@@ -258,14 +221,14 @@ export const useNodeStore = defineStore("nodes", () => {
 
   const childrenMap = computed(() => {
     const map = new Map<string, number>();
-    for (const { path, node } of nodeArray.value) {
-      _numChildren(node, path, map);
+    for (const { path, eventy } of nodeArray.value) {
+      _numChildren(eventy, path, map);
     }
     return map;
   });
 
   const numPredecessors = (
-    node: SomeNode,
+    eventy: Eventy,
     path: Path,
     map: Map<string, number>,
     childrenMap: Map<string, number>
@@ -300,8 +263,8 @@ export const useNodeStore = defineStore("nodes", () => {
 
   const predecessorMap = computed(() => {
     const map = new Map<string, number>();
-    for (const { path, node } of nodeArray.value) {
-      numPredecessors(node, path, map, childrenMap.value);
+    for (const { path, eventy } of nodeArray.value) {
+      numPredecessors(eventy, path, map, childrenMap.value);
     }
     return map;
   });

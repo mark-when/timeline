@@ -13,13 +13,14 @@ import {
   timeMarkerWeightMinimum,
   useTimelineStore,
 } from "../timelineStore";
-import { isEventNode } from "@markwhen/parser";
+import { EventGroup, isEvent, iter, Event } from "@markwhen/parser";
 import { toDateRange } from "@markwhen/parser";
 import { useEventColor } from "../Events/composables/useEventColor";
 import { equivalentPaths } from "../paths";
-import { useNodeStore, walk } from "../useNodeStore";
+import { useNodeStore } from "../useNodeStore";
 import { DateTime } from "luxon";
 import { granularities } from "../utilities/DateTimeDisplay";
+import type { Sourced } from "@/Markwhen/useLpc";
 
 const markersStore = useMarkersStore();
 const timelineStore = useTimelineStore();
@@ -71,15 +72,15 @@ const eras = computed(() => {
   if (!timelineStore.transformedEvents) {
     return [];
   }
-  walk(timelineStore.transformedEvents, [], (node, path) => {
+  for (const { eventy, path } of iter(timelineStore.transformedEvents)) {
     if (
-      isEventNode(node) &&
+      isEvent(eventy) &&
       ["era", "milestone"].some((t) =>
-        node.value.eventDescription.tags.map((t) => t.toLowerCase()).includes(t)
+        eventy.tags.map((t) => t.toLowerCase()).includes(t)
       )
     ) {
-      const { fromDateTime, toDateTime } = toDateRange(node.value.dateRangeIso);
-      const color = useEventColor(node).color.value;
+      const { fromDateTime, toDateTime } = toDateRange(eventy.dateRangeIso);
+      const color = useEventColor(eventy as Sourced<Event>).color.value;
       const isHovering = equivalentPaths(
         timelineStore.hoveringEventPaths,
         path
@@ -97,7 +98,7 @@ const eras = computed(() => {
       }
       erasAndMilestoneEvents.push(styleObj);
     }
-  });
+  }
   return erasAndMilestoneEvents;
 });
 const scaleForThisDate = computed(

@@ -1,6 +1,5 @@
 import { COMPLETION_REGEX } from "@markwhen/parser";
 import type { Event } from "@markwhen/parser";
-import type { Node } from "@markwhen/parser";
 import { ref, watchEffect, type Ref, watch, unref, computed } from "vue";
 import { useTimelineStore } from "../timelineStore";
 import {
@@ -12,19 +11,16 @@ import {
   recurrenceComparator,
 } from "../utilities/eventComparator";
 import { toInnerHtml } from "../utilities/innerHtml";
+import type { Eventy } from "@markwhen/parser";
 
 const cachedComputed = <T>(
   val: () => T | undefined,
   comparator: (a: T | undefined, b: T | undefined) => boolean,
-  condition: () => boolean,
   defaultValue?: T
 ) => {
   // @ts-ignore
   const r: Ref<T | undefined> = ref(defaultValue ? defaultValue : undefined);
   watchEffect(() => {
-    if (!condition()) {
-      return;
-    }
     const value = val();
     if (typeof value === "undefined") {
       r.value = undefined;
@@ -35,10 +31,7 @@ const cachedComputed = <T>(
   return r;
 };
 
-export const useEventRefs = (
-  eventNode: Ref<Node<Event> | undefined>,
-  isEventRow: () => boolean = () => true
-) => {
+export const useEventRefs = (eventNode: Ref<Event | undefined>) => {
   const timelineStore = useTimelineStore();
 
   const cachedEventComputed = <T>(
@@ -49,16 +42,14 @@ export const useEventRefs = (
     cachedComputed(
       val,
       (a, b) => bothDefined(a, b) && comparator(a!, b!),
-      isEventRow,
       defaultValue
     );
 
-  const event = computed(() => eventNode.value!.value);
+  const event = computed(() => eventNode.value);
   const source = cachedComputed(
     // @ts-ignore
     () => eventNode.value!.source as string,
     (a, b) => a === b,
-    isEventRow,
     "default"
   );
   const eventRange = cachedEventComputed(
@@ -66,39 +57,27 @@ export const useEventRefs = (
     dateRangeIsoComparator
   );
 
-  const eventLocations = cachedEventComputed(
-    () => unref(event)?.eventDescription?.locations || [],
-    stringArrayComparator
-  );
-
-  const completed = cachedEventComputed(
-    () => unref(event)?.eventDescription.completed
-  );
+  const completed = cachedEventComputed(() => unref(event)?.completed);
 
   const supplemental = cachedEventComputed(
-    () => unref(event)?.eventDescription?.supplemental || [],
+    () => unref(event)?.supplemental || [],
     supplementalComparator
   );
 
-  const percent = cachedEventComputed(
-    () => unref(event)?.eventDescription?.percent
-  );
+  const percent = cachedEventComputed(() => unref(event)?.percent);
 
   const matchedListItems = cachedEventComputed(
-    () => unref(event)?.eventDescription?.matchedListItems || [],
+    () => unref(event)?.matchedListItems || [],
     matchedListItemsComparator
   );
 
   const tags = cachedEventComputed(
-    () => unref(event)?.eventDescription?.tags || [],
+    () => unref(event)?.tags || [],
     stringArrayComparator
   );
 
   const color = ref<string>();
   watchEffect(() => {
-    if (!isEventRow()) {
-      return;
-    }
     const eventColor = tags.value?.length
       ? timelineStore.colors[source.value || "default"]?.[tags.value[0]]
       : undefined;
@@ -109,14 +88,15 @@ export const useEventRefs = (
 
   const dateText = cachedEventComputed(() => {
     const e = unref(event);
-    if (e?.recurrenceRangeInText?.content) {
-      return e.recurrenceRangeInText.content;
+
+    if (e?.textRanges?.recurrence?.content) {
+      return e.textRanges.recurrence.content;
     }
-    return toInnerHtml(e?.dateText || "");
+    return toInnerHtml(e?.firstLine?.datePart || "");
   });
 
   const titleHtml = cachedEventComputed(() => {
-    const ed = unref(event)?.eventDescription?.eventDescription;
+    const ed = unref(event)?.firstLine?.restTrimmed;
     if (!ed) {
       return "";
     }
@@ -132,7 +112,6 @@ export const useEventRefs = (
 
   return {
     eventRange,
-    eventLocations,
     supplemental,
     percent,
     matchedListItems,

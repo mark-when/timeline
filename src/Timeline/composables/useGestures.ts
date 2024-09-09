@@ -52,7 +52,7 @@ export const useGestures = (
       );
       timelineStore.referenceDate = newReferenceDate;
       pinchStartScrollLeft = el.value!.scrollLeft + d;
-      el.value!.scrollLeft = pinchStartScrollLeft;
+      el.value!.scrollLeft = pinchStartScrollLeft!;
     } else {
       const newScrollTop =
         pinchStartScrollTop! + pinchStartCenterY! - e.center.y;

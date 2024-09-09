@@ -1,13 +1,15 @@
 import type { EventPath } from "@/Timeline/paths";
 import type { DisplayScale } from "@/Timeline/utilities/dateTimeUtilities";
-import type { Node, NodeArray } from "@markwhen/parser";
 import type {
   DateFormat,
   DateRangeIso,
   DateTimeGranularity,
+  Eventy,
+  ParseResult,
   Timeline,
 } from "@markwhen/parser";
 import { useColors } from "./useColors";
+import type { EventGroup } from "@markwhen/parser";
 
 export interface AppState {
   isDark?: boolean;
@@ -16,10 +18,17 @@ export interface AppState {
   path?: string;
   colorMap: Record<string, Record<string, string>>;
 }
+
+export type Source = string;
+export const defaultSourceName = "default";
+export type Sourced<T extends Eventy> = T extends Event
+  ? T & { source?: Source }
+  : T & { source?: Source; children: Array<Sourced<Eventy>> };
+
 export interface MarkwhenState {
   rawText?: string;
-  parsed: Timeline[];
-  transformed?: Node<NodeArray>;
+  parsed: ParseResult;
+  transformed?: Sourced<EventGroup>;
 }
 
 export interface TimelineSpecificMessages {
@@ -194,7 +203,7 @@ export const useLpc = (listeners?: MessageListeners) => {
     (window.__markwhen_initial_state as State | undefined);
   if (initialState && listeners && listeners.markwhenState) {
     const state = initialState as MarkwhenState;
-    const colorMap = useColors(state.parsed[0]).value;
+    const colorMap = useColors(state.parsed).value;
     listeners.markwhenState(initialState);
     listeners.appState?.({
       colorMap,

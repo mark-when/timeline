@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { useIsHoveredInEditor } from "@/Timeline/composables/useIsHoveredInEditor";
-import type { SomeNode } from "@markwhen/parser";
 import { computed } from "@vue/reactivity";
 import { useTimelineStore } from "../../timelineStore";
 import { useEventColor } from "../composables/useEventColor";
+import type { EventGroup } from "@markwhen/parser";
+import type { Sourced } from "@/Markwhen/useLpc";
 
 const props = defineProps<{
   hovering: boolean;
   style: "group" | "section";
-  node: SomeNode;
+  eventy: EventGroup;
   left: number;
   fullWidth: number;
   path: string;
   height: number;
 }>();
-const { color } = useEventColor(computed(() => props.node));
+const { color } = useEventColor(
+  computed(() => props.eventy as Sourced<EventGroup>)
+);
 const timelineStore = useTimelineStore();
 
 const isGroupStyle = computed(() => props.style === "group");

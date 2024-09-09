@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Node, SomeNode } from "@markwhen/parser";
 import { computed, watch } from "vue";
 import EventRow from "./Event/EventRow.vue";
 import { equivalentPaths } from "@/Timeline/paths";
@@ -10,11 +9,12 @@ import {
   type DateRange,
   type Event,
 } from "@markwhen/parser";
-import { eventValue, isEventNode } from "@markwhen/parser";
+import { isEvent } from "@markwhen/parser";
 import { useTimelineStore } from "../timelineStore";
+import type { Eventy } from "@markwhen/parser";
 
 const props = defineProps<{
-  node: SomeNode;
+  eventy: Event;
   path: string;
   numAbove: number;
   numChildren?: number | undefined;
@@ -25,13 +25,12 @@ const { editEventDateRange } = timelineStore;
 
 // We have to do this otherwise props will be 'changed', causing an unnecessary patch
 const pathArray = computed(() => props.path.split(",").map((i) => parseInt(i)));
-const isEventRow = computed(() => isEventNode(props.node));
+const isEventRow = computed(() => isEvent(props.eventy));
 
 const hoveringPath = computed(() => timelineStore.hoveringEventPaths);
 
 const {
   eventRange,
-  eventLocations,
   supplemental,
   percent,
   matchedListItems,
@@ -42,10 +41,7 @@ const {
   completed,
   recurrence,
   source,
-} = useEventRefs(
-  computed(() => props.node as Node<Event>),
-  () => isEventRow.value
-);
+} = useEventRefs(computed(() => props.eventy));
 
 const eventPath = computed(() => pathArray.value);
 const scale = computed(() => timelineStore.scaleOfViewportDateInterval);
@@ -82,7 +78,6 @@ const isDetailEvent = computed(() =>
 <template>
   <EventRow
     :source="source || 'default'"
-    :event-locations="eventLocations || []"
     :supplemental="supplemental || []"
     :matched-list-items="matchedListItems || []"
     :rangeFrom="eventRange!.fromDateTimeIso"

@@ -22,7 +22,6 @@ import { useNodePosition } from "../composables/useNodePosition";
 
 const props = defineProps<{
   path: EventPath;
-  eventLocations: string[];
   tags: string[];
   dateText: string;
   supplemental: MarkdownBlock[];
@@ -49,10 +48,7 @@ const timelineStore = useTimelineStore();
 
 const eventBar = ref();
 const showingMeta = ref(false);
-const hasLocations = computed(() => props.eventLocations.length > 0);
-const hasMeta = computed(
-  () => !!hasLocations.value || !!props.supplemental.length
-);
+const hasMeta = computed(() => !!props.supplemental.length);
 
 const toggleMeta = (e: MouseEvent) => {
   if (e.target instanceof HTMLAnchorElement) {
@@ -72,7 +68,7 @@ const taskDenominator = computed(
   () => props.supplemental.filter((block) => block.type === "checkbox").length
 );
 const canShowMeta = computed(() => {
-  if (hasLocations.value || props.supplemental.length) {
+  if (props.supplemental.length) {
     return showingMeta.value;
   }
   return false;
@@ -339,7 +335,6 @@ const ganttTitleStyle = computed(() => {
             :is-hovering="isHovering"
             :has-meta="hasMeta"
             :has-supplemental="!!supplemental.length"
-            :has-locations="hasLocations"
             :task-denominator="taskDenominator"
             :task-numerator="taskNumerator"
             :completed="completed"
@@ -387,7 +382,6 @@ const ganttTitleStyle = computed(() => {
             :is-hovering="isHovering"
             :has-meta="hasMeta"
             :has-supplemental="!!supplemental.length"
-            :has-locations="hasLocations"
             :task-denominator="taskDenominator"
             :task-numerator="taskNumerator"
             :completed="completed"

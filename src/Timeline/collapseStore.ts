@@ -1,7 +1,6 @@
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
 import { defineStore } from "pinia";
-import { walk } from "@/Timeline/useNodeStore";
-import { isEventNode } from "@markwhen/parser";
+import { isEvent, iter } from "@markwhen/parser";
 import type { Path } from "@markwhen/parser";
 import { useTimelineStore } from "./timelineStore";
 import { ref } from "vue";
@@ -13,16 +12,16 @@ export const useCollapseStore = defineStore("collapse", () => {
   // Initial state
   const collapsed = ref(
     (() => {
-      const mw = markwhenStore.markwhen?.parsed[0];
+      const mw = markwhenStore.markwhen?.parsed;
       const set = new Set<string>();
       if (mw) {
-        walk(mw.events, [], (node, path) => {
-          if (!isEventNode(node)) {
-            if (!node.startExpanded) {
+        for (const { path, eventy } of iter(mw.events)) {
+          if (!isEvent(eventy)) {
+            if (!eventy.startExpanded) {
               set.add(path.join(","));
             }
           }
-        });
+        }
       }
       return set;
     })()
@@ -86,19 +85,19 @@ export const useCollapseStore = defineStore("collapse", () => {
   };
 
   const collapseAll = () => {
-    walk(timelineStore.transformedEvents, [], (node, path) => {
-      if (!isEventNode(node)) {
+    for (const { path, eventy } of iter(timelineStore.transformedEvents)) {
+      if (!isEvent(eventy)) {
         setCollapsed(path, true);
       }
-    });
+    }
   };
 
   const expandAll = () => {
-    walk(timelineStore.transformedEvents, [], (node, path) => {
-      if (!isEventNode(node)) {
+    for (const { path, eventy } of iter(timelineStore.transformedEvents)) {
+      if (!isEvent(eventy)) {
         setCollapsed(path, false);
       }
-    });
+    }
   };
 
   return {

@@ -1,19 +1,16 @@
 import type { EventPath } from "@/Timeline/paths";
 import { useTimelineStore } from "@/Timeline/timelineStore";
-import type { SomeNode } from "@markwhen/parser";
-import { get } from "@markwhen/parser";
+import { get, type Eventy } from "@markwhen/parser";
 import type { MaybeRef } from "@vueuse/core";
 import { computed, ref, watchEffect, unref } from "vue";
 
-export type EventFinder = (
-  eventPath?: EventPath | null
-) => SomeNode | undefined;
+export type EventFinder = (eventPath?: EventPath | null) => Eventy | undefined;
 
 export const useEventFinder = (path?: MaybeRef<EventPath | undefined>) => {
   const timelineStore = useTimelineStore();
   const transformedEvents = computed(() => timelineStore.transformedEvents);
 
-  const event = ref<SomeNode>();
+  const event = ref<Eventy>();
 
   watchEffect(() => {
     if (!path) {
@@ -25,7 +22,7 @@ export const useEventFinder = (path?: MaybeRef<EventPath | undefined>) => {
       event.value = undefined;
       return;
     }
-    let node: SomeNode | undefined;
+    let node: Eventy | undefined;
     node = transformedEvents.value;
     event.value = node ? get(node, eventPath) : undefined;
   });
