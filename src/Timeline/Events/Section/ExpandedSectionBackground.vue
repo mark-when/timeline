@@ -53,7 +53,7 @@ const styleObject = computed(() => {
   }
   if (isGroupStyle.value) {
     obj.marginLeft = `${timelineStore.pageScaleBy24 * props.left - 8}px`;
-    obj.width = `calc(${timelineStore.pageScaleBy24 * props.fullWidth + 16}px)`;
+    obj.width = `calc(${timelineStore.pageScaleBy24 * props.fullWidth + 24}px)`;
   }
   return obj;
 });
