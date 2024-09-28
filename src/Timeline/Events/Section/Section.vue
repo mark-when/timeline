@@ -11,7 +11,7 @@ import { recurrenceLimit } from "@/Timeline/timelineStore";
 import { useCollapseStore } from "@/Timeline/collapseStore";
 import type { Eventy } from "@markwhen/parser";
 import type { Sourced } from "@/Markwhen/useLpc";
-import type { EventGroup } from ".yalc/@markwhen/parser/lib";
+import type { EventGroup } from "@markwhen/parser";
 
 const timelineStore = useTimelineStore();
 const collapseStore = useCollapseStore();

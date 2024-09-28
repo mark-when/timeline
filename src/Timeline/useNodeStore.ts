@@ -116,6 +116,9 @@ export const useNodeStore = defineStore("nodes", () => {
     const visibleEvents: PathAndEventy[] = [];
     const visibleSections: PathAndEventy<EventGroup>[] = [];
     for (const { path, eventy } of nodeArray.value) {
+      if (!eventy) {
+        break;
+      }
       const joinedPath = path.join(",");
       if (!isEvent(eventy)) {
         if (collapseStore.isCollapsedChild(path)) {
