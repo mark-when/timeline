@@ -197,7 +197,8 @@ const hoveringText = computed(() => (timeMarker: TimeMarker) => {
     "
     :style="{
       left: `${era.left}px`,
-      width: `${era.width}px`,
+      width: `max(${era.width}px, 10px)`,
+      height: `max(${nodeStore.viewHeight}, 100%)`,
       backgroundColor: era.backgroundColor,
       borderColor: era.borderColor,
     }"
