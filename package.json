@@ -5,7 +5,7 @@
     "dev": "vite --port=5176",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port=5176",
-    "build-only": "vite build",
+    "build-only": "vite build && cp _headers dist/_headers",
     "type-check": "vue-tsc --noEmit",
     "bump": "node ./scripts/bumper.js patch",
     "link:parser": "yalc add @markwhen/parser && yalc link @markwhen/parser && npm install",
