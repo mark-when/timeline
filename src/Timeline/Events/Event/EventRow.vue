@@ -256,11 +256,11 @@ const ganttTitleStyle = computed(() => {
   if (props.color) {
     styleObj.backgroundColor = `rgba(${props.color}, 0.5)`;
   }
-  styleObj.width = `calc(${
+  styleObj.width = `${
     timelineStore.ganttSidebarTempWidth
       ? timelineStore.ganttSidebarTempWidth
       : timelineStore.ganttSidebarWidth
-  }px)`;
+  }px`;
   return styleObj;
 });
 </script>
