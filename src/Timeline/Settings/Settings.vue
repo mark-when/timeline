@@ -56,7 +56,7 @@ const goToNow = () => timelineStore.goToNow();
 <template>
   <div
     class="fixed hover:text-zinc-700 dark:text-zinc-400 text-zinc-500 dark:hover:text-zinc-300 mt-16"
-    :style="`left: calc(${styleLeftInset}px); bottom: 0rem; right: 0;`"
+    :style="`left: ${styleLeftInset}px; bottom: 0rem; right: 0;`"
   >
     <div
       class="flex flex-row-items-center overflow-scroll noScrollBar relative"

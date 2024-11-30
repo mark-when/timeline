@@ -58,7 +58,7 @@ const mousemove = (e: MouseEvent) => {
   <div
     v-if="timelineStore.mode === 'gantt'"
     class="sticky left-0 relative flex flex-col bg-white dark:bg-zinc-800 top-0 bottom-0 z-[2] h-full"
-    :style="`width: calc(${currentWidth}px);`"
+    :style="`width: ${currentWidth}px;`"
   ></div>
   <template
     v-for="{ path, eventy } in nodeStore.visibleNodes[1]"
