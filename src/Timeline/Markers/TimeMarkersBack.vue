@@ -64,7 +64,7 @@ const alpha = computed(
 
 const borderColor = computed(() => (tm: TimeMarker) => {
   const a = hovering.value(tm) ? 1 : (alpha.value(tm) - 0.3) * 2;
-  return dark.value ? `rgba(71, 85, 105, ${a})` : `rgba(200, 200, 200, ${a})`;
+  return dark.value ? `rgba(82, 82, 91, ${a})` : `rgba(200, 200, 200, ${a})`;
 });
 
 const eras = computed(() => {
