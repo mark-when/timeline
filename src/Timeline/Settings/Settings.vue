@@ -55,7 +55,7 @@ const goToNow = () => timelineStore.goToNow();
 
 <template>
   <div
-    class="fixed hover:text-zinc-700 dark:text-zinc-400 text-zinc-500 dark:hover:text-zinc-300 mt-16"
+    class="fixed hover:text-zinc-700 dark:text-zinc-400 text-zinc-500 dark:hover:text-zinc-300"
     :style="`left: ${styleLeftInset}px; bottom: 0rem; right: 0;`"
   >
     <div
@@ -70,7 +70,7 @@ const goToNow = () => timelineStore.goToNow();
           <Minimap />
         </div>
       </div> -->
-      <div class="flex flex-row gap-2 pt-8">
+      <div class="flex flex-row gap-2 pt-16">
         <div class="dark:bg-zinc-800 bg-white flex flex-row gap-2 px-2">
           <div
             class="flex flex row overflow-visible p-[2px] pointer-events-auto"
@@ -122,7 +122,6 @@ const goToNow = () => timelineStore.goToNow();
           >
             <SettingsButton
               :hover-hint-left="-1"
-              hover-hint-title="Copy view link"
               v-if="markwhenStore.showCopyLinkButton"
               @click="copyTimelineLink"
             >
@@ -149,6 +148,14 @@ const goToNow = () => timelineStore.goToNow();
               >
                 {{ markwhenStore.timelineLink.substring(8) }}
               </p>
+              <template #hoverHint
+                ><div class="flex flex-col items-start">
+                  <span>Copy view link</span>
+                  <span
+                    >Timeline text is encoded in link - not uploaded</span
+                  >
+                </div></template
+              >
             </SettingsButton>
             <SettingsButton
               v-if="markwhenStore.showEmbedButton"

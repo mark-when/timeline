@@ -4,7 +4,6 @@ export type HoverPosition = "right" | "top";
 const props = withDefaults(
   defineProps<{
     hovering: boolean;
-    title: string;
     shortcut?: string;
     hoverPosition?: HoverPosition;
     left?: number;
@@ -23,7 +22,9 @@ const props = withDefaults(
       style="transform: translateX(100%)"
       v-if="hovering && hoverPosition === 'right'"
     >
-      <div class="z-10">{{ title }}</div>
+      <div class="z-10">
+        <slot v-if="$slots['default']"></slot>
+      </div>
       <div
         class="absolute top-0 bottom-0 -left-[2px] rotate-45 bg-indigo-600 h-1/2 aspect-square translate-y-2/4 rounded shadow-sm"
       ></div>
@@ -36,7 +37,7 @@ const props = withDefaults(
       }"
       v-else-if="hovering && hoverPosition === 'top'"
     >
-      <div class="z-10">{{ title }}</div>
+      <div class="z-10"><slot v-if="$slots['default']"></slot></div>
       <div
         class="absolute left-0 -bottom-[2px] rotate-45 bg-indigo-600 h-1/2 aspect-square translate-x-2/4 rounded shadow-sm"
       ></div>

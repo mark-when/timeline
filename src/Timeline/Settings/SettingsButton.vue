@@ -45,13 +45,12 @@ const click = () => {
   >
     <slot></slot>
     <HoverHint
-      v-if="hoverHintTitle"
       :hover-position="'top'"
       :hovering="hovering"
-      :title="hoverHintTitle"
       :shortcut="hoverHintShortcut"
       :left="hoverHintLeft"
-    />
+      ><slot name="hoverHint" v-if="$slots['hoverHint']"></slot
+    ><span v-else>{{ hoverHintTitle}}</span></HoverHint>
   </button>
 </template>
 
