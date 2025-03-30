@@ -8,11 +8,13 @@ const timelineStore = useTimelineStore();
 const dark = computed(() => !!timelineStore.darkMode);
 
 const vp = computed(() => timelineStore.pageSettings.viewport);
-const additionalOffsetLeft = computed(() =>
-  timelineStore.distanceFromReferenceDate(
-    DateTime.fromISO(timelineStore.pageTimelineMetadata.earliestTime)
-  )
-);
+const additionalOffsetLeft = computed(() => {
+  let { earliestTime } = timelineStore.pageTimelineMetadata;
+  earliestTime ||= DateTime.now().plus({ years: 1 }).toISO();
+  return timelineStore.distanceFromReferenceDate(
+    DateTime.fromISO(earliestTime)
+  );
+});
 
 const vpLeft = computed(
   () =>

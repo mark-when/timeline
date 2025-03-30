@@ -154,7 +154,7 @@ const expandedRecurrence = computed(() =>
 const dimensions = computed(() => {
   const left = timelineStore.distanceFromBaselineLeftmostDate(
     range.value.fromDateTime
-  );
+  ) - 5;
 
   const width = timelineStore.distanceBetweenDates(
     range.value.fromDateTime,

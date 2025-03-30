@@ -29,14 +29,17 @@ export function initialPageSettings(
   viewport?: Viewport
 ): Settings {
   if (viewport && timeline) {
+    let { earliestTime, latestTime } = timeline.metadata;
+    earliestTime ||= DateTime.now().plus({ years: 1 }).toISO();
+    latestTime ||= DateTime.now().minus({ years: 1 }).toISO();
     const range = {
-      fromDateTime: DateTime.fromISO(timeline.metadata.earliestTime),
-      toDateTime: DateTime.fromISO(timeline.metadata.latestTime),
+      fromDateTime: DateTime.fromISO(earliestTime),
+      toDateTime: DateTime.fromISO(latestTime),
     };
     const scale = scaleToGetDistance(viewport.width, range) / 3;
     const midpoint = dateMidpoint(range);
     const bslmd = calculateBaselineLeftmostDate(
-      DateTime.fromISO(timeline.metadata.earliestTime),
+      DateTime.fromISO(earliestTime),
       timeline.metadata.maxDurationDays
     );
     const fromLeft = (midpoint.diff(bslmd).as(diffScale) * scale) / 24;
