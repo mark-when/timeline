@@ -11,10 +11,9 @@ import Events from "@/Timeline/Events/Events.vue";
 import { useGestures } from "@/Timeline/composables/useGestures";
 import { useHoveringMarker } from "@/Timeline/composables/useHoveringMarker";
 import { DateTime } from "luxon";
-import { useDebounceFn, useResizeObserver, useThrottleFn } from "@vueuse/core";
+import { useDebounceFn, useResizeObserver } from "@vueuse/core";
 import { toDateRange, type DateRange } from "@markwhen/parser";
 import { dateMidpoint, diffScale } from "./utilities/dateTimeUtilities";
-// import { useEventFinder } from "@/Views/ViewOrchestrator/useEventFinder";
 import { isEvent } from "@markwhen/parser";
 import DebugView from "./DebugView.vue";
 import { ranges } from "@/utilities/ranges";
@@ -44,7 +43,7 @@ markwhenStore.onJumpToPath = (path) => {
   }
 
   const range = isEvent(node)
-    ? (node).dateRangeIso
+    ? node.dateRangeIso
     : ranges(node, recurrenceLimit);
 
   if (!range) {
@@ -303,7 +302,7 @@ const pointerdown = useDoubleTap(setViewportDateInterval);
   >
     <div
       id="timeline"
-      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-zinc-800"
+      class="relative overflow-auto w-full dark:text-white text-gray-900 bg-white dark:bg-zinc-800 noScrollBar"
       ref="timelineElement"
       @scroll="scroll"
       @gestureChange="scroll"
