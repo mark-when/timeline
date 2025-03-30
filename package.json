@@ -1,6 +1,6 @@
 {
   "name": "@markwhen/timeline",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "scripts": {
     "dev": "vite --port=5176",
     "build": "run-p type-check build-only",
