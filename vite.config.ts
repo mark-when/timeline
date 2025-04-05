@@ -23,9 +23,5 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0",
-    headers: {
-      "cross-origin-resource-policy": "same-site",
-      "cross-origin-embedder-policy": "credentialless",
-    },
   },
 });
