@@ -141,20 +141,20 @@ const range = computed(() => {
 
 const expandedRecurrence = computed(() =>
   (props.recurrence
-    ? expand(range.value, props.recurrence, recurrenceLimit)
-    : [range.value]
+      ? expand(range.value, props.recurrence, recurrenceLimit)
+      : [range.value]
   ).map((dr) =>
     timelineStore.distanceBetweenDates(
       range.value.fromDateTime,
       dr.fromDateTime
     )
-  )
+  );
 );
 
 const dimensions = computed(() => {
   const left = timelineStore.distanceFromBaselineLeftmostDate(
     range.value.fromDateTime
-  )
+  );
 
   const width = timelineStore.distanceBetweenDates(
     range.value.fromDateTime,
