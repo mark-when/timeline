@@ -78,38 +78,32 @@ export const markdownBlockComparator = (a: MarkdownBlock, b: MarkdownBlock) => {
 };
 
 export const recurrenceComparator = (a?: Recurrence, b?: Recurrence) => {
-  if (!a || !b) {
-    return false;
-  }
-  if (a.for) {
-    if (!b.for) {
-      return false;
-    } else {
-      const aFor = Object.keys(a.for) as (keyof typeof a.for)[];
-      const bFor = Object.keys(b.for) as (keyof typeof b.for)[];
-      if (aFor.sort().join(",") !== bFor.sort().join(",")) {
-        return false;
-      }
-      for (const aKey of aFor) {
-        if (a.for[aKey] !== b.for[aKey]) {
-          return false;
-        }
-      }
-    }
-  } else {
-    if (b.for) {
-      return false;
-    }
-  }
-  const aEvery = Object.keys(a.every) as (keyof typeof a.every)[];
-  const bEvery = Object.keys(b.every) as (keyof typeof b.every)[];
-  if (aEvery.sort().join(",") !== bEvery.sort().join(",")) {
-    return false;
-  }
-  for (const aKey of aEvery) {
-    if (a.every[aKey] !== b.every[aKey]) {
-      return false;
-    }
-  }
-  return true;
+ return deepCompare(a, b)
 };
+
+
+function deepCompare(obj1: any, obj2: any) {
+  if (
+    typeof obj1 !== "object" ||
+    typeof obj2 !== "object" ||
+    obj1 === null ||
+    obj2 === null
+  ) {
+    return obj1 === obj2;
+  }
+
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (let key of keys1) {
+    if (!obj2.hasOwnProperty(key) || !deepCompare(obj1[key], obj2[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}

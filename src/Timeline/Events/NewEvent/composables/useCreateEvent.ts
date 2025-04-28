@@ -63,10 +63,7 @@ export const useCreateEvent = () => {
           timelineStore.scaleOfViewportDateInterval
         )
           ? "instant"
-          : timelineStore.scaleOfViewportDateInterval,
-        timelineStore.pageTimelineMetadata.preferredInterpolationFormat as
-          | DateFormat
-          | undefined
+          : timelineStore.scaleOfViewportDateInterval
       );
     }
 

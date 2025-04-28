@@ -158,7 +158,7 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
     path: EventPath,
     dateRangeIso: DateRangeIso,
     scale: DisplayScale,
-    preferredInterpolationFormat: DateFormat | undefined
+    preferredInterpolationFormat?: DateFormat
   ) => {
     const params = {
       path,

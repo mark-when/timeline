@@ -46,18 +46,11 @@ const {
 const eventPath = computed(() => pathArray.value);
 const scale = computed(() => timelineStore.scaleOfViewportDateInterval);
 
-const preferredInterpolationFormat = computed(
-  () =>
-    timelineStore.pageTimelineMetadata.preferredInterpolationFormat as
-      | DateFormat
-      | undefined
-);
 const editDateRange = (range: DateRange) =>
   editEventDateRange(
     pathArray.value,
     toDateRangeIso(range),
-    scale.value,
-    preferredInterpolationFormat.value
+    scale.value
   );
 
 const hover = (hovering: boolean) => {

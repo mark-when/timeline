@@ -6,7 +6,12 @@ import type { EventPath } from "@/Timeline/paths";
 import { ranges } from "@/utilities/ranges";
 import { initialPageSettings } from "./initialPageSettings";
 import { useMarkwhenStore } from "@/Markwhen/markwhenStore";
-import { RECURRENCE_AMOUNT_REGEX } from "@markwhen/parser";
+import {
+  isEvent,
+  iter,
+  RECURRENCE_AMOUNT_REGEX,
+  toDateRange,
+} from "@markwhen/parser";
 import type { DateRange } from "@markwhen/parser";
 import { lsRef } from "./utilities/localStorageRef";
 import type { Sourced } from "@/Markwhen/useLpc";
@@ -71,7 +76,27 @@ export const useTimelineStore = defineStore("timeline", () => {
 
   const pageTimeline = computed(() => markwhenState.value.parsed);
   const pageTimelineMetadata = computed(() => {
-    return pageTimeline.value.metadata;
+    const now = DateTime.now();
+    if (!pageTimeline.value.events.children.length) {
+      return {
+        earliestTime: now.minus({ years: 2 }),
+        latestTime: now.plus({ years: 2 }),
+      };
+    }
+    let latestTime = DateTime.now().minus({ years: 10 });
+    let earliestTime = DateTime.now().plus({ years: 10 });
+    for (const { eventy } of iter(pageTimeline.value.events)) {
+      if (isEvent(eventy)) {
+        const dr = toDateRange(eventy.dateRangeIso);
+        if (+dr.fromDateTime < +earliestTime) {
+          earliestTime = dr.fromDateTime;
+        }
+        if (+dr.toDateTime > +latestTime) {
+          latestTime = dr.toDateTime;
+        }
+      }
+    }
+    return { earliestTime, latestTime };
   });
   const tags = computed(() =>
     Object.keys(pageTimeline.value.header)
@@ -122,13 +147,10 @@ export const useTimelineStore = defineStore("timeline", () => {
   const ganttSidebarWidth = ref(200);
   const ganttSidebarTempWidth = ref(0);
   const autoCenterSemaphore = ref(0);
-  const miniMapShowing = ref(false);
 
   const autoCenter = () => {
     autoCenterSemaphore.value++;
   };
-
-  const toggleMiniMap = () => (miniMapShowing.value = !miniMapShowing.value);
 
   const leftInsetWidth = computed(() =>
     mode.value === "gantt"
@@ -146,13 +168,6 @@ export const useTimelineStore = defineStore("timeline", () => {
   };
 
   const pageScale = computed(() => pageSettings.value.scale || 1);
-
-  const earliest = computed(() => pageRange.value.fromDateTime);
-
-  const maxDurationDays = computed(
-    () => pageTimelineMetadata.value.maxDurationDays
-  );
-
   const hoveringDate = ref(DateTime.now());
 
   const referenceDate = ref(DateTime.now());
@@ -379,7 +394,6 @@ export const useTimelineStore = defineStore("timeline", () => {
     ganttSidebarWidth,
     ganttSidebarTempWidth,
     autoCenterSemaphore,
-    miniMapShowing,
     dateTimeDisplay,
     progressDisplay,
     colors: computed(() => markwhenStore.app?.colorMap),
@@ -435,7 +449,6 @@ export const useTimelineStore = defineStore("timeline", () => {
     setGanttSidebarWidth,
     setGanttSidebarTempWidth,
     autoCenter,
-    toggleMiniMap,
     goToNow,
     goToNowSemaphore,
     setRange,

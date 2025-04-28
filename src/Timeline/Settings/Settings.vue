@@ -2,9 +2,7 @@
 import { useTimelineStore } from "../timelineStore";
 import { computed } from "vue";
 import TimelineScale from "../Settings/TimelineScale.vue";
-import Minimap from "./Minimap.vue";
 import AutoCenter from "./AutoCenter.vue";
-import ToggleMiniMap from "./ToggleMiniMap.vue";
 import CollapseAll from "./CollapseAll.vue";
 import ExpandAll from "./ExpandAll.vue";
 import ToggleMode from "./ToggleMode.vue";
@@ -61,15 +59,6 @@ const goToNow = () => timelineStore.goToNow();
     <div
       class="flex flex-row-items-center overflow-scroll noScrollBar relative"
     >
-      <!-- <div
-        class="flex"
-        style="grid-area: minimap"
-        v-if="timelineStore.miniMapShowing"
-      >
-        <div class="p-2 pointer-events-auto">
-          <Minimap />
-        </div>
-      </div> -->
       <div class="flex flex-row gap-2 pt-16">
         <div class="dark:bg-zinc-800 bg-white flex flex-row gap-2 px-2">
           <div
@@ -101,7 +90,6 @@ const goToNow = () => timelineStore.goToNow();
           <div
             class="flex flex row overflow-visible p-[2px] pointer-events-auto"
           >
-            <!-- <ToggleMiniMap></ToggleMiniMap> -->
             <TimelineScale></TimelineScale>
           </div>
           <div
@@ -151,9 +139,7 @@ const goToNow = () => timelineStore.goToNow();
               <template #hoverHint
                 ><div class="flex flex-col items-start">
                   <span>Copy view link</span>
-                  <span
-                    >Timeline text is encoded in link - not uploaded</span
-                  >
+                  <span>Timeline text is encoded in link - not uploaded</span>
                 </div></template
               >
             </SettingsButton>
