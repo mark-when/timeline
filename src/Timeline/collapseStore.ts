@@ -14,15 +14,6 @@ export const useCollapseStore = defineStore("collapse", () => {
     (() => {
       const mw = markwhenStore.markwhen?.parsed;
       const set = new Set<string>();
-      if (mw) {
-        for (const { path, eventy } of iter(mw.events)) {
-          if (!isEvent(eventy)) {
-            if (!eventy.startExpanded) {
-              set.add(path.join(","));
-            }
-          }
-        }
-      }
       return set;
     })()
   );

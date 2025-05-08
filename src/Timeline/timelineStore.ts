@@ -42,6 +42,7 @@ const MONTH = 30 * DAY;
 const YEAR = 12 * MONTH;
 const DECADE = 10 * YEAR;
 const CENT = 10 * DECADE;
+const MILL = 10 * CENT;
 
 export type TimelineMode = "timeline" | "gantt";
 export const timeMarkerWeightMinimum = 0.25;
@@ -173,7 +174,7 @@ export const useTimelineStore = defineStore("timeline", () => {
   const referenceDate = ref(DateTime.now());
   const diffAmount = computed(() => ({
     [diffScale]:
-      ((pageSettings.value.viewport.width * 2.5) / pageScale.value) * 24,
+      ((pageSettings.value.viewport.width * 1.5) / pageScale.value) * 24,
   }));
   const baselineLeftmostDate = computed(() =>
     referenceDate.value.minus(diffAmount.value)
@@ -370,6 +371,7 @@ export const useTimelineStore = defineStore("timeline", () => {
       clamp(roundToTwoDecimalPlaces((25 * YEAR) / denom)),
       clamp(roundToTwoDecimalPlaces((25 * DECADE) / denom)),
       clamp(roundToTwoDecimalPlaces((20 * CENT) / denom)),
+      clamp(roundToTwoDecimalPlaces((20 * MILL) / denom)),
     ];
   });
 
