@@ -2,7 +2,7 @@
   "name": "Timeline",
   "description": "A graph-like representation of events in a cascading timeline. Optionally view as a gantt chart as well.",
   "repo": "https://github.com/mark-when/timeline",
-  "iconSvg": "https://timeline.markwhen.com/icon.svg",
+  "iconSvgPath": "m 19.5 19.5 h -7.5 c -0.825 0 -1.5 -0.675 -1.5 -1.5 s 0.675 -1.5 1.5 -1.5 h 7.5 c 0.825 0 1.5 0.675 1.5 1.5 s -0.675 1.5 -1.5 1.5 z m -1.5 -6 h -10.5 c -0.825 0 -1.5 -0.675 -1.5 -1.5 s 0.675 -1.5 1.5 -1.5 h 10.5 c 0.825 0 1.5 0.675 1.5 1.5 s -0.675 1.5 -1.5 1.5 z m -13.5 -6 h 0 c -0.825 0 -1.5 -0.675 -1.5 -1.5 s 0.675 -1.5 1.5 -1.5 h 3 c 0.825 0 1.5 0.675 1.5 1.5 s -0.675 1.5 -1.5 1.5 z",
   "screenshots": [
     "https://timeline.markwhen.com/timeline1.png",
     "https://timeline.markwhen.com/timeline2.png"
