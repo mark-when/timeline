@@ -1,8 +1,8 @@
 {
-  "name": "Timeline",
+  "name": "OG Timeline",
   "description": "A graph-like representation of events in a cascading timeline. Optionally view as a gantt chart as well.",
   "repo": "https://github.com/mark-when/timeline",
-  "iconSvgPath": "M 5 10 h 11 L 16 11 L 5 11 Z Z Z M 9 16 h 8 L 17 17 L 9 17 Z Z M 2 4 L 5 4 L 5 5 L 2 5 Z",
+  "iconSvgPath": "M 8 12 h 11 L 19 13 L 8 13 Z Z Z M 12 18 h 8 L 20 19 L 12 19 Z Z M 5 6 L 8 6 L 8 7 L 5 7 Z M 6 16 Q 7 16 7 17 L 7 20 Q 7 21 6 21 L 5 21 Q 4 21 4 20 L 4 17 Q 4 16 5 16 Z",
   "screenshots": [
     "https://timeline.markwhen.com/timeline1.png",
     "https://timeline.markwhen.com/timeline2.png"
