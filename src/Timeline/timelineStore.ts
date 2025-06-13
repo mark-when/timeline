@@ -90,10 +90,10 @@ export const useTimelineStore = defineStore("timeline", () => {
       if (isEvent(eventy)) {
         const dr = toDateRange(eventy.dateRangeIso);
         if (+dr.fromDateTime < +earliestTime) {
-          earliestTime = dr.fromDateTime;
+          earliestTime = dr.fromDateTime as DateTime<true>;
         }
         if (+dr.toDateTime > +latestTime) {
-          latestTime = dr.toDateTime;
+          latestTime = dr.toDateTime as DateTime<true>;
         }
       }
     }
