@@ -26,8 +26,8 @@ export function initialPageSettings(
   viewport?: Viewport
 ): Settings {
   if (viewport && timeline) {
-    let earliestTime = DateTime.now().plus({ years: 1 }).toISO();
-    let latestTime = DateTime.now().minus({ years: 1 }).toISO();
+    let earliestTime = DateTime.now().minus({ years: 1 }).toISO();
+    let latestTime = DateTime.now().plus({ years: 1 }).toISO();
     const range = {
       fromDateTime: DateTime.fromISO(earliestTime),
       toDateTime: DateTime.fromISO(latestTime),
