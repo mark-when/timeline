@@ -208,6 +208,10 @@ export const useLpc = (listeners?: MessageListeners) => {
     listeners.appState?.({
       colorMap,
     });
+  } else if (typeof window !== "undefined" && !socket) {
+    // No initial state and not using WebSocket, request from parent
+    postRequest("appState");
+    postRequest("markwhenState");
   }
 
   return { postRequest };

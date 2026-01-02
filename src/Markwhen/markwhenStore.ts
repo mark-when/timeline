@@ -65,6 +65,12 @@ export const useMarkwhenStore = defineStore("markwhen", () => {
 
   watchEffect(async () => {
     const { user, timeline } = route.params;
+    if (
+      (Array.isArray(user) ? user[0] : user)?.startsWith("_") ||
+      [user, timeline].some((u) => u?.includes(".html"))
+    ) {
+      return;
+    }
     if (user) {
       try {
         const url = timeline
