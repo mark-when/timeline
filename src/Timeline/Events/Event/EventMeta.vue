@@ -18,7 +18,7 @@ const hasLocations = computed(() => props.locations.length > 0);
 const locations = computed(() =>
   props.locations.map(
     (l) =>
-      `https://www.google.com/maps/embed/v1/place?key=AIzaSyCWzyvdh_bxpqGgmNTjTZ833Dta4_XzKeU&q=${l}`
+      `https://www.google.com/maps/embed/v1/place?key=AIzaSyDLgCXTGAsH2JhVsj1vJlB8L2S47hUwG0w&q=${l}`
   )
 );
 </script>
