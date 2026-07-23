@@ -12,8 +12,8 @@
     "unlink:parser": "yalc remove @markwhen/parser && npm install"
   },
   "dependencies": {
-    "@markwhen/parser": "^1.1.1",
-    "@markwhen/view-client": "^1.6.1",
+    "@markwhen/parser": "^1.2.0",
+    "@markwhen/view-client": "^1.6.2",
     "@squadette/hammerjs": "^2.1.0-pre3",
     "@vueuse/core": "^10.11.0",
     "@vueuse/integrations": "^10.11.0",

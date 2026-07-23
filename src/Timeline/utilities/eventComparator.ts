@@ -71,6 +71,9 @@ export const markdownBlockComparator = (a: MarkdownBlock, b: MarkdownBlock) => {
       (a as Image).link === (b as Image).link
     );
   }
+  if (a.type === BlockType.PARAGRAPH_BREAK) {
+    return true;
+  }
   return (
     (a as Block).raw === (b as Block).raw &&
     (a as Block).value === (b as Block).value

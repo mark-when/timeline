@@ -77,7 +77,13 @@ const onChange = (index: number, checked: boolean) => {
         :key="'p' + (item as Block).raw"
         v-html="toInnerHtml((item as Block).raw)"
       ></p>
-      <img v-else :src="(item as Image).link" class="py-4" />
+      <div
+        v-else-if="item.type === 'paragraphBreak'"
+        :key="`paragraph-break-${index}`"
+        class="h-4"
+        aria-hidden="true"
+      ></div>
+      <img v-else-if="item.type === 'image'" :src="(item as Image).link" class="py-4" />
     </template>
   </div>
 </template>
